@@ -38,6 +38,8 @@ class TableOverviewProductItem extends StatefulWidget {
 }
 
 class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
+  bool onSwipe = false;
+
   @override
   Widget build(BuildContext context) {
      var tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
@@ -56,7 +58,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                     : Colors.transparent,
                 width: 3),
             borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-            color: widget.tableItemProvidor.fromWaiter ? Colors.orange.withOpacity(0.3) : Colors.transparent,
+            color: widget.tableItemProvidor.fromWaiter ? const Color(0xFFD3E03A).withOpacity(0.8) : Colors.transparent,
           ),
           height: (widget.tableItemProvidor.paymode && widget.tableItemProvidor.fromWaiter)  ? 0 : widget._height + 2,
           duration: const Duration(milliseconds: 300),
@@ -73,6 +75,8 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                 //     bottom: 10,
                 child: GestureDetector(
                   onPanUpdate: (details) {
+                    if(onSwipe) return;
+                    onSwipe = true;
                     if (widget.tableItemProvidor.getPaymode()) {
                       // Swiping in right direction.
                       if (details.delta.dx > 0) {
@@ -83,16 +87,19 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                         widget.tableItemProvidor.zeroAmountInCard(context: context);
                       }
                     }
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      onSwipe = false;
+                    });
                   },
                   child: Container(
                     width: widget.width * 0.23,
                     height: widget._height-4,
-                    //color: Colors.blue,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 0.5),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(15.0)),
-                    ),
+                    // //color: Colors.blue,
+                    // decoration: BoxDecoration(
+                    //   border: Border.all(color: Colors.black, width: 0.5),
+                    //   borderRadius:
+                    //       const BorderRadius.all(Radius.circular(15.0)),
+                    // ),
                     child: Center(
                       child: Text(
                         widget.tableItemProvidor
@@ -100,8 +107,9 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                 .toStringAsFixed(2) +
                             "€",
                         style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -127,7 +135,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                     height: widget._height-4,
                     //color: Colors.blue,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 0.5),
+                      border: Border.all(color: Colors.black, width: 0.5),
                       borderRadius: const BorderRadius.all(
                         Radius.circular(15.0),
                       ),
@@ -139,7 +147,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                             : widget.tableItemProvidor.quantity.toString(),
                         style: const TextStyle(
                           fontSize: 18,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -183,7 +191,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                       style: const TextStyle(
                                         fontSize: 9,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                     )
                                   : Container(),
@@ -197,29 +205,29 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                       (index) => Padding(
                                         padding: const EdgeInsets.only(left: 3),
                                         child: Container(
-                                          height: 6,
-                                          width: 6,
+                                          height: 10,
+                                          width: 10,
                                           decoration: BoxDecoration(
                                             color:
                                             widget.tableItemProvidor.getPaymode()
-                                                    ? Colors.white
-                                                    : Colors.grey,
+                                                    ? Colors.black38
+                                                    : Colors.white,
                                             borderRadius:
-                                                BorderRadius.circular(3),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: widget.tableItemProvidor
-                                                        .getPaymode()
-                                                    ? Colors.lightBlueAccent
-                                                        .withOpacity(0.5)
-                                                    : Colors.purpleAccent
-                                                        .withOpacity(0.3),
-                                                spreadRadius: 1,
-                                                blurRadius: 5,
-                                                offset: const Offset(
-                                                    2, 2), // Shadow position
-                                              ),
-                                            ],
+                                                BorderRadius.circular(5),
+                                            // boxShadow: [
+                                            //   BoxShadow(
+                                            //     color: widget.tableItemProvidor
+                                            //             .getPaymode()
+                                            //         ? const Color(0xFFD3E03A)
+                                            //             .withOpacity(0.3)
+                                            //         : Colors.lightBlueAccent
+                                            //             .withOpacity(0.35),
+                                            //     spreadRadius: 1,
+                                            //     blurRadius: 5,
+                                            //     offset: const Offset(
+                                            //         2, 2), // Shadow position
+                                            //   ),
+                                            // ],
                                           ),
                                         ),
                                       ),
@@ -233,29 +241,29 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                       (index) => Padding(
                                         padding: const EdgeInsets.only(left: 3),
                                         child: Container(
-                                          height: 6,
-                                          width: 6,
+                                          height: 10,
+                                          width: 10,
                                           decoration: BoxDecoration(
                                             color:
                                             widget.tableItemProvidor.getPaymode()
-                                                    ? Colors.grey
-                                                    : Colors.white,
+                                                    ? Colors.white
+                                                    : Colors.black38,
                                             borderRadius:
-                                                BorderRadius.circular(3),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: widget.tableItemProvidor
-                                                        .getPaymode()
-                                                    ? Colors.purpleAccent
-                                                        .withOpacity(0.3)
-                                                    : Colors.lightBlueAccent
-                                                        .withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 5,
-                                                offset: const Offset(
-                                                    2, 2), // Shadow position
-                                              ),
-                                            ],
+                                                BorderRadius.circular(5),
+                                            // boxShadow: [
+                                            //   BoxShadow(
+                                            //     color: widget.tableItemProvidor
+                                            //             .getPaymode()
+                                            //         ? Colors.lightBlueAccent
+                                            //             .withOpacity(0.35)
+                                            //         : const Color(0xFFD3E03A)
+                                            //             .withOpacity(0.3),
+                                            //     spreadRadius: 1,
+                                            //     blurRadius: 5,
+                                            //     offset: const Offset(
+                                            //         2, 2), // Shadow position
+                                            //   ),
+                                            // ],
                                           ),
                                         ),
                                       ),
@@ -274,7 +282,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                           productProvidor.findById(widget.tableItemProvidor.product).name,
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -291,7 +299,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                             )
                           ],

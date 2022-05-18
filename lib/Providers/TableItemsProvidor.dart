@@ -222,6 +222,12 @@ class TableItemsProvidor with ChangeNotifier {
     //notify(context: context);
   }
 
+  //remove a singel item
+  void removeSingelProduct({required pos, required context}){
+    _tableItems.removeAt(pos);
+    notifyListeners();
+    notify(context: context);
+  }
 
 
   ///Override all Products with the Products from the Server

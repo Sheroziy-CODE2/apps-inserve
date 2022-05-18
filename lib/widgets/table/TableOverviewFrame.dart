@@ -13,10 +13,10 @@ class TableOverviewWidgetFrame extends StatefulWidget {
 
   const TableOverviewWidgetFrame(
       {required this.height,
-      required this.height_expended,
-      required this.id,
-      Key? key,
-      required this.width})
+        required this.height_expended,
+        required this.id,
+        Key? key,
+        required this.width})
       : super(key: key);
   final double height;
   final double height_expended;
@@ -43,22 +43,22 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
 
   @override
   Widget build(BuildContext context) {
-     
+
     tablesprov = Provider.of<Tables>(context, listen: true);
     final TableModel table = tablesprov.findById(widget.id);
     tableItemProvidor = table.tIP;
 
     return Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.only(left: 5, right: 5, top: 15),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 450),
           curve: Curves.fastOutSlowIn,
           height:
-              (tableItemProvidor.hight_mode_extendet ? widget.height_expended : widget.height) -
-                  10,
+          (tableItemProvidor.hight_mode_extendet ? widget.height_expended : widget.height) -
+              10,
           width: widget.width - 10,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(30, 0, 0, 0),
+          /*decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 245, 242, 231),
             borderRadius: BorderRadius.circular(11),
             boxShadow: [
               BoxShadow(
@@ -68,184 +68,311 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                 offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
-          ),
+          ),*/
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(begin: Alignment.bottomRight,
+                  //stops: const [0, 1],
+                  colors: [
+                    const Color(0x00C4C4C4).withOpacity(.8),
+                    const Color(0xFFC4C4C4).withOpacity(.1)
+                  ])),
           child: isloading
               ? Center(
-                  child: Column(children: const [
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    "Tischdaten laden ...",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  CircularProgressIndicator(),
-                ]))
-              : Column(
-                  children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Center(
-                      child: Row(
-                        children: [
-                          Text(table.name,
-                              style: const TextStyle(
-                                  fontSize: 20, color: Colors.white)),
-                          const Spacer(),
-                          Text(paymode ? "Zahlen" : "Offen",
-                              style: const TextStyle(
-                                  fontSize: 20, color: Colors.white)),
-                          const Spacer(),
-                          Text(
-                              (paymode
-                                          ? tableItemProvidor
-                                              .getTotalCartTablePrice(
-                                                  context: context)
-                                          : tableItemProvidor
-                                              .getTotalOpenTablePrice(
-                                                  context: context))!
-                                      .toStringAsFixed(2) +
-                                  "€",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white)),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                        ],
-                      ),
-                    ),
-                    //const SizedBox(height: 5,),
-                    TableOverviewProductList(id: widget.id),
-                    selectedItem != -1
-                        ? const SizedBox(
-                            height: 5,
-                          )
-                        : Container(),
-                    TableOverviewChangeProduct(
-                        height: widget.height,
-                        width: widget.width,
-                        height_expended: widget.height_expended,
-                        tableID: widget.id),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        paymode ?
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: const Color.fromARGB(50, 10, 10, 10),
-                          ),
-                          onPressed: () {
-                            tableItemProvidor.setItemsPaymode(
-                              context: context,
-                                paymode: !paymode);
-                            setState(() {
-                              paymode = !paymode;
-                              tableItemProvidor.setHightModeExtendet(hight_mode_extendet: false, context: context);
-                            });
-                          },
-                          child: const Text("Zurück"),
-                        ) :Container(),
-                        const Spacer(),
-                        paymode
-                            ? FloatingActionButton.small(
-                                backgroundColor:
-                                    const Color.fromARGB(1050, 10, 10, 10),
-                                onPressed: () {
-                                  tableItemProvidor.setItemsAmountToPayToZero(context: context);
-                                },
-                                //backgroundColor: Colors.green,
-                                child: const Icon(Icons.delete_forever),
-                              )
-                            : Container(),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        paymode
-                            ? FloatingActionButton.small(
-                                backgroundColor:
-                                    const Color.fromARGB(100, 0, 0, 0),
-                                onPressed: () {
-                                  tableItemProvidor
-                                      .setItemsAmountToPayToTotal(context: context);
-                                },
-                                //backgroundColor: Colors.green,
-                                child: const Icon(Icons.done_all),
-                              )
-                            : FloatingActionButton.small(
-                          backgroundColor: const Color.fromARGB(100, 0, 0, 0),
-                          onPressed: () {
-                            tableItemProvidor.setHightModeExtendet(hight_mode_extendet: !tableItemProvidor.hight_mode_extendet, context: context);
-                          },
-                          //backgroundColor: Colors.green,
-                          child: const Icon(Icons.expand),
-                        ),
-          const SizedBox(
-            width: 10,
-          ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        paymode
-                            ? ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary:
-                            const Color.fromARGB(100, 10, 10, 10),
-                          ),
-                          onPressed: () async {
-                            await tablesprov.checkout(context: context, tableID: widget.id);
-                          },
-                          child: const Text("Abrechnen"),
-                        )
-                            :
-
-                        Row(
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: const Color.fromARGB(50, 10, 10, 10),
-                              ),
-                              onPressed: () {
-                                tablesprov.checkoutItemsToSocket(context:context,tableID:widget.id);
-                              },
-                              child: const Text("Übertragen"),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: const Color.fromARGB(50, 10, 10, 10),
-                              ),
-                              onPressed: () {
-                                tableItemProvidor.setItemsPaymode(
-                                    context: context,
-                                    paymode: !paymode);
-                                  paymode = !paymode;
-                                tableItemProvidor.setHightModeExtendet(hight_mode_extendet: true, context: context);
-
-                              },
-                              child: const Text(" Zahlen "),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    )
-                  ],
+              child: Column(children: const [
+                SizedBox(
+                  height: 30,
                 ),
+                Text(
+                  "Tischdaten laden ...",
+                  style: TextStyle(color: Colors.black),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                CircularProgressIndicator(),
+              ]))
+              : Column(
+            children: [
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 5,),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Tisch", style: TextStyle(fontSize: 14),),
+                      Text(table.name,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
+                    ],
+                  ),
+                  const Spacer(),
+                  Text(paymode ? "Zahlen" : "Offen",
+                      style: const TextStyle(
+                          fontSize: 20, color: Colors.black)),
+                  const Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text("Betray", style: TextStyle(fontSize: 14),),
+                      Text((paymode
+                          ? tableItemProvidor
+                          .getTotalCartTablePrice(
+                          context: context)
+                          : tableItemProvidor
+                          .getTotalOpenTablePrice(
+                          context: context))!
+                          .toStringAsFixed(2) +
+                          "€",
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                ],
+              ),
+              //const SizedBox(height: 5,),
+              TableOverviewProductList(id: widget.id),
+              selectedItem != -1
+                  ? const SizedBox(
+                height: 5,
+              )
+                  : Container(),
+              TableOverviewChangeProduct(
+                  height: widget.height,
+                  width: widget.width,
+                  height_expended: widget.height_expended,
+                  tableID: widget.id),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  paymode ?
+                  SizedBox(
+                    height: 40,
+                    width: 110,
+                    child: GestureDetector(
+                      onTap: (){
+                        tableItemProvidor.setItemsPaymode(
+                            context: context,
+                            paymode: !paymode);
+                        setState(() {
+                          paymode = !paymode;
+                          tableItemProvidor.setHightModeExtendet(
+                              hight_mode_extendet: false,
+                              context: context);
+                        });
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF3F3F3),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Icon(Icons.arrow_back_ios, color: Colors.black.withOpacity(0.4),),
+                              ),
+                              const SizedBox(width: 5,),
+                              const Text("Zurück"),
+                            ],
+                          )),
+                    ),
+                  ) : Container(),
+                  const Spacer(),
+                  paymode
+                      ? GestureDetector(
+                    onTap:(){
+                      tableItemProvidor.setItemsAmountToPayToZero(context: context);
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F3F3),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Icon(Icons.delete_forever, color: Colors.black.withOpacity(0.4),),
+                    ),
+                  ) : Container(),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  paymode
+                      ?
+                  GestureDetector(
+                    onTap:(){
+                      tableItemProvidor.setItemsAmountToPayToTotal(context: context);
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F3F3),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Icon(Icons.done_all, color: Colors.black.withOpacity(0.4),),
+                    ),
+                  )
+                      :
+
+                  SizedBox(
+                    height: 40,
+                    width: 105,
+                    child: GestureDetector(
+                      onTap: (){
+                        tableItemProvidor.setHightModeExtendet(hight_mode_extendet: !tableItemProvidor.hight_mode_extendet, context: context);
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF3F3F3),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Icon(
+                                  tableItemProvidor.hight_mode_extendet ? Icons.keyboard_arrow_up :
+                                  Icons.keyboard_arrow_down , color: Colors.black.withOpacity(0.4),),
+                              ),
+                              const SizedBox(width: 5,),
+                              const Text("Menü"),
+                            ],
+                          )),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  paymode ?
+                  SizedBox(
+                    height: 40,
+                    width: 127,
+                    child: GestureDetector(
+                      onTap: () async{
+                        await tablesprov.checkout(context: context, tableID: widget.id);
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF3F3F3),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Icon(Icons.credit_card ,color: Colors.black.withOpacity(0.4),),
+                              ),
+                              const SizedBox(width: 5,),
+                              const Text("Abrechnen"),
+                            ],
+                          )),
+                    ),
+                  ) :
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 40,
+                        width: 130,
+                        child: GestureDetector(
+                          onTap: (){
+                            tablesprov.checkoutItemsToSocket(context:context,tableID:widget.id);
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF3F3F3),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Icon(Icons.send, color: Colors.black.withOpacity(0.4),),
+                                  ),
+                                  const SizedBox(width: 5,),
+                                  const Text("Übertragen"),
+                                ],
+                              )),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 105,
+                        child: GestureDetector(
+                          onTap: (){
+                            tableItemProvidor.setItemsPaymode(
+                                context: context,
+                                paymode: !paymode);
+                            paymode = !paymode;
+                            tableItemProvidor.setHightModeExtendet(hight_mode_extendet: true, context: context);
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF3F3F3),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Icon(Icons.credit_card_sharp, color: Colors.black.withOpacity(0.4),),
+                                  ),
+                                  const SizedBox(width: 5,),
+                                  const Text("Zahlen"),
+                                ],
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              )
+            ],
+          ),
         ));
 
     //);
