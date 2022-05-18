@@ -149,7 +149,8 @@ class Tables with ChangeNotifier {
                   Image.asset(paymentImages[paymentMethod]!),
                   GestureDetector(
                     onTap: (){
-                      checkout2(context: context, tableID: tableID, payment: paymentOptions[paymentMethod]!);
+                      Navigator.of(context).pop();
+                      checkout_print(context: context, tableID: tableID, payment: paymentOptions[paymentMethod]!);
                     },
                     child: Container(
                       height: 46,
@@ -221,7 +222,151 @@ class Tables with ChangeNotifier {
     );
 
   }
-  Future<void> checkout2({required context, required int tableID, required String payment}) async {
+
+  Future<void> showCalculator({required context,required double amount}){
+    return showDialog(
+      context: context,
+      builder: (context) {
+        String typedInValue = "0000,00€";
+        int actPos = 0;
+        final List<double> block = [7,8,9,4,5,6,1,2,3,-1,0,-1];
+        List<bool> isPressed = List.generate(block.length, (index) => false);
+
+        return StatefulBuilder(
+          builder: (context2, setState) {
+            double rueckgeld = double.parse(typedInValue.replaceFirst(",", ".").replaceFirst("€", "")) - amount;
+            if(rueckgeld < 0) rueckgeld = 0;
+            return AlertDialog(
+              backgroundColor: const Color(0xFFF5F2E7),
+              content: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const Spacer(),
+                  Center(
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text("Zu bezahlen:  "),
+                                  Text(amount.toStringAsFixed(2) + "€", style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline,),),
+                                ],
+                              ),
+                              const SizedBox(height: 20,),
+                              const Text("Vom Kunde Gezahlt"),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: List.generate(typedInValue.length, (index) =>
+                                    Padding(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child: Text(
+                                        typedInValue[index],style:
+                                      TextStyle(
+                                          color: index == actPos ? Colors.green : Colors.black,
+                                          fontSize: 30,
+                                          fontWeight: index == actPos ? FontWeight.bold : FontWeight.normal
+                                      ),
+                                      ),
+                                    )
+                                ),
+                              ),
+                              const SizedBox(height: 15,),
+                              const Text("Rückgeld"),
+                              Text(rueckgeld.toStringAsFixed(2).replaceFirst(".", ",") + "€",
+                                style: const TextStyle(fontSize: 25,decoration: TextDecoration.underline, fontWeight: FontWeight.bold),),
+                            ],
+                          ),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: 280,
+                    height: 370,
+                    child: GridView.count(
+                        physics: const ScrollPhysics(),
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
+                        padding: const EdgeInsets.all(15),
+                        shrinkWrap: false,
+                        crossAxisCount: 3,
+                        children:
+                        List.generate(block.length, (index) =>
+                        block[index] == -1 ? Container() :
+                        GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              typedInValue = typedInValue.substring(0,actPos) + block[index].toStringAsFixed(0) + typedInValue.substring(actPos+1);
+                              actPos ++;
+                              if(actPos == typedInValue.length-1) actPos = 0;
+                              if(typedInValue[actPos] == ",") actPos++;
+                              if(typedInValue[actPos] == "€") actPos++;
+                              isPressed[index] = true;
+                            });
+                            Future.delayed(const Duration(milliseconds: 100), () => setState((){isPressed[index] = false;}));
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: const Color(0xFFF5F2E7),
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 10,
+                                    offset: const Offset(-5,-5),
+                                    color: Colors.white,
+                                    blurStyle: isPressed[index] ? BlurStyle.outer : BlurStyle.inner,
+                                  ),
+                                  BoxShadow(
+                                    blurRadius: 10,
+                                    offset: const Offset(5,5),
+                                    color: const Color(0xFFA7A9AF),
+                                    blurStyle: isPressed[index] ? BlurStyle.outer : BlurStyle.inner,
+                                  ),
+                                ]
+                            ),
+                            child: Center(child: Text(block[index].toStringAsFixed(0), style: const TextStyle(fontSize: 20),)),
+                          ),
+                        )
+                        )
+
+                    ),
+                  ),
+
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Schließen'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+
+
+  Future<void> checkout_print({required context, required int tableID, required String payment}) async {
     var element = findById(tableID).tIP.tableItems;
     List jsonList = [];
     for (int x = 0; x < element.length; x++) {
@@ -365,8 +510,12 @@ class Tables with ChangeNotifier {
         }
       });
 
-
-
+      if(payment == "Bar") {
+        showCalculator(
+            context: context,
+            amount: findById(tableID).tIP.getTotalCartTablePrice(context: context)!,
+        );
+      }
 
     } else {
       print(
