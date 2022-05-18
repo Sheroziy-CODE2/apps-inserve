@@ -67,10 +67,12 @@ class _InvoicesScreen extends State<InvoicesView> {
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Expanded(
                     flex: 1,
                     child: Container(
-                      margin: EdgeInsets.only(top: 40),
                       child: const Text(
                         'Rechnungen',
                         textAlign: TextAlign.center,
