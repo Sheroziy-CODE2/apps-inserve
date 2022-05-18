@@ -91,49 +91,132 @@ class Tables with ChangeNotifier {
   }
 
   Future<void> checkout({required context, required int tableID}) async {
+    var table = findById(tableID);
+    final totalPrice = table
+        .tIP
+        .getTotalCartTablePrice(context: context)!;
+    if(totalPrice <= 0){
+      return;
+    }
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Text("Zahlungsmethode wählen"),
-      content: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            onTap: (){
-              Navigator.of(context).pop();
-              checkout2(context: context, tableID: tableID, payment: "Bar");
-            },
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children:const [
-                  Icon(Icons.money, size: 100,),
-                  Text("Bar"),
-                ]
-            ),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: (){
-              Navigator.of(context).pop();
-              checkout2(context: context, tableID: tableID, payment: "Karte");
-            },
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children:const [
-                  Icon(Icons.credit_card, size: 100,),
-                  Text("Karte"),
-                ]
-            ),
-          ),
-        ],
-      ),
-    );
-
-    // show the dialog
+    final Map<int,String> paymentOptions = {
+      0 : "Karte",
+      1 : "Bar"
+    };
+    final Map<int,String> paymentImages = {
+      0 : "assets/images/PayCard.png",
+      1 : "assets/images/PayCash.png"
+    };
+    final Map<int,Icon> paymentIcons = {
+      0 : Icon(Icons.credit_card,color: Colors.black.withOpacity(0.6)),
+      1 : Icon(Icons.monetization_on_outlined,color: Colors.black.withOpacity(0.6))
+    };
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return alert;
+      builder: (context) {
+        int paymentMethod = 0;
+        return StatefulBuilder(
+          builder: (context2, setState) {
+            return AlertDialog(
+              backgroundColor: const Color(0xFFF5F2E7),
+              //title: const Text("Zahlungsmethode wählen"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(table.name, style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline,),),
+                            ),
+                            const SizedBox(height: 30,),
+                            const Text("Die Rechnung"),
+                            Text(totalPrice.toStringAsFixed(2) + "€", style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline,),),
+                            const SizedBox(height: 10,),
+                          ],
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
+                  Image.asset(paymentImages[paymentMethod]!),
+                  GestureDetector(
+                    onTap: (){
+                      checkout2(context: context, tableID: tableID, payment: paymentOptions[paymentMethod]!);
+                    },
+                    child: Container(
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      child: const Center(child: Text("Ja")),
+                    ),
+                  ),
+                  const SizedBox(height: 40,),
+                  Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: paymentOptions.keys.map((key) =>
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    paymentMethod = key;
+                                  });
+                                },
+                                child:
+                                SizedBox(
+                                    height: 40,
+                                    width: 127,
+                                    child:  Stack(
+                                      children: [
+                                        Positioned(
+                                          top: 2,
+                                          left: 2,
+                                          child: Container(
+                                            height: 34,
+                                            width: 120,
+                                            padding: const EdgeInsets.only(left: 45, right: 15),
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(20),
+                                                border: paymentMethod != key ? null : Border.all(color: Colors.green, style: BorderStyle.solid, width: 4)
+
+                                            ),
+                                            child: Center(child: Text(paymentOptions[key]!)),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE8E8E8),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: paymentIcons[key],
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                            ],
+                          ),
+                      ).toList()
+                  )
+                ],
+              ),
+            );
+          },
+        );
       },
     );
 
@@ -187,100 +270,100 @@ class Tables with ChangeNotifier {
 
       print("connection " + (await _configPrinter.checkState(context: context).toString()));
 
-BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
+      BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
-    var now = DateTime.now();
-    var formatter = DateFormat('HH:mm dd-MM-yyyy');
-    String formattedDate = formatter.format(now);
-    String restaurantPhoto =
-        Provider.of<Authy>(context, listen: false).RestaurantPhotoLink;
+      var now = DateTime.now();
+      var formatter = DateFormat('HH:mm dd-MM-yyyy');
+      String formattedDate = formatter.format(now);
+      String restaurantPhoto =
+          Provider.of<Authy>(context, listen: false).RestaurantPhotoLink;
 
-    var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    var priceProvidor = Provider.of<Prices>(context, listen: false);
-    var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-    var productsProvidor = Provider.of<Products>(context, listen: false);
+      var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
+      var priceProvidor = Provider.of<Prices>(context, listen: false);
+      var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
+      var productsProvidor = Provider.of<Products>(context, listen: false);
 
-    const filename = 'yourlogo.png';
-    //var bytes = await rootBundle.load(restaurantPhoto);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    //writeToFile(bytes, '$dir/$filename');
-    String pathImage = '$dir/$filename';
+      const filename = 'yourlogo.png';
+      //var bytes = await rootBundle.load(restaurantPhoto);
+      String dir = (await getApplicationDocumentsDirectory()).path;
+      //writeToFile(bytes, '$dir/$filename');
+      String pathImage = '$dir/$filename';
 
-    bluetooth.isConnected.then((isConnected) {
-      if (isConnected ?? false) {
-        bluetooth.printCustom("INSPARY", 2, 1);
-        bluetooth.printImage(pathImage);
-        bluetooth.printNewLine();
-        bluetooth.printCustom("Rechnung/Bon-Nr:13", 0, 2);
-        bluetooth.printCustom(formattedDate, 0, 2);
-        bluetooth.printNewLine();
-        for (int x = 0; x < element.length; x++) {
-          if (element[x].getInCard() < 1) continue;
-          bluetooth.print4Column(
-              element[x].getInCard().toString(),
-              productsProvidor.findById(element[x].product).name,
-              priceProvidor.findById(element[x].price).price.toStringAsFixed(2),
-              element[x].getTotalPrice(context: context).toStringAsFixed(2),
-              1,
-              format: "%2s %15s %5s %5s %n");
-
-          List<int> sideDishes = element[x].side_dish;
-          Map<int, int> sd_map = {};
-          sideDishes.forEach((sd) {
-            if (!sd_map.containsKey(sd)) {
-              sd_map[sd] = 1;
-            } else {
-              sd_map[sd] = sd_map[sd] ?? 0 + 1;
-            }
-          });
-          sd_map.keys.forEach((id) {
+      bluetooth.isConnected.then((isConnected) {
+        if (isConnected ?? false) {
+          bluetooth.printCustom("INSPARY", 2, 1);
+          bluetooth.printImage(pathImage);
+          bluetooth.printNewLine();
+          bluetooth.printCustom("Rechnung/Bon-Nr:13", 0, 2);
+          bluetooth.printCustom(formattedDate, 0, 2);
+          bluetooth.printNewLine();
+          for (int x = 0; x < element.length; x++) {
+            if (element[x].getInCard() < 1) continue;
             bluetooth.print4Column(
-                sd_map[id].toString(),
-                sideDishProvidor.findById(id).name,
-                sideDishProvidor
-                    .findById(id)
-                    .secondary_price
-                    .toStringAsFixed(2),
-                "",
-                0,
-                format: "%1s %20s %5s %5s %n");
-          });
+                element[x].getInCard().toString(),
+                productsProvidor.findById(element[x].product).name,
+                priceProvidor.findById(element[x].price).price.toStringAsFixed(2),
+                element[x].getTotalPrice(context: context).toStringAsFixed(2),
+                1,
+                format: "%2s %15s %5s %5s %n");
 
-          List<int> added_ingredients = element[x].added_ingredients;
-          Map<int, int> ai_map = {};
-          added_ingredients.forEach((sd) {
-            if (!ai_map.containsKey(sd)) {
-              ai_map[sd] = 1;
-            } else {
-              ai_map[sd] = ai_map[sd] ?? 0 + 1;
-            }
-          });
-          ai_map.keys.forEach((id) {
-            bluetooth.print4Column(
-                ai_map[id].toString(),
-                ingredientsProvidor.findById(id).name,
-                ingredientsProvidor.findById(id).price.toStringAsFixed(2),
-                "",
-                0,
-                format: "%1s %20s %5s %5s %n");
-          });
+            List<int> sideDishes = element[x].side_dish;
+            Map<int, int> sd_map = {};
+            sideDishes.forEach((sd) {
+              if (!sd_map.containsKey(sd)) {
+                sd_map[sd] = 1;
+              } else {
+                sd_map[sd] = sd_map[sd] ?? 0 + 1;
+              }
+            });
+            sd_map.keys.forEach((id) {
+              bluetooth.print4Column(
+                  sd_map[id].toString(),
+                  sideDishProvidor.findById(id).name,
+                  sideDishProvidor
+                      .findById(id)
+                      .secondary_price
+                      .toStringAsFixed(2),
+                  "",
+                  0,
+                  format: "%1s %20s %5s %5s %n");
+            });
+
+            List<int> added_ingredients = element[x].added_ingredients;
+            Map<int, int> ai_map = {};
+            added_ingredients.forEach((sd) {
+              if (!ai_map.containsKey(sd)) {
+                ai_map[sd] = 1;
+              } else {
+                ai_map[sd] = ai_map[sd] ?? 0 + 1;
+              }
+            });
+            ai_map.keys.forEach((id) {
+              bluetooth.print4Column(
+                  ai_map[id].toString(),
+                  ingredientsProvidor.findById(id).name,
+                  ingredientsProvidor.findById(id).price.toStringAsFixed(2),
+                  "",
+                  0,
+                  format: "%1s %20s %5s %5s %n");
+            });
+          }
+          bluetooth.printCustom("--------------------------------", 1, 0);
+          bluetooth.printLeftRight(
+              "SUMME",
+              findById(tableID)
+                  .tIP
+                  .getTotalCartTablePrice(context: context)!
+                  .toStringAsFixed(2),
+              3);
+          bluetooth.printCustom("--------------------------------", 1, 0);
+          bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
+          bluetooth.printNewLine();
+          bluetooth.printNewLine();
+          bluetooth.printNewLine();
+          bluetooth.paperCut();
         }
-        bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printLeftRight(
-            "SUMME",
-            findById(tableID)
-                .tIP
-                .getTotalCartTablePrice(context: context)!
-                .toStringAsFixed(2),
-            3);
-        bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.paperCut();
-      }
-    });
+      });
 
 
 
