@@ -107,7 +107,7 @@ class _SignInState extends State<SignIn> {
             'assets/illustrations/possystem.svg',
             matchTextDirection: true,
           ),
-          Center(
+          const Center(
             child: Text(
               'I N S P E R Y',
               style: TextStyle(
