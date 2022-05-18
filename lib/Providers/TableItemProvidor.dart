@@ -124,6 +124,7 @@ class TableItemProvidor with ChangeNotifier {
     added_ingredients.forEach((element) {
       ret += /* "+" + */ ingredientsProvidor.findById(element).name + ", ";
     });
+    if(ret == ", ") ret = "";
     //deleted_ingredients.forEach((element) {
     //  ret += "-" + ingredientsProvidor.findById(element).name + ", ";
     //});

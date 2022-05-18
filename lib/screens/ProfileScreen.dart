@@ -25,7 +25,7 @@ class _ProfileState extends State<Profile> {
   bool _isLoading = true;
   bool _isInit = true;
 
-  double gesammt = 0;
+  num gesammt = 0;
   double tip = 46.128;
   double bar = 302.45;
   double karte = 244.87;
@@ -50,7 +50,7 @@ class _ProfileState extends State<Profile> {
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 201) {
         setState(() {
-          gesammt = jsonDecode(response.body)['sum'].toDouble();
+          gesammt = jsonDecode(response.body)['sum'];
         });
         setState(() {
           _isLoading = false;

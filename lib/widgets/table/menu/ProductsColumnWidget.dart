@@ -16,6 +16,7 @@ class ProductsColumn extends StatefulWidget {
 }
 
 class _ProductsColumnState extends State<ProductsColumn> {
+  ScrollController scrollController = ScrollController();
   TextEditingController editingController = TextEditingController();
   List<Product> products = [];
   String search = '';
@@ -68,6 +69,10 @@ class _ProductsColumnState extends State<ProductsColumn> {
   // Category category = category;
   @override
   Widget build(BuildContext context) {
+    Future.delayed(const Duration(milliseconds: 50), () {
+      scrollController.jumpTo(0);
+    });
+
     if (search == '') {
       setState(() {
         final categorysData = Provider.of<Categorys>(context, listen: false);
@@ -78,16 +83,16 @@ class _ProductsColumnState extends State<ProductsColumn> {
       });
     }
     List<Product> productsList = this.products;
-    ;
+
     return GridTile(
       child: Container(
-        padding: const EdgeInsets.only(top: 0, left: 2, right: 2, bottom: 5.0),
+        padding: const EdgeInsets.only(top: 0, left: 2, right: 2, bottom: 25.0),
         child: Column(
           children: [
             Container(
               height: 50,
               padding:
-                  const EdgeInsets.only(top: 7, left: 8, right: 8, bottom: 0.0),
+                  const EdgeInsets.only(top: 2, left: 8, right: 8, bottom: 2),
               child: TextField(
                 onChanged: (value) {
                   filterSearchResults(value);
@@ -102,10 +107,10 @@ class _ProductsColumnState extends State<ProductsColumn> {
                   fillColor: Color(0xFFF5F2E7),
                   focusColor: Color(0xFFF5F2E7),
 
-                  labelText: "Search",
+                  labelText: "Suchen",
                   filled: true,
                   // labelTextColor: Colors.white,
-                  hintText: "Search",
+                  hintText: "Suchen",
                   hintStyle: TextStyle(
                     color: Color(0xFF1B262C),
                     height: 2.8,
@@ -123,6 +128,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
             ),
             Expanded(
               child: ListView.builder(
+                controller: scrollController,
                 padding:
                     const EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 0),
                 scrollDirection: Axis.vertical,
@@ -139,7 +145,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
                     padding: const EdgeInsets.only(
                         top: 1.5, left: 2.0, right: 2.0, bottom: 1.5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF395B64),
+                      color: const Color(0xFFD3E03A),
                       boxShadow: const [],
                       borderRadius: BorderRadius.circular(5),
                     ),
@@ -150,7 +156,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 18,
-                        color: Color(0xFFF5F2E7),
+                        color: Color(0xFF1B262C),
                       ),
                     ),
                   ),

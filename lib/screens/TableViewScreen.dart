@@ -28,11 +28,13 @@ class TableView extends StatelessWidget {
       body: Container(
         color: Theme.of(context).primaryColorDark,
         child: Container(
-          decoration: BoxDecoration(color: Theme.of(context).primaryColorDark),
+          decoration: const BoxDecoration(
+              color: Color(0xFFF5F2E7),//Theme.of(context).primaryColorDark
+          ),
           child: Column(children: [
             TableOverviewWidgetFrame(
               height: (MediaQuery.of(context).size.height / 2),
-              height_expended: MediaQuery.of(context).size.height - 75,
+              height_expended: MediaQuery.of(context).size.height - 77,
               width: MediaQuery.of(context).size.width,
               id: tableId,
             ),

@@ -31,15 +31,19 @@ class _TableOverviewProductListState extends State<TableOverviewProductList> {
     }
     lastLength = tableItemsProvidor.getLength();
     final double width = MediaQuery.of(context).size.width;
-    print("Render new List");
     return Flexible(
       child: ListView.separated(
         controller: _scrollController,
         itemBuilder: (_, index) {
-          return TableOverviewProductItem(
-            width: width,
-            tableItemProvidor: tableItemsProvidor.tableItems[index],
-            index: index,
+          return GestureDetector(
+            onPanEnd: tableItemsProvidor.tableItems[index].isFromServer() ? null : (x){
+              tableItemsProvidor.removeSingelProduct(pos: index, context: context);
+            },
+            child: TableOverviewProductItem(
+              width: width,
+              tableItemProvidor: tableItemsProvidor.tableItems[index],
+              index: index,
+            ),
           );
         },
         separatorBuilder: (_, x) {
@@ -53,7 +57,7 @@ class _TableOverviewProductListState extends State<TableOverviewProductList> {
                       child: Container(
                         color: index % 2 == 0
                             ? Colors.transparent
-                            : Colors.grey,
+                            : Colors.black,
                         height: 0.5,
                       ),
                     )),
