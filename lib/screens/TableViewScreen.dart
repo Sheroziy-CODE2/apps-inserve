@@ -24,7 +24,6 @@ class TableView extends StatelessWidget {
 
     return
       Scaffold(
-      bottomNavigationBar: const NavBar(selectedIcon: 2),
       body: Container(
         color: Theme.of(context).primaryColorDark,
         child: Container(
@@ -32,6 +31,9 @@ class TableView extends StatelessWidget {
               color: Color(0xFFF5F2E7),//Theme.of(context).primaryColorDark
           ),
           child: Column(children: [
+            const SizedBox(
+              height: 20,
+            ),
             TableOverviewWidgetFrame(
               height: (MediaQuery.of(context).size.height / 2),
               height_expended: MediaQuery.of(context).size.height - 77,
