@@ -187,100 +187,100 @@ class Tables with ChangeNotifier {
 
       print("connection " + (await _configPrinter.checkState(context: context).toString()));
 
-BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
+      BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
-    var now = DateTime.now();
-    var formatter = DateFormat('HH:mm dd-MM-yyyy');
-    String formattedDate = formatter.format(now);
-    String restaurantPhoto =
-        Provider.of<Authy>(context, listen: false).RestaurantPhotoLink;
+      var now = DateTime.now();
+      var formatter = DateFormat('HH:mm dd-MM-yyyy');
+      String formattedDate = formatter.format(now);
+      String restaurantPhoto =
+          Provider.of<Authy>(context, listen: false).RestaurantPhotoLink;
 
-    var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    var priceProvidor = Provider.of<Prices>(context, listen: false);
-    var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-    var productsProvidor = Provider.of<Products>(context, listen: false);
+      var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
+      var priceProvidor = Provider.of<Prices>(context, listen: false);
+      var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
+      var productsProvidor = Provider.of<Products>(context, listen: false);
 
-    const filename = 'yourlogo.png';
-    //var bytes = await rootBundle.load(restaurantPhoto);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    //writeToFile(bytes, '$dir/$filename');
-    String pathImage = '$dir/$filename';
+      const filename = 'yourlogo.png';
+      //var bytes = await rootBundle.load(restaurantPhoto);
+      String dir = (await getApplicationDocumentsDirectory()).path;
+      //writeToFile(bytes, '$dir/$filename');
+      String pathImage = '$dir/$filename';
 
-    bluetooth.isConnected.then((isConnected) {
-      if (isConnected ?? false) {
-        bluetooth.printCustom("INSPARY", 2, 1);
-        bluetooth.printImage(pathImage);
-        bluetooth.printNewLine();
-        bluetooth.printCustom("Rechnung/Bon-Nr:13", 0, 2);
-        bluetooth.printCustom(formattedDate, 0, 2);
-        bluetooth.printNewLine();
-        for (int x = 0; x < element.length; x++) {
-          if (element[x].getInCard() < 1) continue;
-          bluetooth.print4Column(
-              element[x].getInCard().toString(),
-              productsProvidor.findById(element[x].product).name,
-              priceProvidor.findById(element[x].price).price.toStringAsFixed(2),
-              element[x].getTotalPrice(context: context).toStringAsFixed(2),
-              1,
-              format: "%2s %15s %5s %5s %n");
-
-          List<int> sideDishes = element[x].side_dish;
-          Map<int, int> sd_map = {};
-          sideDishes.forEach((sd) {
-            if (!sd_map.containsKey(sd)) {
-              sd_map[sd] = 1;
-            } else {
-              sd_map[sd] = sd_map[sd] ?? 0 + 1;
-            }
-          });
-          sd_map.keys.forEach((id) {
+      bluetooth.isConnected.then((isConnected) {
+        if (isConnected ?? false) {
+          bluetooth.printCustom("INSPARY", 2, 1);
+          bluetooth.printImage(pathImage);
+          bluetooth.printNewLine();
+          bluetooth.printCustom("Rechnung/Bon-Nr:13", 0, 2);
+          bluetooth.printCustom(formattedDate, 0, 2);
+          bluetooth.printNewLine();
+          for (int x = 0; x < element.length; x++) {
+            if (element[x].getInCard() < 1) continue;
             bluetooth.print4Column(
-                sd_map[id].toString(),
-                sideDishProvidor.findById(id).name,
-                sideDishProvidor
-                    .findById(id)
-                    .secondary_price
-                    .toStringAsFixed(2),
-                "",
-                0,
-                format: "%1s %20s %5s %5s %n");
-          });
+                element[x].getInCard().toString(),
+                productsProvidor.findById(element[x].product).name,
+                priceProvidor.findById(element[x].price).price.toStringAsFixed(2),
+                element[x].getTotalPrice(context: context).toStringAsFixed(2),
+                1,
+                format: "%2s %15s %5s %5s %n");
 
-          List<int> added_ingredients = element[x].added_ingredients;
-          Map<int, int> ai_map = {};
-          added_ingredients.forEach((sd) {
-            if (!ai_map.containsKey(sd)) {
-              ai_map[sd] = 1;
-            } else {
-              ai_map[sd] = ai_map[sd] ?? 0 + 1;
-            }
-          });
-          ai_map.keys.forEach((id) {
-            bluetooth.print4Column(
-                ai_map[id].toString(),
-                ingredientsProvidor.findById(id).name,
-                ingredientsProvidor.findById(id).price.toStringAsFixed(2),
-                "",
-                0,
-                format: "%1s %20s %5s %5s %n");
-          });
+            List<int> sideDishes = element[x].side_dish;
+            Map<int, int> sd_map = {};
+            sideDishes.forEach((sd) {
+              if (!sd_map.containsKey(sd)) {
+                sd_map[sd] = 1;
+              } else {
+                sd_map[sd] = sd_map[sd] ?? 0 + 1;
+              }
+            });
+            sd_map.keys.forEach((id) {
+              bluetooth.print4Column(
+                  sd_map[id].toString(),
+                  sideDishProvidor.findById(id).name,
+                  sideDishProvidor
+                      .findById(id)
+                      .secondary_price
+                      .toStringAsFixed(2),
+                  "",
+                  0,
+                  format: "%1s %20s %5s %5s %n");
+            });
+
+            List<int> added_ingredients = element[x].added_ingredients;
+            Map<int, int> ai_map = {};
+            added_ingredients.forEach((sd) {
+              if (!ai_map.containsKey(sd)) {
+                ai_map[sd] = 1;
+              } else {
+                ai_map[sd] = ai_map[sd] ?? 0 + 1;
+              }
+            });
+            ai_map.keys.forEach((id) {
+              bluetooth.print4Column(
+                  ai_map[id].toString(),
+                  ingredientsProvidor.findById(id).name,
+                  ingredientsProvidor.findById(id).price.toStringAsFixed(2),
+                  "",
+                  0,
+                  format: "%1s %20s %5s %5s %n");
+            });
+          }
+          bluetooth.printCustom("--------------------------------", 1, 0);
+          bluetooth.printLeftRight(
+              "SUMME",
+              findById(tableID)
+                  .tIP
+                  .getTotalCartTablePrice(context: context)!
+                  .toStringAsFixed(2),
+              3);
+          bluetooth.printCustom("--------------------------------", 1, 0);
+          bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
+          bluetooth.printNewLine();
+          bluetooth.printNewLine();
+          bluetooth.printNewLine();
+          bluetooth.paperCut();
         }
-        bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printLeftRight(
-            "SUMME",
-            findById(tableID)
-                .tIP
-                .getTotalCartTablePrice(context: context)!
-                .toStringAsFixed(2),
-            3);
-        bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.printNewLine();
-        bluetooth.paperCut();
-      }
-    });
+      });
 
 
 
@@ -337,6 +337,9 @@ BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
                 }
                 this._items[i].tIP.setItems(_tIPItems);
                 // notifyListeners();
+                _items[i].timeHistory.putIfAbsent("Buchung", () => _items[i].tIP.getTimeFromLastInputProduct());
+                _items[i].timeHistory.putIfAbsent("Syncronisierung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
+                print("Timestamp: " + (DateTime.now().millisecondsSinceEpoch/1000).round().toString());
                 break;
 
               case 'table_items':
@@ -351,6 +354,7 @@ BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
                 this._items[i].total_price =
                 data['table_items']['table']['total_price'].toDouble()
                 as double;
+                _items[i].timeHistory.putIfAbsent("Buchung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
                 notifyListeners();
                 break;
 
@@ -361,12 +365,14 @@ BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
                   this._items[i].tIP.deleteItemsFromServer(
                       body['fields']['quantity'], body['fields']['order']);
                 }
+                _items[i].timeHistory.putIfAbsent("Loeschung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
                 break;
 
               case 'transfer_table_items':
                 List<int> products = data['transfer'];
                 var newTable = data['new_table'];
                 _items[i].tIP.transfereTableItem(newTable: newTable, products: products, context: context);
+                _items[i].timeHistory.putIfAbsent("Tischumbuchung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
                 break;
 
               default:
