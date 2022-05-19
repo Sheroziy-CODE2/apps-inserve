@@ -21,6 +21,14 @@ class TableItemsProvidor with ChangeNotifier {
     return [..._tableItems];
   }
 
+  num getTimeFromLastInputProduct(){
+    num retunrTime = 0;
+    for (var element in _tableItems) {
+      if(retunrTime < element.date) retunrTime = element.date;
+    }
+    return retunrTime;
+  }
+
   void delete(item) {
     _tableItems.remove(item);
   }

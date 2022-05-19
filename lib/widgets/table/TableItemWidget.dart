@@ -4,6 +4,7 @@ import '../../Providers/Tables.dart';
 import '../../screens/TableViewScreen.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/Authy.dart';
+import 'package:intl/intl.dart';
 
 class TableItem extends StatefulWidget {
   late final int id;
@@ -45,6 +46,14 @@ class _TableItemState extends State<TableItem> {
     }
 
     final t = tabl.total_price;
+    String updateTime = "- : -";
+    final DateFormat formatter = DateFormat('HH : mm');
+    if(tabl.timeHistory.keys.contains("Buchung")){
+      updateTime = formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000.0).round()));
+    }
+
+    bool dropDownHistoryTime = false;
+    final double dropdownHight = 47;
 
     return GridTile(
       child: GestureDetector(
@@ -129,21 +138,58 @@ class _TableItemState extends State<TableItem> {
                                 fontSize: 11,
                               ),
                             ),
-                            Container(
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(10)),
-                                color: Color(0xFF25363E),
-                              ),
-                              width: 114,
-                              height: 47,
-                              child: Center(
-                                child: Text(
-                                  "16 : 01",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).cardColor,
-                                    fontSize: 25,
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  dropDownHistoryTime = !dropDownHistoryTime;
+                                });
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 100),
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: Color(0xFF25363E),
+                                ),
+                                width: 114,
+                                height: dropDownHistoryTime ? dropdownHight * tabl.timeHistory.length : dropdownHight,
+                                child: dropDownHistoryTime ?
+                                ListView.builder(
+                                  itemCount: tabl.timeHistory.length,
+                                  itemBuilder: (context, i) {
+                                    return Column(
+                                      children: [
+                                        Text(
+                                          tabl.timeHistory.keys.toList()[i],
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context).primaryColorDark,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            formatter.format(DateTime.fromMillisecondsSinceEpoch(tabl.timeHistory.values.toList()[i].round())),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context).cardColor,
+                                              fontSize: 25,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )
+                                :Center(
+                                  child: Text(
+                                    updateTime,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).cardColor,
+                                      fontSize: 25,
+                                    ),
                                   ),
                                 ),
                               ),
