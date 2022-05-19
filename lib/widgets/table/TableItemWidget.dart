@@ -20,6 +20,7 @@ class TableItem extends StatefulWidget {
 class _TableItemState extends State<TableItem> {
   double table_total_price = 0;
   var _isInit = true;
+  bool dropDownHistoryTime = false;
 
   /// Listen for all incoming data
   @override
@@ -47,13 +48,17 @@ class _TableItemState extends State<TableItem> {
 
     final t = tabl.total_price;
     String updateTime = "- : -";
-    final DateFormat formatter = DateFormat('HH : mm');
+    final DateFormat formatter = DateFormat('hh : mm');
     if(tabl.timeHistory.keys.contains("Buchung")){
-      updateTime = formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000.0).round()));
+      if(tabl.timeHistory["Buchung"]! != 0) {
+        updateTime = formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000.0).round()));
+      }
+      print("This is "+ DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000.0).round()).toString());
+      print("For Value: " + tabl.timeHistory["Buchung"].toString());
     }
+    print("LastTime for " + tabl.name + ": " + updateTime);
 
-    bool dropDownHistoryTime = false;
-    final double dropdownHight = 47;
+    const double dropdownHight = 47;
 
     return GridTile(
       child: GestureDetector(
@@ -73,8 +78,8 @@ class _TableItemState extends State<TableItem> {
               Expanded(
                 flex: 6,
                 child: Container(
-                  height: 75,
-                  padding: const EdgeInsets.all(5),
+                  //height: 75,
+                  padding: const EdgeInsets.only(top: 5,left: 5, bottom: 15, right: 5),
                   width: MediaQuery.of(context).size.width / 2,
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -126,10 +131,10 @@ class _TableItemState extends State<TableItem> {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: EdgeInsets.only(right: 10, top: dropDownHistoryTime ? 10 : 0),
                         child: Column(
                           children: [
-                            Text(
+                            dropDownHistoryTime ? Container() : Text(
                               "letzte Buchung",
                               textAlign: TextAlign.start,
                               style: TextStyle(
@@ -142,6 +147,7 @@ class _TableItemState extends State<TableItem> {
                               onTap: (){
                                 setState(() {
                                   dropDownHistoryTime = !dropDownHistoryTime;
+                                  print("Length of hist: " + tabl.timeHistory.length.toString());
                                 });
                               },
                               child: AnimatedContainer(
@@ -164,13 +170,13 @@ class _TableItemState extends State<TableItem> {
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Theme.of(context).primaryColorDark,
+                                            color: Theme.of(context).cardColor,
                                             fontSize: 11,
                                           ),
                                         ),
                                         Center(
-                                          child: Text(
-                                            formatter.format(DateTime.fromMillisecondsSinceEpoch(tabl.timeHistory.values.toList()[i].round())),
+                                          child: Text( tabl.timeHistory.values.toList()[i] == 0 ? "- : -" :
+                                            formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory.values.toList()[i]*1000).round())),
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Theme.of(context).cardColor,

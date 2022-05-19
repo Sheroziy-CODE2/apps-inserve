@@ -19,7 +19,7 @@ class TableModel {
   double total_price;
   final int owner;
   final String type;
-  Map<String, num> timeHistory = {};
+  Map<String, int> timeHistory = {};
 
   bool _isInit = true;
   IOWebSocketChannel? _channel;

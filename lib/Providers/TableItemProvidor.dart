@@ -18,7 +18,7 @@ class TableItemProvidor with ChangeNotifier {
   int user;
   int product;
   int price;
-  num date;
+  int date;
   List<int> side_dish;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
@@ -163,7 +163,7 @@ class TableItemProvidor with ChangeNotifier {
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:
           List<int>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
-      date: jsonResponse["date"] as num,
+      date: jsonResponse["date"]??0,
     );
   }
 
