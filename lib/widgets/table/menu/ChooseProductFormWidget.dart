@@ -38,7 +38,7 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
     final hight = MediaQuery
         .of(context)
         .size
-        .height / 2 - 50;
+        .height / 2;
     return GestureDetector(
       onPanUpdate: (details) {
         updateListWidgets();

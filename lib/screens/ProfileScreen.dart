@@ -176,8 +176,7 @@ class _ProfileState extends State<Profile> {
                                 child: GestureDetector(
                                   onTap: () async {
                                     final ConfigPrinter _configPrinter = ConfigPrinter();
-                                    print("connection " +
-                                        (await _configPrinter.checkState(context: context).toString()));
+                                    print("connection " + (await _configPrinter.checkState()).toString());
                                     BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
                                     var now = DateTime.now();
                                     var formatter = DateFormat('HH:mm dd-MM-yyyy');

@@ -163,7 +163,7 @@ class TableItemProvidor with ChangeNotifier {
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:
           List<int>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
-      date: jsonResponse["date"]??0,
+      date: (int.parse((jsonResponse["date"]??0)) /1000).round(),
     );
   }
 
