@@ -32,11 +32,11 @@ class TableView extends StatelessWidget {
           ),
           child: Column(children: [
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             TableOverviewWidgetFrame(
               height: (MediaQuery.of(context).size.height / 2),
-              height_expended: MediaQuery.of(context).size.height - 77,
+              height_expended: MediaQuery.of(context).size.height - 22,
               width: MediaQuery.of(context).size.width,
               id: tableId,
             ),

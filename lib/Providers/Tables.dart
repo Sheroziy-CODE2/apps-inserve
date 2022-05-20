@@ -95,8 +95,34 @@ class Tables with ChangeNotifier {
     final totalPrice = table
         .tIP
         .getTotalCartTablePrice(context: context)!;
-    if(totalPrice <= 0){
-      return;
+
+    var element = table.tIP.tableItems;
+    List jsonList = [];
+    for (int x = 0; x < element.length; x++) {
+      if (element[x].getInCard() < 1) continue;
+      // add items to the payment list
+      jsonList.add({
+        "quantity": element[x].getInCard(),
+        "order": element[x].id,
+      });
+    }
+
+
+    if(jsonList.isEmpty){
+      try {
+            final _context = MyApp.navKey.currentContext;
+            if(_context!=null){
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    backgroundColor: Colors.orange,
+                    content: Text("Kein Produkt gewählt"),)
+              );
+              return;
+            }
+          }catch(e){
+            print("CurrentContext error: " + e.toString());
+            return;
+          }
     }
 
     final Map<int,String> paymentOptions = {
@@ -150,7 +176,7 @@ class Tables with ChangeNotifier {
                   GestureDetector(
                     onTap: (){
                       Navigator.of(context).pop();
-                      checkout_print(context: context, tableID: tableID, payment: paymentOptions[paymentMethod]!);
+                      checkout_print(tableID: tableID, jsonList: jsonList, payment: paymentOptions[paymentMethod]!);
                     },
                     child: Container(
                       height: 46,
@@ -366,34 +392,15 @@ class Tables with ChangeNotifier {
 
 
 
-  Future<void> checkout_print({required context, required int tableID, required String payment}) async {
-    var element = findById(tableID).tIP.tableItems;
-    List jsonList = [];
-    for (int x = 0; x < element.length; x++) {
-      if (element[x].getInCard() < 1) continue;
-      // add items to the payment list
-      jsonList.add({
-        "quantity": element[x].getInCard(),
-        "order": element[x].id,
-      });
-    }
-    if(jsonList.isEmpty){
-      try {
-        final _context = MyApp.navKey.currentContext;
-        if(_context!=null){
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.orange,
-                content: Text("Kein Produkt gewählt"),)
-          );
-        }
-      }catch(e){
-        print("CurrentContext error: " + e.toString());
-      }
+  Future<void> checkout_print({required int tableID, required jsonList, required String payment}) async {
+
+    final _context = MyApp.navKey.currentContext;
+    if(_context == null) {
+      print("Global context in checkState Tables checkout_printer is null");
       return;
     }
 
-    String token = Provider.of<Authy>(context, listen: false).token;
+    String token = Provider.of<Authy>(_context, listen: false).token;
     final url = Uri.parse(
       'https://www.inspery.com/invoice/invoices_items/',
     );
@@ -408,25 +415,27 @@ class Tables with ChangeNotifier {
     });
     final response = await http.post(url, headers: headers, body: data);
     if (response.statusCode == 201) {
-      print("Response: " + jsonDecode(response.body));
+
+      print("Response: " + jsonDecode(response.body).toString());
+      var jsonReturn = jsonDecode(response.body);
+
+
+      Ingredients ingredientsProvider = Provider.of<Ingredients>(_context, listen: false);
+      Prices priceProvider = Provider.of<Prices>(_context, listen: false);
+      SideDishes sideDishProvider = Provider.of<SideDishes>(_context, listen: false);
+      Products productsProvider = Provider.of<Products>(_context, listen: false);
 
 
 
-
-      print("connection " + (await _configPrinter.checkState(context: context).toString()));
+      print("connection " + (await _configPrinter.checkState()).toString());
 
       BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
-      var now = DateTime.now();
-      var formatter = DateFormat('HH:mm dd-MM-yyyy');
-      String formattedDate = formatter.format(now);
-      String restaurantPhoto =
-          Provider.of<Authy>(context, listen: false).RestaurantPhotoLink;
+      //var now = DateTime.now();
+      //var formatter = DateFormat('HH:mm dd-MM-yyyy');
+      //String formattedDate = formatter.format(now);
+      //String restaurantPhoto = Provider.of<Authy>(context, listen: false).RestaurantPhotoLink;
 
-      var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-      var priceProvidor = Provider.of<Prices>(context, listen: false);
-      var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-      var productsProvidor = Provider.of<Products>(context, listen: false);
 
       const filename = 'yourlogo.png';
       //var bytes = await rootBundle.load(restaurantPhoto);
@@ -439,19 +448,22 @@ class Tables with ChangeNotifier {
           bluetooth.printCustom("INSPARY", 2, 1);
           bluetooth.printImage(pathImage);
           bluetooth.printNewLine();
-          bluetooth.printCustom("Rechnung/Bon-Nr:13", 0, 2);
-          bluetooth.printCustom(formattedDate, 0, 2);
+          bluetooth.printCustom("Rechnung/Bon-Nr: " + jsonReturn["id"].toString(), 0, 2);
+          bluetooth.printCustom(jsonReturn["date"].split(".")[0].replaceFirst("T"," "), 0, 2);
+          bluetooth.printCustom("Tisch: " + jsonReturn["table"].toString(), 0, 2);
           bluetooth.printNewLine();
-          for (int x = 0; x < element.length; x++) {
-            if (element[x].getInCard() < 1) continue;
+
+          List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
+          for (var item in items) {
             bluetooth.print4Column(
-                element[x].getInCard().toString(),
-                productsProvidor.findById(element[x].product).name,
-                priceProvidor.findById(element[x].price).price.toStringAsFixed(2),
-                element[x].getTotalPrice(context: context).toStringAsFixed(2),
+                item["fields"]["quantity"].toString(),
+                productsProvider.findById(item["pk"]).name,
+                "?,??",
+                "?,??",
                 1,
                 format: "%2s %15s %5s %5s %n");
 
+            /*
             List<int> sideDishes = element[x].side_dish;
             Map<int, int> sd_map = {};
             sideDishes.forEach((sd) {
@@ -464,8 +476,8 @@ class Tables with ChangeNotifier {
             sd_map.keys.forEach((id) {
               bluetooth.print4Column(
                   sd_map[id].toString(),
-                  sideDishProvidor.findById(id).name,
-                  sideDishProvidor
+                  sideDishProvider.findById(id).name,
+                  sideDishProvider
                       .findById(id)
                       .secondary_price
                       .toStringAsFixed(2),
@@ -486,22 +498,24 @@ class Tables with ChangeNotifier {
             ai_map.keys.forEach((id) {
               bluetooth.print4Column(
                   ai_map[id].toString(),
-                  ingredientsProvidor.findById(id).name,
-                  ingredientsProvidor.findById(id).price.toStringAsFixed(2),
+                  ingredientsProvider.findById(id).name,
+                  ingredientsProvider.findById(id).price.toStringAsFixed(2),
                   "",
                   0,
                   format: "%1s %20s %5s %5s %n");
-            });
+            });*/
           }
+
           bluetooth.printCustom("--------------------------------", 1, 0);
           bluetooth.printLeftRight(
               "SUMME",
               findById(tableID)
                   .tIP
-                  .getTotalCartTablePrice(context: context)!
-                  .toStringAsFixed(2),
+                  .getTotalCartTablePrice(context: _context)!
+                  .toStringAsFixed(2) + "EUR",
               3);
           bluetooth.printCustom("--------------------------------", 1, 0);
+          bluetooth.printCustom("Zahlungsmethode: " + payment, 0, 2);
           bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
           bluetooth.printNewLine();
           bluetooth.printNewLine();
@@ -513,8 +527,8 @@ class Tables with ChangeNotifier {
 
       if(payment == "Bar") {
         showCalculator(
-            context: context,
-            amount: findById(tableID).tIP.getTotalCartTablePrice(context: context)!,
+            context: _context,
+            amount: findById(tableID).tIP.getTotalCartTablePrice(context: _context)!,
         );
       }
 
