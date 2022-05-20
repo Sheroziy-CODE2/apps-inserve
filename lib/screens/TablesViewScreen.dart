@@ -43,24 +43,58 @@ class _TablesViewState extends State<TablesView> {
     final opendTables = tablesData.items;
 
     for (int i = 0;
-        opendTables.length != null ? i < opendTables.length : i > 5;
-        i++) {}
+    opendTables.length != null ? i < opendTables.length : i > 5;
+    i++) {}
     return Scaffold(
       bottomNavigationBar: const NavBar(selectedIcon: 2),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Container(
-              color: Theme.of(context).cardColor,
-              width: MediaQuery.of(context).size.width,
-              child: ListView.builder(
-                itemCount: opendTables.length,
-                itemBuilder: (context, i) => TableItem(
-                  id: opendTables[i].id,
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.bottomRight,
+                //stops: const [0, 1],
+                colors: [
+                  const Color(0x00535353).withOpacity(.8),
+                  const Color(0xFF535353).withOpacity(.1)
+                ])),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 30,),
+            const Text("Offene Tische", style: TextStyle(fontSize: 16),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.only(right: 15),
+                  child: Icon(Icons.multiple_stop, size: 28,color: Color(0xFF7B7B7B),),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 15),
+                  child: Icon(Icons.supervised_user_circle_outlined, size: 28,color: Color(0xFF7B7B7B)),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 15),
+                  child: Icon(Icons.settings, size: 28,color: Color(0xFF7B7B7B)),
+                ),
+              ],
+            ),
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                child: CircularProgressIndicator(),
+              )
+                  : SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  itemCount: opendTables.length,
+                  itemBuilder: (context, i) => TableItem(
+                    id: opendTables[i].id,
+                  ),
                 ),
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 }

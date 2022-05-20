@@ -21,6 +21,14 @@ class TableItemsProvidor with ChangeNotifier {
     return [..._tableItems];
   }
 
+  int getTimeFromLastInputProduct(){
+    int retunrTime = 0;
+    for (var element in _tableItems) {
+      if(retunrTime < element.date) retunrTime = element.date;
+    }
+    return retunrTime;
+  }
+
   void delete(item) {
     _tableItems.remove(item);
   }
@@ -105,11 +113,14 @@ class TableItemsProvidor with ChangeNotifier {
 
   ///Set all Items in the TableOverviewProductItem Widget to paymode
   void setItemsPaymode({required bool paymode, required context}) {
-    for (int x = 0; x < _tableItems.length; x++) {
-      _tableItems[x].paymode = paymode;
+    try {
+      for (int x = 0; x < _tableItems.length; x++) {
+        _tableItems[x].paymode = paymode;
+      }
+      notify(context: context);
+      notifyListeners();
     }
-    notify(context: context);
-    notifyListeners();
+    catch(e){print("SetPaymode failed: " + e.toString());}
   }
 
   void setHightModeExtendet({required hight_mode_extendet, required context}){

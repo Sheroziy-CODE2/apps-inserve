@@ -18,6 +18,7 @@ class TableItemProvidor with ChangeNotifier {
   int user;
   int product;
   int price;
+  int date;
   List<int> side_dish;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
@@ -143,6 +144,7 @@ class TableItemProvidor with ChangeNotifier {
     this.side_dish = const [0],
     this.added_ingredients = const [0],
     this.deleted_ingredients = const [0],
+    this.date = 0,
   });
 
   factory TableItemProvidor.fromResponse(response) {
@@ -161,6 +163,7 @@ class TableItemProvidor with ChangeNotifier {
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:
           List<int>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
+      date: jsonResponse["date"]??0,
     );
   }
 
