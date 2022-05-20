@@ -82,6 +82,8 @@ flutter:
   assets:
     - assets/illustrations/possystem.svg
     - assets/illustrations/inspery.svg
+    - assets/images/PayCard.png
+    - assets/images/PayCash.png
     - assets/img/logo.png
     - assets/images/yourlogo.png #this logo will be printet in the TestPrinterWidget
 
