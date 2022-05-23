@@ -63,9 +63,9 @@ class Categorys with ChangeNotifier {
     notifyListeners();
   }
 
-  Category findById(String id) {
+  Category findById(int id) {
     //this function will search for a category by ID
-    return _items.firstWhere((t) => t.id.toString() == id,
+    return _items.firstWhere((t) => t.id == id,
         orElse: () => Category(
               id: 0,
               name: '0',

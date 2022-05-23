@@ -52,6 +52,14 @@ class Tables with ChangeNotifier {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
+  bool isItemFromWaiter({required int tableID}){
+    var tableItems = findById(tableID).tIP.tableItems;
+    for (var element in tableItems) {
+      if(element.fromWaiter) return true;
+    }
+    return false;
+  }
+
   Future<void> checkoutItemsToSocket(
       {required context, required int tableID}) async {
     var table = findById(tableID);
