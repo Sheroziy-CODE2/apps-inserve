@@ -14,12 +14,14 @@ class CategorysColumn extends StatefulWidget {
   int id = 0;
   ScrollController scrollController = ScrollController();
   final elementsShown = 6;
+  final int categorieID;
 
   CategorysColumn({
     Key? key,
     required this.id,
     required this.name,
     required this.categoryHandler,
+    required this.categorieID
   }) : super(key: key);
 
   @override
@@ -45,12 +47,10 @@ class CategorysColumnState extends State<CategorysColumn> {
     final categorysData = Provider.of<Categorys>(
       context,
     ); //category provider
-    final drinks = categorysData.items.where((i) => i.category_type == 2).toList();
-    //drinks category items
-    final food = categorysData.items.where((i) => i.category_type != 2).toList();
-    //drinks category items-
-    // final String id = ModalRoute.of(context)?.settings.arguments as String;
-    final tablData = Provider.of<Tables>(context, listen: false);
+    final categorieitems = categorysData.items.where((i) =>
+      i.category_type == widget.categorieID
+    ).toList();
+
     int id = widget.id.toInt();
 
     Widget icon = widget.name == 'Getränke' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
@@ -67,11 +67,8 @@ class CategorysColumnState extends State<CategorysColumn> {
     }
 
 
-    while(drinks.length % widget.elementsShown != 0){
-      drinks.add(Category(id: -1, name: "Platzhalter", category_type: 0));
-    }
-    while(food.length % widget.elementsShown != 0){
-      food.add(Category(id: -1, name: "Platzhalter", category_type: 0));
+    while(categorieitems.length % widget.elementsShown != 0){
+      categorieitems.add(Category(id: -1, name: "Platzhalter", category_type: 0));
     }
 
 
@@ -91,11 +88,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                     child: Container(),
                     backgroundColor:
                     selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                    widget.name == 'Getränke'
-                        ? drinks[selectedIndex].id == id
-                        ? const Color(0xFFD3E03A)
-                        : const Color(0xFFD1D1D1)
-                        : food[selectedIndex].id == id
+                    categorieitems[selectedIndex].id == id
                         ? const Color(0xFFD3E03A)
                         : const Color(0xFFD1D1D1),
                   ),
@@ -107,11 +100,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                      widget.name == 'Getränke'
-                          ? drinks[selectedIndex].id == id
-                          ? const Color(0xFF1B262C)
-                          : const Color(0xFFD1D1D1)
-                          : food[selectedIndex].id == id
+                      categorieitems[selectedIndex].id == id
                           ? const Color(0xFF1B262C)
                           : const Color(0xFFD1D1D1),
                     ),
@@ -147,19 +136,16 @@ class CategorysColumnState extends State<CategorysColumn> {
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
                   scrollDirection: Axis.vertical,
-                  itemCount:
-                  widget.name == 'Getränke' ? drinks.length : food.length,
+                  itemCount:categorieitems.length,
                   itemBuilder: (context, index) {
                     return SizedBox(
                       height: elementHight,
-                      child: (widget.name == 'Getränke' ? drinks[index].id == -1 :  food[index].id == -1) ? Container() :
+                      child: categorieitems[index].id == -1 ? Container() :
                         GestureDetector(
                         onTap: () {
                           selectedIndex = index;
                           changeCategory(
-                              widget.name == 'Getränke'
-                                  ? drinks[index]
-                                  : food[index]);
+                              categorieitems[index]);
                         },
                         child: Container(
                           padding: const EdgeInsets.only(
@@ -167,11 +153,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                           decoration: BoxDecoration(
                             // border:
                             //     Border.all(color: Colors.blueAccent),
-                            color: widget.name == 'Getränke'
-                                ? drinks[index].id == id
-                                ? const Color(0xFFD3E03A)
-                                : const Color(0xFFD1D1D1)
-                                : food[index].id == id
+                            color: categorieitems[index].id == id
                                 ? const Color(0xFFD3E03A)
                                 : const Color(0xFFD1D1D1),
 
@@ -189,9 +171,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    widget.name == 'Getränke'
-                                        ? drinks[index].name
-                                        : food[index].name,
+                                    categorieitems[index].name,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontSize: 12,

@@ -4,12 +4,15 @@ import '../../../Providers/TableItemChangeProvidor.dart';
 import '../../../Models/Product.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Providers/Tables.dart';
+
 class ProductsColumn extends StatefulWidget {
   // this is the column of product in ChooseProductForm
   final int id;
   final int tableID;
+  final Function goToNextPos;
 
-  ProductsColumn({required this.id, required this.tableID});
+  ProductsColumn({required this.id, required this.tableID, required this.goToNextPos});
 
   @override
   State<ProductsColumn> createState() => _ProductsColumnState();
@@ -32,7 +35,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
       });
     } else {
       final categorysData = Provider.of<Categorys>(context, listen: false);
-      final category = categorysData.findById(widget.id.toString());
+      final category = categorysData.findById(widget.id);
       setState(() {
         products = category.products;
       });
@@ -58,7 +61,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
     } else {
       setState(() {
         final categorysData = Provider.of<Categorys>(context, listen: false);
-        final category = categorysData.findById(widget.id.toString());
+        final category = categorysData.findById(widget.id);
         setState(() {
           products = category.products;
         });
@@ -76,7 +79,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
     if (search == '') {
       setState(() {
         final categorysData = Provider.of<Categorys>(context, listen: false);
-        final category = categorysData.findById(widget.id.toString());
+        final category = categorysData.findById(widget.id);
         setState(() {
           products = category.products;
         });
@@ -135,11 +138,16 @@ class _ProductsColumnState extends State<ProductsColumn> {
                 itemCount: productsList.length,
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
-                    Provider.of<TableItemChangeProvidor>(context, listen: false)
-                        .addProduct(
-                            context: context,
-                            productID: productsList[index].id,
-                            tableID: widget.tableID);
+                    final tip = Provider.of<TableItemChangeProvidor>(context, listen: false);
+                    int? itemPos = tip.getActProduct();
+                    var itemList = Provider.of<Tables>(context, listen: false).findById(widget.tableID).tIP;
+                    if(itemPos == null) {
+                      Provider.of<TableItemChangeProvidor>(context, listen: false)
+                        .addProduct(context: context, productID: productsList[index].id, tableID: widget.tableID, refresh: false);
+                      itemPos = itemList.getLength()-1;
+                    }
+                    itemList.editItemFromWaiter(context: context, itemPos: itemPos ,product: productsList[index].id);
+                    widget.goToNextPos(indicator: productsList[index].name);
                   },
                   child: Container(
                     padding: const EdgeInsets.only(

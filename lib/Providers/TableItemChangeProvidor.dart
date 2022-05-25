@@ -1,14 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:inspery_pos/Models/Product.dart';
-import 'package:inspery_pos/Providers/Authy.dart';
-import 'package:inspery_pos/Providers/SideDishes.dart';
 import 'package:inspery_pos/Providers/TableItemProvidor.dart';
 import 'package:provider/provider.dart';
-import '../Models/SideDish.dart';
-import '../Models/TableModel.dart';
 import 'Products.dart';
-import 'TableItemsProvidor.dart';
 import 'Tables.dart';
 
 
@@ -23,14 +17,13 @@ class TableItemChangeProvidor extends ChangeNotifier {
 
   ///Call this Function to add a Product to the TableItemsProvidor
   ///In Future it will not hand it directly to the Providor, it will do it via the Websocket
-  addProduct({required context, required productID, required int tableID}){
-    print("Add Item");
-    // //TODO: Replace the next line with a Serverrequest when the WebSockets are implemented - Andi 30.03
-     // Provider.of<TableItemsProvidor>(context, listen: false).addProduct(productID: productID, tableName: tableName);
-    var tablesProvider = Provider.of<Tables>(context, listen: false);
+  void addProduct({required context, required productID, required int tableID, bool refresh = true}){
+    final tablesProvider = Provider.of<Tables>(context, listen: false);
     var procuct = Provider.of<Products>(context, listen:  false).findById(productID);
     _productPosInItem = tablesProvider.findById(tableID).tIP.getItemLenth();
-    tablesProvider.findById(tableID).tIP.addItemFromWaiter(
+    var items = tablesProvider.findById(tableID).tIP;
+    items.addItemFromWaiter(
+      refresh: refresh,
         newItem:
         TableItemProvidor(
           product: productID,
@@ -43,9 +36,13 @@ class TableItemChangeProvidor extends ChangeNotifier {
           added_ingredients: [],
         ),
     );
-    tablesProvider.notify();//Workarround beause we use only the Tables Providor
-    notifyListeners();
+    if(refresh) {
+      tablesProvider
+          .notify(); //Workarround beause we use only the Tables Providor
+      notifyListeners();
+    }
   }
+
 
   ///Set this to true if you want to pay, false if you only want to see what is on the table in the TableOverviewProductList
   void setPaymode({required paymode, required context}){

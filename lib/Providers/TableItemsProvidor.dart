@@ -21,6 +21,8 @@ class TableItemsProvidor with ChangeNotifier {
     return [..._tableItems];
   }
 
+  //late TableItemProvidor _tableItemInBuffer; //This is a item that is just in configuration
+
   int getTimeFromLastInputProduct(){
     int retunrTime = 0;
     for (var element in _tableItems) {
@@ -82,11 +84,13 @@ class TableItemsProvidor with ChangeNotifier {
     notifyListeners();
   }
 
-  void addItemFromWaiter({required TableItemProvidor newItem}) {
+  void addItemFromWaiter({required TableItemProvidor newItem, bool refresh = true}) {
     print("Add item from Waiter to list");
     _tableItems.add(newItem);
     _tableItems.last.fromWaiter = true;
-    notifyListeners();
+    if(refresh) {
+      notifyListeners();
+    }
   }
 
   int getItemLenth() {
@@ -264,4 +268,38 @@ class TableItemsProvidor with ChangeNotifier {
           'TabelOverviewWidget: Request failed with status: ${response.statusCode}.');
     }
   }
+
+
+  void editItemFromWaiter({
+    required context,
+    required itemPos,
+    int? quantity,
+    int? saved_table,
+    int? user,
+    int? product,
+    int? price,
+    int? date,
+    List<int>? side_dish,
+    List<int>? added_ingredients,
+    List<int>? deleted_ingredients,
+  }){
+    if(_tableItems[itemPos].isFromServer()){
+      print("You are not allowed to Addid this item");
+      return;
+    }
+    if(quantity != null){_tableItems[itemPos].quantity = quantity;}
+    if(saved_table!= null){_tableItems[itemPos].saved_table = saved_table;}
+    if(user!= null){_tableItems[itemPos].user = user;}
+    if(product!= null){_tableItems[itemPos].product = product;}
+    if(price!= null){_tableItems[itemPos].price = price;}
+    if(date!= null){_tableItems[itemPos].date = date;}
+    if(side_dish!= null){_tableItems[itemPos].side_dish = side_dish;}
+    if(added_ingredients!= null){_tableItems[itemPos].added_ingredients = added_ingredients;}
+    if(deleted_ingredients!= null){_tableItems[itemPos].deleted_ingredients = deleted_ingredients;}
+    _tableItems[itemPos].fromWaiter = true;
+    notify(context: context);
+  }
+
+
+
 }

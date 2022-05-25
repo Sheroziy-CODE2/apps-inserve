@@ -4,13 +4,17 @@ import '../../../Models/Product.dart';
 import 'CategorysColumnWidget.dart';
 import '../../../../Providers/Category.dart';
 import 'ProductsColumnWidget.dart';
+import 'dart:math';
 
 class ChooseProductForm extends StatefulWidget {
   // this form is to choose a product and add it as an order to the table!
   // it consists of 2 other widgets which are: ProductsColumnWidget and CategorysColumnWidget
   late List<Product> products;
   final int tableName;
-  ChooseProductForm({required this.tableName});
+  final Function goToNextPos;
+  final int categorieIDLeft;
+  final int categorieIDRight;
+  ChooseProductForm({required this.tableName, required this.goToNextPos, required this.categorieIDLeft, required this.categorieIDRight});
 
   @override
   State<ChooseProductForm> createState() => _ChooseProductFormState();
@@ -21,13 +25,11 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
   int id = 0;
   bool rotate = false;
   final List<GlobalKey<CategorysColumnState>> list_key = List.generate(
-      2, (index) => GlobalObjectKey<CategorysColumnState>(index));
+      2, (index) => GlobalObjectKey<CategorysColumnState>(index*Random().nextInt(100)));
+
 
 
   changeCategory(category) {
-    setState(() {
-      category = category;
-    });
     setState(() {
       id = category.id;
     });
@@ -35,10 +37,11 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
 
   @override
   Widget build(BuildContext context) {
+
     final hight = MediaQuery
         .of(context)
         .size
-        .height / 2;
+        .height / 2 -20;
     return GestureDetector(
       onPanUpdate: (details) {
         updateListWidgets();
@@ -65,7 +68,9 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
                     key: list_key[0],
                     id: id,
                     name: 'Getränke',
-                    categoryHandler: changeCategory),
+                    categorieID: widget.categorieIDLeft,
+                    categoryHandler: changeCategory,
+                ),
                 Positioned(
                   left: 20,
                   right: 20,
@@ -101,6 +106,7 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
             child: ProductsColumn(
               id: id,
               tableID: widget.tableName,
+              goToNextPos: widget.goToNextPos,
             ),
           ),
           AnimatedPositioned(
@@ -118,10 +124,13 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
             curve: Curves.fastOutSlowIn,
             child: Stack(
               children: [
-                CategorysColumn(key: list_key[1],
+                CategorysColumn(
+                    key: list_key[1],
                     id: id,
                     name: 'Speisen',
-                    categoryHandler: changeCategory),
+                  categorieID: widget.categorieIDRight,
+                    categoryHandler: changeCategory,
+                ),
                 Positioned(
                   left: 20,
                   right: 20,

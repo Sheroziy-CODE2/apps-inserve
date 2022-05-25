@@ -140,16 +140,16 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
               ),
               //const SizedBox(height: 5,),
               TableOverviewProductList(id: widget.id),
-              selectedItem != -1
-                  ? const SizedBox(
-                height: 5,
-              )
-                  : Container(),
-              TableOverviewChangeProduct(
-                  height: widget.height,
-                  width: widget.width,
-                  height_expended: widget.height_expended,
-                  tableID: widget.id),
+              // selectedItem != -1
+              //     ? const SizedBox(
+              //   height: 5,
+              // )
+              //     : Container(),
+              // TableOverviewChangeProduct(
+              //     height: widget.height,
+              //     width: widget.width,
+              //     height_expended: widget.height_expended,
+              //     tableID: widget.id),
               Row(
                 children: [
                   const SizedBox(
@@ -296,6 +296,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                   ) :
                   Row(
                     children: [
+                      tablesprov.isItemFromWaiter(tableID: widget.id) ?
                       SizedBox(
                         height: 40,
                         width: 130,
@@ -324,7 +325,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                                 ],
                               )),
                         ),
-                      ),
+                      ): Container(),
                       const SizedBox(
                         width: 6,
                       ),
