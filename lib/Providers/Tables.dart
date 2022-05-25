@@ -570,9 +570,8 @@ class Tables with ChangeNotifier {
                 }
                 this._items[i].tIP.setItems(_tIPItems);
                 // notifyListeners();
-                _items[i].timeHistory.putIfAbsent("Buchung", () => _items[i].tIP.getTimeFromLastInputProduct());
-                _items[i].timeHistory.putIfAbsent("Syncronisierung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
-                print("Timestamp: " + (DateTime.now().millisecondsSinceEpoch/1000).round().toString());
+                _items[i].timeHistory["Buchung"] = _items[i].tIP.getTimeFromLastInputProduct();
+                _items[i].timeHistory["Syncronisierung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
                 break;
 
               case 'table_items':
@@ -587,7 +586,7 @@ class Tables with ChangeNotifier {
                 this._items[i].total_price =
                 data['table_items']['table']['total_price'].toDouble()
                 as double;
-                _items[i].timeHistory.putIfAbsent("Buchung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
+                _items[i].timeHistory["Buchung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
                 notifyListeners();
                 break;
 
@@ -598,14 +597,14 @@ class Tables with ChangeNotifier {
                   this._items[i].tIP.deleteItemsFromServer(
                       body['fields']['quantity'], body['fields']['order']);
                 }
-                _items[i].timeHistory.putIfAbsent("Loeschung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
+                _items[i].timeHistory["Loeschung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
                 break;
 
               case 'transfer_table_items':
                 List<int> products = data['transfer'];
                 var newTable = data['new_table'];
                 _items[i].tIP.transfereTableItem(newTable: newTable, products: products, context: context);
-                _items[i].timeHistory.putIfAbsent("Tischumbuchung", () => (DateTime.now().millisecondsSinceEpoch/1000).round());
+                _items[i].timeHistory["Tischumbuchung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
                 break;
 
               default:
