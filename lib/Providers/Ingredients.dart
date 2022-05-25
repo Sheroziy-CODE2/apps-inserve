@@ -13,12 +13,15 @@ class Ingredients with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> addIngredients() async {
+  Future<void> addIngredients({required token}) async {
     // this function will add ingredients to the _items List
     final url = Uri.parse(
       'https://www.inspery.com/menu/ingriedients/',
     );
-    final headers = {"Content-type": "application/json"};
+    final headers = {
+      "Content-type": "application/json",
+      "Authorization": "Token ${token}"
+    };
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {

@@ -55,13 +55,12 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
     await {
       tablesData.addTabl(token: token).then((_) async {
         Provider.of<Categorys>(context, listen: false).addCategory();
-        Provider.of<Ingredients>(context, listen: false).addIngredients();
-        _isInit = false;
         final token_provider = Provider.of<Authy>(context, listen: false);
+        _isInit = false;
         final token = token_provider.token;
+        Provider.of<Ingredients>(context, listen: false).addIngredients(token: token);
         Provider.of<Prices>(context, listen: false).addPrices(token: token);
-        Provider.of<SideDishes>(context, listen: false)
-            .addSideDishes(token: token);
+        Provider.of<SideDishes>(context, listen: false).addSideDishes(token: token);
         Provider.of<Products>(context, listen: false).addProducts(token: token);
 
         for (var i = 0; i < tablesData.items.length; i++) {
