@@ -7,7 +7,7 @@ import 'package:web_socket_channel/io.dart';
 
 import 'Ingredients.dart';
 import 'Products.dart';
-import 'SideDishes.dart';
+import 'SideProducts.dart';
 import 'Tables.dart';
 
 class TableItemProvidor with ChangeNotifier {
@@ -20,7 +20,7 @@ class TableItemProvidor with ChangeNotifier {
   int product;
   int? selected_price;
   int date;
-  List<int> side_dish;
+  List<int> side_product;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
 
@@ -101,13 +101,13 @@ class TableItemProvidor with ChangeNotifier {
     List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
     double value = 0;
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
+    var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
     if(selected_price!=null) value +=  productPriceList[selected_price!].price;
     added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
-    side_dish.forEach((sd) {
-      value += sideDishProvidor.findById(sd).secondary_price;
+    side_product.forEach((sd) {
+      value += sideProductProvidor.findById(sd).price;
     });
     if (checkout ?? paymode) {
       value *= getAmountInCard();
@@ -119,9 +119,13 @@ class TableItemProvidor with ChangeNotifier {
 
   String getExtrasWithSemicolon({required context}) {
     String ret = "";
-    var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-    side_dish.forEach((element) {
-      ret += sideDishProvidor.findById(element).name + ", ";
+    var sideDishProvidor = Provider.of<SideProducts>(context, listen: false);
+    var productProvidor = Provider.of<Products>(context, listen: false);
+    var productPro = productProvidor.findById(product);
+    ret += productPro.product_price[selected_price!].description + ", ";
+
+    side_product.forEach((element) {
+      ret += productProvidor.findById(sideDishProvidor.findById(element).product).name + ", ";
     });
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     added_ingredients.forEach((element) {
@@ -143,9 +147,9 @@ class TableItemProvidor with ChangeNotifier {
     this.user = 0,
     this.product = 0,
     this.selected_price = 0,
-    this.side_dish = const [0],
-    this.added_ingredients = const [0],
-    this.deleted_ingredients = const [0],
+    this.side_product = const [],
+    this.added_ingredients = const [],
+    this.deleted_ingredients = const [],
     this.date = 0,
   });
 
@@ -160,7 +164,7 @@ class TableItemProvidor with ChangeNotifier {
       user: jsonResponse["user"] as int,
       product: jsonResponse["product"] as int,
       selected_price: jsonResponse["selected_price"] as int,
-      side_dish: List<int>.from(jsonResponse["side_dish"] as List<dynamic>),
+      side_product: List<int>.from(jsonResponse["side_dish"] as List<dynamic>),
       added_ingredients:
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:

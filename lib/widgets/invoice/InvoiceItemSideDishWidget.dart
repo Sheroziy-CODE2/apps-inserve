@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:inspery_pos/Providers/Products.dart';
 import 'package:provider/provider.dart';
 
+import '../../Providers/SideProducts.dart';
 import '../reusable/CenterText.dart';
-import '../../Providers/SideDishes.dart';
 
 class InvoiceItemSideDishWidget extends StatelessWidget {
   // this widget is used to show a line of information about a side dish in the invoice
@@ -11,8 +12,9 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sideDishProvider = Provider.of<SideDishes>(context, listen: false);
+    final sideDishProvider = Provider.of<SideProducts>(context, listen: false);
     final sideDish = sideDishProvider.findById(id);
+    final product = Provider.of<Products>(context, listen: false).findById(sideDish.product);
     return Material(
       type: MaterialType.transparency,
       child: Container(
@@ -37,12 +39,12 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 4,
-                  child: CenterText(text: sideDish.name.toString()),
+                  child: CenterText(text: product.name),
                 ),
                 Expanded(
                   flex: 4,
                   child: Text(
-                    '  ${sideDish.secondary_price} Euro',
+                    '  ${sideDish.price} Euro',
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:inspery_pos/Providers/Products.dart';
 import 'package:provider/provider.dart';
 import 'Ingredients.dart';
-import 'SideDishes.dart';
+import 'SideProducts.dart';
 import 'TableItemProvidor.dart';
 
 import 'Tables.dart';
@@ -192,9 +192,9 @@ class TableItemsProvidor with ChangeNotifier {
     _tableItems[pos].added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
-    var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-    _tableItems[pos].side_dish.forEach((sd) {
-      value += sideDishProvidor.findById(sd).secondary_price;
+    var sideProductsProvidor = Provider.of<SideProducts>(context, listen: false);
+    _tableItems[pos].side_product.forEach((sd) {
+      value += sideProductsProvidor.findById(sd).price;
     });
     if (paymode) {
       value *= _tableItems[pos].getAmountInCard();
@@ -279,7 +279,7 @@ class TableItemsProvidor with ChangeNotifier {
     int? product,
     int? selected_price,
     int? date,
-    List<int>? side_dish,
+    List<int>? side_product,
     List<int>? added_ingredients,
     List<int>? deleted_ingredients,
   }){
@@ -293,7 +293,7 @@ class TableItemsProvidor with ChangeNotifier {
     if(product!= null){_tableItems[itemPos].product = product;}
     if(selected_price!= null){_tableItems[itemPos].selected_price = selected_price;}
     if(date!= null){_tableItems[itemPos].date = date;}
-    if(side_dish!= null){_tableItems[itemPos].side_dish = side_dish;}
+    if(side_product!= null){_tableItems[itemPos].side_product = side_product;}
     if(added_ingredients!= null){_tableItems[itemPos].added_ingredients = added_ingredients;}
     if(deleted_ingredients!= null){_tableItems[itemPos].deleted_ingredients = deleted_ingredients;}
     _tableItems[itemPos].fromWaiter = true;

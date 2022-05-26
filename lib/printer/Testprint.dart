@@ -53,24 +53,7 @@ class TestPrint {
               1,
               format: "%2s %15s %5s %5s %n");
 
-          List<int> sideDishes = element.side_dish;
           Map<int, int> sd_map = {};
-          sideDishes.forEach((sd) {
-            if (!sd_map.containsKey(sd)) {
-              sd_map[sd] = 1;
-            } else {
-              sd_map[sd] = sd_map[sd] ?? 0 + 1;
-            }
-          });
-          sd_map.keys.forEach((id) {
-            bluetooth.print4Column(
-                sd_map[id].toString(),
-                "sideDish", //sideDishProvidor.findById(id.toString()).name,
-                "2,00", //sideDishProvidor.findById(id.toString()).secondary_price.toStringAsFixed(2),
-                "",
-                0,
-                format: "%1s %20s %5s %5s %n");
-          });
 
           List<int> added_ingredients = element.added_ingredients;
           Map<int, int> ai_map = {};
