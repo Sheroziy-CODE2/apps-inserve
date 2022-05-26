@@ -9,8 +9,8 @@ class Category extends ChangeNotifier {
   final String name;
   final int category_type;
   List<Product> products = [];
-  final String product_type;
-  final String picture;
+  final String? product_type;
+  final String? picture;
   final type;
 
   Category({
@@ -32,9 +32,9 @@ class Category extends ChangeNotifier {
       name: jsonResponse["name"] as String,
       id: jsonResponse["id"] as int,
       category_type: jsonResponse["category_type"] as int,
-      product_type: jsonResponse["product_type"] as String,
+      product_type: jsonResponse["product_type"],
       type: jsonResponse["typ"],
-      picture: jsonResponse["picture"] as String,
+      picture: jsonResponse["picture"],
     );
   }
 }
