@@ -9,11 +9,17 @@ class Category extends ChangeNotifier {
   final String name;
   final int category_type;
   List<Product> products = [];
+  final String product_type;
+  final String picture;
+  final type;
 
   Category({
     required this.id,
     required this.name,
     required this.category_type,
+    required this.picture,
+    required this.product_type,
+    required this.type,
   });
 
   changePropducts(productList) {
@@ -26,6 +32,9 @@ class Category extends ChangeNotifier {
       name: jsonResponse["name"] as String,
       id: jsonResponse["id"] as int,
       category_type: jsonResponse["category_type"] as int,
+      product_type: jsonResponse["product_type"] as String,
+      type: jsonResponse["typ"],
+      picture: jsonResponse["picture"] as String,
     );
   }
 }
