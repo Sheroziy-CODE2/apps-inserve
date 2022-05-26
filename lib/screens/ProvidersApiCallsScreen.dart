@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../Providers/Authy.dart';
-import '../Providers/SideDishes.dart';
 
 import 'package:provider/provider.dart';
+import '../Providers/SideProducts.dart';
 import '../Providers/Tables.dart';
 import '../Providers/Categorys.dart';
 import '../Providers/Ingredients.dart';
@@ -59,7 +59,7 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
         final token = token_provider.token;
         Provider.of<Ingredients>(context, listen: false).addIngredients(token: token, context: context);
         //Provider.of<Prices>(context, listen: false).addPrices(token: token);
-        Provider.of<SideDishes>(context, listen: false).addSideDishes(token: token);
+        Provider.of<SideProducts>(context, listen: false).addSideProducts(token: token);
         Provider.of<Products>(context, listen: false).addProducts(token: token, context: context);
 
         for (var i = 0; i < tablesData.items.length; i++) {
