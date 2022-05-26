@@ -69,6 +69,9 @@ class Categorys with ChangeNotifier {
               id: 0,
               name: '0',
               category_type: 0,
+              product_type: '',
+              picture: '',
+              type: null,
             ));
   }
 }
