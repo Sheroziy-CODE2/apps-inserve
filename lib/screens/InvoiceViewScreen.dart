@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:inspery_pos/widgets/invoice/InvoiceTaxinfo.dart';
-// import 'package:inspery_pos/Providers/categoryss.dart';
 import '../widgets/invoice/InvoiceOrderWidget.dart';
 import 'SplashScreen.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +11,6 @@ import '../Models/Invoice.dart';
 import '../Models/InvoiceItem.dart';
 import '../widgets/reusable/InvoiceSeparator.dart';
 import '../widgets/invoice/InvoiceRestaurantInfo.dart';
-import 'package:inspery_pos/widgets/invoice/InvoiceTaxinfo.dart';
 
 import 'dart:convert' as convert;
 
@@ -167,7 +165,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                           removeBottom: false,
                         ),
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItems.length,
                           itemBuilder: (context, index) => InvoiceOrderWidget(
@@ -178,7 +176,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                     Column(children: [
                       const InvoiceSeparator(color: Color(0xFF2C3333)),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Material(
                           type: MaterialType.transparency,
                           child: Row(children: [

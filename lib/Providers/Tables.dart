@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inspery_pos/Providers/TableItemProvidor.dart';
 import 'package:inspery_pos/printer/ConfigPrinter.dart';
-import 'package:inspery_pos/printer/Testprint.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -16,15 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';
 import 'Authy.dart';
-import 'Ingredients.dart';
-import 'Prices.dart';
 import 'Products.dart';
-import 'SideDishes.dart';
 
 class Tables with ChangeNotifier {
   List<TableModel> _items = [];
@@ -72,7 +67,7 @@ class Tables with ChangeNotifier {
         "quantity": elements[i].quantity,
         "table": tableID,
         "product": elements[i].product,
-        "price": elements[i].price,
+        "selected_price": elements[i].selected_price,
         "side_dish": [],
         // elements[i].side_dish
         "added_ingredients": elements[i].added_ingredients,
@@ -428,9 +423,8 @@ class Tables with ChangeNotifier {
       var jsonReturn = jsonDecode(response.body);
 
 
-      Ingredients ingredientsProvider = Provider.of<Ingredients>(_context, listen: false);
-      Prices priceProvider = Provider.of<Prices>(_context, listen: false);
-      SideDishes sideDishProvider = Provider.of<SideDishes>(_context, listen: false);
+      //Ingredients ingredientsProvider = Provider.of<Ingredients>(_context, listen: false);
+      //SideDishes sideDishProvider = Provider.of<SideDishes>(_context, listen: false);
       Products productsProvider = Provider.of<Products>(_context, listen: false);
 
 
@@ -554,7 +548,6 @@ class Tables with ChangeNotifier {
   Future<void> connectSocket(
       {required id, required context, required token}) async {
     // if there is no connection yet connect the channel
-    var table = findById(id);
     print('ws://inspery.com/ws/restaurant_tables/${id}/?=${token}');
     sleep(const Duration(milliseconds: 300));
     for (int i = 0; i < _items.length; i++) {

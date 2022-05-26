@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:inspery_pos/Models/ProductPrice.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'Ingredients.dart';
-import 'Prices.dart';
+import 'Products.dart';
 import 'SideDishes.dart';
 import 'Tables.dart';
 
@@ -17,7 +18,7 @@ class TableItemProvidor with ChangeNotifier {
   int saved_table;
   int user;
   int product;
-  int price;
+  int? selected_price;
   int date;
   List<int> side_dish;
   List<int> added_ingredients;
@@ -96,11 +97,12 @@ class TableItemProvidor with ChangeNotifier {
   }
 
   double getTotalPrice({required context, checkout}) {
+    var productProvidor = Provider.of<Products>(context, listen: false);
+    List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
     double value = 0;
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    var priceProvidor = Provider.of<Prices>(context, listen: false);
     var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-    value += priceProvidor.findById(price).price;
+    if(selected_price!=null) value +=  productPriceList[selected_price!].price;
     added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
@@ -140,7 +142,7 @@ class TableItemProvidor with ChangeNotifier {
     this.saved_table = 0,
     this.user = 0,
     this.product = 0,
-    this.price = 0,
+    this.selected_price = 0,
     this.side_dish = const [0],
     this.added_ingredients = const [0],
     this.deleted_ingredients = const [0],
@@ -157,7 +159,7 @@ class TableItemProvidor with ChangeNotifier {
       saved_table: jsonResponse["saved_table"] as int,
       user: jsonResponse["user"] as int,
       product: jsonResponse["product"] as int,
-      price: jsonResponse["price"] as int,
+      selected_price: jsonResponse["selected_price"] as int,
       side_dish: List<int>.from(jsonResponse["side_dish"] as List<dynamic>),
       added_ingredients:
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
