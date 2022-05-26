@@ -14,9 +14,7 @@ import 'Providers/Categorys.dart';
 import 'Providers/Products.dart';
 import 'Providers/Ingredients.dart';
 import './Providers/Authy.dart';
-import './Providers/Prices.dart';
 import './Providers/SideDishes.dart';
-import './Models/TableModel.dart';
 
 //screens
 import 'package:inspery_pos/screens/SignInScreen.dart';
@@ -50,9 +48,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Tables(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Prices(),
-        ),
+        // ChangeNotifierProvider(
+        //   create: (ctx) => Prices(),
+        // ),
         ChangeNotifierProvider(
           create: (ctx) => Products(),
         ),

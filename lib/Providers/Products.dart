@@ -12,7 +12,7 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> addProducts({required token}) async {
+  Future<void> addProducts({required token, required context}) async {
     // this function will add all products to the _items List
     final url = Uri.parse(
       'https://www.inspery.com/menu/all_products/',
@@ -22,7 +22,7 @@ class Products with ChangeNotifier {
     if (response.statusCode == 200) {
       final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
       for (int i = 0; i < data.length; i++) {
-        var pro = Product.fromJson(data[i]);
+        var pro = Product.fromJson(data[i], context: context);
         _items.add(pro);
         //print("Product Name: " + pro.name + "  ID: " + pro.id.toString());
       }
@@ -38,11 +38,11 @@ class Products with ChangeNotifier {
         orElse: () => Product(
               id: 0,
               name: '0',
-              price1: [],
-              side_dishes_number: 0,
-              description: '',
               allergien: [],
               ingredients: [],
+              side_product_number: 0,
+              product_price: [],
+              dips_number: 0,
             ));
     return debug;
   }
