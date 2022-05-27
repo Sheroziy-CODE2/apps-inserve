@@ -68,8 +68,7 @@ class Tables with ChangeNotifier {
         "table": tableID,
         "product": elements[i].product,
         "selected_price": elements[i].selected_price,
-        "side_dish": [],
-        // elements[i].side_dish
+        "side_products": elements[i].side_product,
         "added_ingredients": elements[i].added_ingredients,
         "deleted_ingredients": elements[i].deleted_ingredients,
       };

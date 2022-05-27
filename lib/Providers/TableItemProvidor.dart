@@ -38,9 +38,13 @@ class TableItemProvidor with ChangeNotifier {
   void setPaymode({required paymode, required context}) {
     this.paymode = paymode;
     notify(context);
-    notifyListeners();
   }
 
+  void setSelectedPrice({required context, required new_selected_price}){
+    if(isFromServer()) return;
+    selected_price = new_selected_price;
+    notify(context);
+  }
 
 
   int getInCard() {
@@ -70,7 +74,6 @@ class TableItemProvidor with ChangeNotifier {
     if (_inCart < 0) _inCart = 0;
     if (_inCart > quantity) _inCart = quantity;
     notify(context);
-    notifyListeners();
   }
 
   void zeroAmountInCard({required context}) {
@@ -164,7 +167,7 @@ class TableItemProvidor with ChangeNotifier {
       user: jsonResponse["user"] as int,
       product: jsonResponse["product"] as int,
       selected_price: jsonResponse["selected_price"] as int,
-      side_product: List<int>.from(jsonResponse["side_dish"] as List<dynamic>),
+      side_product: List<int>.from(jsonResponse["side_products"] as List<dynamic>),
       added_ingredients:
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:
