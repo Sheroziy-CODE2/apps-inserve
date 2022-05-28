@@ -41,11 +41,12 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
           .of<Tables>(context, listen: true)
           .findById(widget.tableName)
           .tIP;
-      tableItemProvidor = tIP.tableItems[tableItemChangeProvidor.getActProduct()!];
+      final int x = tableItemChangeProvidor.getActProduct()!;
+      tableItemProvidor = tIP.tableItems[x];
     }
     catch (e){
       print("Table ID: " + widget.tableName.toString());
-      print("TOCP coulden't get Ingredients: " + e.toString());
+      print("CEOW coulden't get Ingredients: " + e.toString());
       return Container();
     }
     return Column(

@@ -386,7 +386,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
       tableItemProvidor.setHightModeExtendet(
           hight_mode_extendet: false, context: context);
       tablesprov.checkoutItemsToSocket(context: context, tableID: widget.id);
-      super.dispose();
     }catch(e){}
+    super.dispose();
   }
 }
