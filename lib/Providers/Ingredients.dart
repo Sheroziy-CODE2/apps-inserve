@@ -13,18 +13,21 @@ class Ingredients with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> addIngredients() async {
+  Future<void> addIngredients({required token, required context}) async {
     // this function will add ingredients to the _items List
     final url = Uri.parse(
       'https://www.inspery.com/menu/ingriedients/',
     );
-    final headers = {"Content-type": "application/json"};
+    final headers = {
+      "Content-type": "application/json",
+      "Authorization": "Token ${token}"
+    };
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
       final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
       for (int i = 0; i < data.length; i++) {
-        var ing = Ingredient.fromJson(data[i]);
+        var ing = Ingredient.fromJson(data[i], context: context);
         _items.add(ing);
       }
     } else {
@@ -39,6 +42,7 @@ class Ingredients with ChangeNotifier {
     return _items.firstWhere((t) => t.id == id,
         orElse: () => Ingredient(
               id: 0,
+              ingredient_type: "",
               name: '0',
               price: 0,
             ));

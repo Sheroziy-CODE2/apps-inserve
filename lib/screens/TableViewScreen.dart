@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspery_pos/widgets/table/menu/ChooseExtraOptionsWidget.dart';
+import 'package:inspery_pos/widgets/table/menu/ChooseProductSize.dart';
 import 'package:provider/provider.dart';
 import '../Providers/TableItemChangeProvidor.dart';
-import '../Providers/Tables.dart';
 import '../widgets/table/TableOverviewFrame.dart';
 import '../widgets/table/menu/ChooseProductFormWidget.dart';
 
@@ -70,10 +70,16 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
         child:
         ChooseProductForm(tableName: tableId, goToNextPos: goToNextPos, categorieIDLeft: 2, categorieIDRight: 3,),
       ),
+      "Size" : SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: (MediaQuery.of(context).size.height / 2) -40,
+          child: ChooseProductSize(tableName: tableId, goToNextPos: goToNextPos,),
+        //ChooseProductForm(tableName: tableId),
+      ),
       "Beilagen" : SizedBox(
           width: MediaQuery.of(context).size.width,
           height: (MediaQuery.of(context).size.height / 2) -40,
-          child: Center(child: Text('Dips & Beilagen'))
+          child: const Center(child: Text('Dips & Beilagen'))
         //ChooseProductForm(tableName: tableId),
       ),
       "Dips" :SizedBox(
@@ -183,7 +189,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
                                     borderRadius: BorderRadius.circular(20),
                                     border: buttonNames.length > index ? Border.all() : null,
                                   ),
-                                  child: Center(child: Text((buttonNames.length > index ? buttonNames.first : (index+1).toString() + ". " +  chooseProductWidget.keys.toList()[index])))),
+                                  child: Center(child: Text((buttonNames.length > index ? buttonNames[index] : (index+1).toString() + ". " +  chooseProductWidget.keys.toList()[index])))),
                             ),
                           ),
                         ),

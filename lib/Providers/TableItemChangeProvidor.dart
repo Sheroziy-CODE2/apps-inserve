@@ -19,7 +19,6 @@ class TableItemChangeProvidor extends ChangeNotifier {
   ///In Future it will not hand it directly to the Providor, it will do it via the Websocket
   void addProduct({required context, required productID, required int tableID, bool refresh = true}){
     final tablesProvider = Provider.of<Tables>(context, listen: false);
-    var procuct = Provider.of<Products>(context, listen:  false).findById(productID);
     _productPosInItem = tablesProvider.findById(tableID).tIP.getItemLenth();
     var items = tablesProvider.findById(tableID).tIP;
     items.addItemFromWaiter(
@@ -29,8 +28,7 @@ class TableItemChangeProvidor extends ChangeNotifier {
           product: productID,
           quantity: 1,
           table: tableID,
-          price: procuct.price1.isNotEmpty ? procuct.price1.first : 0,
-          side_dish: [procuct.side_dishes_number],
+          selected_price: 0,
           saved_table: 0,
           deleted_ingredients: [],
           added_ingredients: [],

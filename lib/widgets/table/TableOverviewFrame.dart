@@ -381,9 +381,12 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
   @override
   void dispose() {
     print('on dispose');
-    tableItemProvidor.setItemsPaymode(context: context, paymode: false);
-    tableItemProvidor.setHightModeExtendet(hight_mode_extendet: false, context: context);
-    tablesprov.checkoutItemsToSocket(context:context,tableID:widget.id);
+    try {
+      tableItemProvidor.setItemsPaymode(context: context, paymode: false);
+      tableItemProvidor.setHightModeExtendet(
+          hight_mode_extendet: false, context: context);
+      tablesprov.checkoutItemsToSocket(context: context, tableID: widget.id);
+    }catch(e){}
     super.dispose();
   }
 }

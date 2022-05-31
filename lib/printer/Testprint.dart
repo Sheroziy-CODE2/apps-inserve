@@ -2,9 +2,7 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../Providers/Ingredients.dart';
-import '../Providers/Prices.dart';
 import '../Providers/Products.dart';
-import '../Providers/SideDishes.dart';
 import '../Providers/TableItemsProvidor.dart';
 
 class TestPrint {
@@ -22,8 +20,6 @@ class TestPrint {
     String formattedDate = formatter.format(now);
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    var priceProvidor = Provider.of<Prices>(context, listen: false);
-    var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
     var productsProvidor = Provider.of<Products>(context, listen: false);
 
     //SIZE
@@ -46,35 +42,18 @@ class TestPrint {
         bluetooth.printCustom("Rechnung/Bon-Nr:13", 0, 2);
         bluetooth.printCustom(formattedDate, 0, 2);
         bluetooth.printNewLine();
-        int count = 0;
         for (int x = 0; x < 3; x++) {
           var element = tableItemsProvidor.tableItems[x];
+          var productPrice = productsProvidor.findById(element.product).product_price[element.selected_price!];
           bluetooth.print4Column(
               element.quantity.toString(),
-              productsProvidor.findById(element.product).name,
-              priceProvidor.findById(element.price).price.toStringAsFixed(2),
+              productsProvidor.findById(element.product).name + " " + productPrice.description,
+              productPrice.price.toStringAsFixed(2),
               element.getTotalPrice(context: context).toStringAsFixed(2),
               1,
               format: "%2s %15s %5s %5s %n");
 
-          List<int> sideDishes = element.side_dish;
           Map<int, int> sd_map = {};
-          sideDishes.forEach((sd) {
-            if (!sd_map.containsKey(sd)) {
-              sd_map[sd] = 1;
-            } else {
-              sd_map[sd] = sd_map[sd] ?? 0 + 1;
-            }
-          });
-          sd_map.keys.forEach((id) {
-            bluetooth.print4Column(
-                sd_map[id].toString(),
-                "sideDish", //sideDishProvidor.findById(id.toString()).name,
-                "2,00", //sideDishProvidor.findById(id.toString()).secondary_price.toStringAsFixed(2),
-                "",
-                0,
-                format: "%1s %20s %5s %5s %n");
-          });
 
           List<int> added_ingredients = element.added_ingredients;
           Map<int, int> ai_map = {};

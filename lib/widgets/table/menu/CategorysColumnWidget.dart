@@ -68,7 +68,7 @@ class CategorysColumnState extends State<CategorysColumn> {
 
 
     while(categorieitems.length % widget.elementsShown != 0){
-      categorieitems.add(Category(id: -1, name: "Platzhalter", category_type: 0));
+      categorieitems.add(Category(id: -1, name: "Platzhalter", category_type: 0, product_type: '', type: null, picture: ''));
     }
 
 

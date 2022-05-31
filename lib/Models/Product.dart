@@ -1,6 +1,6 @@
-import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:inspery_pos/Models/Ingredient.dart';
+import 'package:inspery_pos/Models/ProductPrice.dart';
 
 import 'Ingredient.dart';
 
@@ -8,7 +8,7 @@ class Product {
 //this class is the product class
   late final int id;
   final String name;
-  final List<int> price1;
+  final List<ProductPrice> product_price;
   final List<int> allergien;
   final int side_product_number;
   //final String? description;
@@ -18,12 +18,13 @@ class Product {
   final List<ProductPrice> product_price;
   final int dips_number;
   final List<int> side_products;
-
+  final int dips_number;
   Product({
     required this.product_price,
     required this.id,
     required this.name,
-    required this.price1,
+    required this.product_price,
+    //required this.description,
     required this.allergien,
     required this.ingredients,
     required this.side_product_number,
@@ -31,12 +32,11 @@ class Product {
     required this.side_products,
   });
 
-  factory Product.fromJson(response) {
+  factory Product.fromJson(response, {required context}) {
     var jsonResponse = response as Map<String, dynamic>;
     return Product(
-      name: jsonResponse["name"] as String,
       id: jsonResponse["id"] as int,
-      price1: List<int>.from(jsonResponse["product_price"] as List<dynamic>),
+      name: jsonResponse["name"] as String,
       allergien: List<int>.from(jsonResponse["allergien"] as List<dynamic>),
       product_price: List.generate((jsonResponse["product_price"] as List<dynamic>).length, (index) => ProductPrice.fromJson((jsonResponse["product_price"] as List<dynamic>)[index])),
       //description: jsonResponse["description"] as String?,

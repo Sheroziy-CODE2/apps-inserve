@@ -3,9 +3,7 @@ import 'Category.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 
 import '../Models/Product.dart';
 
@@ -16,7 +14,7 @@ class Categorys with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> addProducts(cat) async {
+  Future<void> addProducts(cat, {required context}) async {
     //this function will get all the products for the category sent to it
     final url = Uri.parse(
       'https://www.inspery.com/menu/products/${cat.id}',
@@ -28,7 +26,7 @@ class Categorys with ChangeNotifier {
           List<Map<String, dynamic>>.from(jsonDecode(response.body));
       List<Product> proList = [];
       for (int i = 0; i < productsData.length; i++) {
-        var p = Product.fromJson(productsData[i]);
+        var p = Product.fromJson(productsData[i], context: context);
         proList.add(p);
       }
       cat.changePropducts(proList);
@@ -39,7 +37,7 @@ class Categorys with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addCategory() async {
+  Future<void> addCategory({required context}) async {
     // this function will add categorys to the _items List
     final url = Uri.parse(
       'https://www.inspery.com/menu/category/3',
@@ -53,6 +51,7 @@ class Categorys with ChangeNotifier {
         addProducts(
           //adding the products to the category we are saving
           cat,
+          context: context
         );
         _items.add(cat);
       }
@@ -70,6 +69,9 @@ class Categorys with ChangeNotifier {
               id: 0,
               name: '0',
               category_type: 0,
+              product_type: '',
+              picture: '',
+              type: null,
             ));
   }
 }

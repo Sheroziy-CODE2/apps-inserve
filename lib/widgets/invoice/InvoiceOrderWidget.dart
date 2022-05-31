@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../Models/InvoiceItem.dart';
 import '../reusable/CenterText.dart';
 import '../../components/ProductNameComponent.dart';
-import '../../components/PriceComponent.dart';
 
 import '../invoice/InvoiceItemSideDishWidget.dart';
 import '../invoice/InvoiceItemIngredientsWidget.dart';
@@ -43,13 +42,21 @@ class InvoiceOrderWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 2,
-                  child: PriceComponent(id: invoiceItem.price),
+                  child: //PriceComponent(id: invoiceItem.price),
+                  Text(
+                   "??",
+                   style: const TextStyle(
+                     fontWeight: FontWeight.w500,
+                     color: Color(0xFF2C3333),
+                     fontSize: 25,
+                   ),
+                 ),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 2,
                   child: Text(
                     'Euro',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
                       fontSize: 20,
