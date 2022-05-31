@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,19 +10,20 @@ import '../../../Providers/TableItemProvidor.dart';
 import '../../../Providers/TableItemsProvidor.dart';
 import '../../../Providers/Tables.dart';
 
-class ChooseProductSize extends StatefulWidget {
-  const ChooseProductSize({Key? key, required this.tableName, required this.goToNextPos}) : super(key: key);
+class ChooseSideProduct extends StatefulWidget {
+  const ChooseSideProduct({Key? key, required this.tableName, required this.goToNextPos}) : super(key: key);
   final int tableName;
   final Function goToNextPos;
 
   @override
-  State<ChooseProductSize> createState() => _ChooseProductSizeState();
+  State<ChooseSideProduct> createState() => _ChooseSideProductState();
 }
 
-class _ChooseProductSizeState extends State<ChooseProductSize> {
+class _ChooseSideProductState extends State<ChooseSideProduct> {
 
   late TableItemProvidor tableItemProvidor;
   late TableItemsProvidor tIP;
+  List<int> selected = [];
 
 
   @override
@@ -38,20 +40,20 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
     }
     catch (e){
       print("Table ID: " + widget.tableName.toString());
-      print("CPS coulden't get Table: " + e.toString());
-      return const Center(child: Text('Product Größe Fehler'));
+      print("CSP coulden't get Table: " + e.toString());
+      return const Center(child: Text('Beilagen Fehler'));
     }
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
 
-    // if(productPro.product_price.where((element) => !element.isSD).isNotEmpty){
-    //   widget.goToNextPos(indicator: productPro.product_price[productPro.side_products.first].description);
+    // if(productPro.side_products.isEmpty){
+    //   widget.goToNextPos(indicator: "---");
     // }
 
     return Column(
       children: [
         const SizedBox(height: 15,),
-        const Text("Größe Wählen", style: TextStyle(color: Colors.black,fontSize: 20,),),
+        Text((productPro.side_product_number - selected.length).toString() + " Beilagen Wählen", style: const TextStyle(color: Colors.black,fontSize: 20,),),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: GridView.count(
@@ -62,16 +64,26 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
             shrinkWrap: true,
             crossAxisCount: 5,
             children:
-            productPro.product_price.where((element) => !element.isSD).map((price_item) {
+            productPro.side_products.map((sideProductID) {
+              var product = productProvidor.findById(sideProductID);
               return GestureDetector(
                   onTap: (){
-                    widget.goToNextPos(indicator: price_item.description);
-                    tableItemProvidor.setSelectedPrice(context: context, new_selected_price: productPro.product_price.indexOf(price_item));
+                    if(selected.contains(sideProductID)){
+                      selected.remove(sideProductID);
+                    }
+                    else{
+                      selected.add(sideProductID);
+                    }
+                    if(selected.length != productPro.side_product_number){
+                      return;
+                    }
+                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + "x Beilagen");
+                    tableItemProvidor.setSideProducts(context: context, new_side_product: selected);
                   },
                   child: Container(
                     height: 10,
                     decoration: BoxDecoration(
-                      color: productPro.product_price.indexOf(price_item) == tableItemProvidor.selected_price! ? const Color(0xFFD3E03A) : Colors.transparent,
+                      color: selected.contains(sideProductID) ? const Color(0xFFD3E03A) : Colors.transparent,
                       border: Border.all(
                           color: Colors.grey,
                           width: 0.5),
@@ -84,8 +96,8 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
                     child: Column(
                         children: [
                           const Spacer(),
-                          Text(price_item.description, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
-                          Text(price_item.price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
+                          Text(product.name, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
+                          Text(product.product_price.firstWhere((element) => element.isSD).price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
                           const Spacer(),
                         ]
                     ),

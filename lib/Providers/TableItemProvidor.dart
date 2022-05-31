@@ -53,6 +53,11 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
+  void setSideProducts({required context, required new_side_product}){
+    if(isFromServer()) return;
+    selected_price = new_side_product;
+    notify(context);
+  }
 
   int getInCard() {
     return _inCart;

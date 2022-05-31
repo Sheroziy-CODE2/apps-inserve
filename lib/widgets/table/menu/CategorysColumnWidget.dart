@@ -1,9 +1,6 @@
 import "package:flutter/material.dart";
-import '../../../Providers/Tables.dart';
-import '../../../screens/TableViewScreen.dart';
 import 'package:provider/provider.dart';
 
-import '../../../Models/TableModel.dart';
 import '../../../Providers/Categorys.dart';
 import '../../../Providers/Category.dart';
 
@@ -11,17 +8,17 @@ class CategorysColumn extends StatefulWidget {
   // this is the column of categorys in ChooseProductForm
   String name = 'categorys';
   final Function categoryHandler;
-  int id = 0;
+  String id = "";
   ScrollController scrollController = ScrollController();
   final elementsShown = 6;
-  final int categorieID;
+  //final String categorieID;
 
   CategorysColumn({
     Key? key,
     required this.id,
     required this.name,
     required this.categoryHandler,
-    required this.categorieID
+    //required this.categorieID
   }) : super(key: key);
 
   @override
@@ -48,10 +45,9 @@ class CategorysColumnState extends State<CategorysColumn> {
       context,
     ); //category provider
     final categorieitems = categorysData.items.where((i) =>
-      i.category_type == widget.categorieID
+      i.product_type == widget.id
     ).toList();
 
-    int id = widget.id.toInt();
 
     Widget icon = widget.name == 'Getränke' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
 
@@ -88,7 +84,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                     child: Container(),
                     backgroundColor:
                     selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                    categorieitems[selectedIndex].id == id
+                    categorieitems[selectedIndex].product_type == widget.id
                         ? const Color(0xFFD3E03A)
                         : const Color(0xFFD1D1D1),
                   ),
@@ -100,7 +96,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                      categorieitems[selectedIndex].id == id
+                      categorieitems[selectedIndex].product_type == widget.id
                           ? const Color(0xFF1B262C)
                           : const Color(0xFFD1D1D1),
                     ),
@@ -153,7 +149,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                           decoration: BoxDecoration(
                             // border:
                             //     Border.all(color: Colors.blueAccent),
-                            color: categorieitems[index].id == id
+                            color: categorieitems[index].product_type == widget.id
                                 ? const Color(0xFFD3E03A)
                                 : const Color(0xFFD1D1D1),
 

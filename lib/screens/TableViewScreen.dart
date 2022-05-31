@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../Providers/TableItemChangeProvidor.dart';
 import '../widgets/table/TableOverviewFrame.dart';
 import '../widgets/table/menu/ChooseProductFormWidget.dart';
+import '../widgets/table/menu/ChooseSideProduct.dart';
 
 class TableView extends StatefulWidget {
   static const routeName = '/table-view';
@@ -63,29 +64,26 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
 
     final int tableId = id;
 
-    Map<String, Widget> chooseProductWidget = {
+    final Map<String, Widget> chooseProductWidget = {
       "Product" : SizedBox(
         width: MediaQuery.of(context).size.width,
         height: (MediaQuery.of(context).size.height / 2)-40,
-        child:
-        ChooseProductForm(tableName: tableId, goToNextPos: goToNextPos, categorieIDLeft: 2, categorieIDRight: 3,),
+        child: ChooseProductForm(tableName: tableId, goToNextPos: goToNextPos, categorieIDLeft: "food", categorieIDRight: "drinks",),
       ),
       "Size" : SizedBox(
           width: MediaQuery.of(context).size.width,
           height: (MediaQuery.of(context).size.height / 2) -40,
           child: ChooseProductSize(tableName: tableId, goToNextPos: goToNextPos,),
-        //ChooseProductForm(tableName: tableId),
       ),
       "Beilagen" : SizedBox(
           width: MediaQuery.of(context).size.width,
           height: (MediaQuery.of(context).size.height / 2) -40,
-          child: const Center(child: Text('Dips & Beilagen'))
-        //ChooseProductForm(tableName: tableId),
+          child: ChooseSideProduct(tableName: tableId, goToNextPos: goToNextPos,),
       ),
       "Dips" :SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 2 - 40,
-        child: ChooseExtraOptionWidget(tableName: tableId),
+        child: const Center(child: Text('Dips')),
       ),
       "Extras" :SizedBox(
         width: MediaQuery.of(context).size.width,

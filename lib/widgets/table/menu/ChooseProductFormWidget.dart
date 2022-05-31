@@ -12,8 +12,8 @@ class ChooseProductForm extends StatefulWidget {
   late List<Product> products;
   final int tableName;
   final Function goToNextPos;
-  final int categorieIDLeft;
-  final int categorieIDRight;
+  final String categorieIDLeft;
+  final String categorieIDRight;
   ChooseProductForm({required this.tableName, required this.goToNextPos, required this.categorieIDLeft, required this.categorieIDRight});
 
   @override
@@ -22,7 +22,7 @@ class ChooseProductForm extends StatefulWidget {
 
 class _ChooseProductFormState extends State<ChooseProductForm> {
   Category? category;
-  int id = 0;
+  String id = "food";
   bool rotate = false;
   final List<GlobalKey<CategorysColumnState>> list_key = List.generate(
       2, (index) => GlobalObjectKey<CategorysColumnState>(index*Random().nextInt(100)));
@@ -68,7 +68,7 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
                     key: list_key[0],
                     id: id,
                     name: 'Getränke',
-                    categorieID: widget.categorieIDLeft,
+                    //categorieID: widget.categorieIDLeft,
                     categoryHandler: changeCategory,
                 ),
                 Positioned(
@@ -128,7 +128,7 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
                     key: list_key[1],
                     id: id,
                     name: 'Speisen',
-                  categorieID: widget.categorieIDRight,
+                  //categorieID: widget.categorieIDRight,
                     categoryHandler: changeCategory,
                 ),
                 Positioned(

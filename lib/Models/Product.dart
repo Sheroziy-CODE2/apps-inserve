@@ -9,7 +9,7 @@ class Product {
   late final int id;
   final String name;
   final List<ProductPrice> product_price;
-  final List<int> allergien;
+  final List<String> allergien;
   final int side_product_number;
   final List<Ingredient> ingredients;
   final int dips_number;
@@ -32,7 +32,7 @@ class Product {
     return Product(
       id: jsonResponse["id"] as int,
       name: jsonResponse["name"] as String,
-      allergien: List<int>.from(jsonResponse["allergien"] as List<dynamic>),
+      allergien: List<String>.from(jsonResponse["allergien"] as List<dynamic>),
       product_price: List.generate((jsonResponse["product_price"] as List<dynamic>).length, (index) => ProductPrice.fromJson((jsonResponse["product_price"] as List<dynamic>)[index])),
       //description: jsonResponse["description"] as String?,
       //product_pic: jsonResponse["product_pic"] as String?,
