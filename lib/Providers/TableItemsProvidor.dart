@@ -188,7 +188,7 @@ class TableItemsProvidor with ChangeNotifier {
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     var productssProvidor = Provider.of<Products>(context, listen: false);
 
-    value += productssProvidor.findById(_tableItems[pos].product).product_price[_tableItems[pos].selected_price!].price;
+    value += productssProvidor.findById(_tableItems[pos].product).product_price.firstWhere((element) => element.id == _tableItems[pos].selected_price!).price;
     _tableItems[pos].added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });

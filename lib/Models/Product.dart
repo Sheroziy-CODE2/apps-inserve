@@ -11,19 +11,14 @@ class Product {
   final List<ProductPrice> product_price;
   final List<int> allergien;
   final int side_product_number;
-  //final String? description;
-  //final String? product_pic;
-  //final int category;
   final List<Ingredient> ingredients;
-  final List<ProductPrice> product_price;
   final int dips_number;
   final List<int> side_products;
-  final int dips_number;
+
   Product({
     required this.product_price,
     required this.id,
     required this.name,
-    required this.product_price,
     //required this.description,
     required this.allergien,
     required this.ingredients,

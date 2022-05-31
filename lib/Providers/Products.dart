@@ -38,8 +38,6 @@ class Products with ChangeNotifier {
         orElse: () => Product(
               id: 0,
               name: '0',
-              price1: [],
-              side_products = [],
               allergien: [],
               side_products: [],
               ingredients: [],
