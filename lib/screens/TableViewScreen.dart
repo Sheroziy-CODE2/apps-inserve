@@ -82,6 +82,11 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
           child: const Center(child: Text('Dips & Beilagen'))
         //ChooseProductForm(tableName: tableId),
       ),
+      "Dips" :SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 2 - 40,
+        child: ChooseExtraOptionWidget(tableName: tableId),
+      ),
       "Extras" :SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 2 - 40,

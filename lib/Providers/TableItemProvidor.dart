@@ -9,6 +9,7 @@ import 'Ingredients.dart';
 import 'Products.dart';
 import 'SideProducts.dart';
 import 'Tables.dart';
+import 'package:intl/intl.dart';
 
 class TableItemProvidor with ChangeNotifier {
   final int id;
@@ -27,6 +28,12 @@ class TableItemProvidor with ChangeNotifier {
   bool fromWaiter = false;
   int _inCart = 0;
   bool paymode = false;
+
+
+  String getDateTime({String format = 'yyyy-MM-dd'}){
+    final DateFormat formatter = DateFormat(format);
+    return formatter.format(DateTime.fromMillisecondsSinceEpoch(date * 1000));
+  }
 
   //this function is needed because we use only one Providor anymore
   void notify(context) {
