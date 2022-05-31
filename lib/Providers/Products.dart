@@ -39,10 +39,13 @@ class Products with ChangeNotifier {
               id: 0,
               name: '0',
               price1: [],
-              side_dishes_number: 0,
-              description: '',
+              side_products = [],
               allergien: [],
               ingredients: [],
+              side_products: [],
+              side_product_number: 0,
+              product_price: [],
+              dips_number: 0,
             ));
     return debug;
   }

@@ -30,13 +30,6 @@ class _TableItemState extends State<TableItem> {
 
   @override
   Widget build(BuildContext context) {
-    // final table = Provider.of<TableProvider>(context, listen: true);
-    final token_provider = Provider.of<Authy>(context, listen: true);
-    final token = token_provider.token;
-    // setState(() {
-    //   table_total_price = table.total_price;
-    // });
-    // final String id = ModalRoute.of(context)?.settings.arguments as String;
     final tablData = Provider.of<Tables>(context, listen: true);
 
     final TableModel tabl = tablData.findById(widget.id);
@@ -53,10 +46,7 @@ class _TableItemState extends State<TableItem> {
       if(tabl.timeHistory["Buchung"]! != 0) {
         updateTime = formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000.0).round()));
       }
-      print("This is "+ DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000.0).round()).toString());
-      print("For Value: " + tabl.timeHistory["Buchung"].toString());
     }
-    print("LastTime for " + tabl.name + ": " + updateTime);
 
     const double dropdownHight = 47;
 
