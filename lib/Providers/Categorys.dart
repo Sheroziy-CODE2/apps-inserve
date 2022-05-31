@@ -71,7 +71,7 @@ class Categorys with ChangeNotifier {
           category_type: 0,
           product_type: '',
           picture: '',
-          type: null,
+          //type: null,
         ));
   }
 
@@ -84,7 +84,7 @@ class Categorys with ChangeNotifier {
               category_type: 0,
               product_type: '',
               picture: '',
-              type: null,
+              //type: null,
             ));
   }
 }

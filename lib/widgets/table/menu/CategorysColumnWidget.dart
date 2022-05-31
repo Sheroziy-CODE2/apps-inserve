@@ -6,9 +6,9 @@ import '../../../Providers/Category.dart';
 
 class CategorysColumn extends StatefulWidget {
   // this is the column of categorys in ChooseProductForm
-  String name = 'categorys';
   final Function categoryHandler;
-  String id = "";
+  final String type;
+  int id;
   ScrollController scrollController = ScrollController();
   final elementsShown = 6;
   //final String categorieID;
@@ -16,7 +16,7 @@ class CategorysColumn extends StatefulWidget {
   CategorysColumn({
     Key? key,
     required this.id,
-    required this.name,
+    required this.type,
     required this.categoryHandler,
     //required this.categorieID
   }) : super(key: key);
@@ -45,11 +45,11 @@ class CategorysColumnState extends State<CategorysColumn> {
       context,
     ); //category provider
     final categorieitems = categorysData.items.where((i) =>
-      i.product_type == widget.id
+      i.product_type == widget.type
     ).toList();
 
 
-    Widget icon = widget.name == 'Getränke' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
+    Widget icon = widget.type == 'food' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
 
 
      late final double elementHight;
@@ -64,7 +64,7 @@ class CategorysColumnState extends State<CategorysColumn> {
 
 
     while(categorieitems.length % widget.elementsShown != 0){
-      categorieitems.add(Category(id: -1, name: "Platzhalter", category_type: 0, product_type: '', type: null, picture: ''));
+      categorieitems.add(Category(id: -1, name: "Platzhalter", category_type: 0, product_type: '', picture: ''));
     }
 
 
@@ -84,19 +84,19 @@ class CategorysColumnState extends State<CategorysColumn> {
                     child: Container(),
                     backgroundColor:
                     selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                    categorieitems[selectedIndex].product_type == widget.id
+                    categorieitems[selectedIndex].id == widget.id
                         ? const Color(0xFFD3E03A)
                         : const Color(0xFFD1D1D1),
                   ),
                   const SizedBox(width: 3,),
                   Text(
-                    widget.name,
+                    widget.type,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                      categorieitems[selectedIndex].product_type == widget.id
+                      categorieitems[selectedIndex].product_type == widget.type
                           ? const Color(0xFF1B262C)
                           : const Color(0xFFD1D1D1),
                     ),
@@ -149,7 +149,8 @@ class CategorysColumnState extends State<CategorysColumn> {
                           decoration: BoxDecoration(
                             // border:
                             //     Border.all(color: Colors.blueAccent),
-                            color: categorieitems[index].product_type == widget.id
+                            color:
+                            categorieitems[index].id == widget.id
                                 ? const Color(0xFFD3E03A)
                                 : const Color(0xFFD1D1D1),
 
@@ -161,7 +162,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              widget.name == 'Getränke' ? rotate
+                              widget.type == 'food' ? rotate
                                   ? icon
                                   : Container() : !rotate ? icon : Container(),
                               Expanded(
@@ -183,7 +184,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                                   ),
                                 ),
                               ),
-                              widget.name == 'Getränke' ? !rotate
+                              widget.type == 'food' ? !rotate
                                   ? icon
                                   : Container() : rotate ? icon : Container(),
                             ],

@@ -68,7 +68,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
       "Product" : SizedBox(
         width: MediaQuery.of(context).size.width,
         height: (MediaQuery.of(context).size.height / 2)-40,
-        child: ChooseProductForm(tableName: tableId, goToNextPos: goToNextPos, categorieIDLeft: "food", categorieIDRight: "drinks",),
+        child: ChooseProductForm(tableName: tableId, goToNextPos: goToNextPos, categorieTypeLeft: "food", categorieTypeRight: "drinks",),
       ),
       "Size" : SizedBox(
           width: MediaQuery.of(context).size.width,

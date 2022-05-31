@@ -8,7 +8,7 @@ import '../../../Providers/Tables.dart';
 
 class ProductsColumn extends StatefulWidget {
   // this is the column of product in ChooseProductForm
-  final String id;
+  int id;
   final int tableID;
   final Function goToNextPos;
 
@@ -24,7 +24,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
   List<Product> products = [];
   String search = '';
   // var productsList = <Product>[];
-  String get id => widget.id;
+  int get id => widget.id;
   @override
   void initState() {
     super.initState();
@@ -36,7 +36,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
     } else {
       final categorysData = Provider.of<Categorys>(context, listen: false);
       final category = categorysData.
-      findByType(widget.id);
+      findById(widget.id);
       setState(() {
         products = category.products;
       });
@@ -62,7 +62,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
     } else {
       setState(() {
         final categorysData = Provider.of<Categorys>(context, listen: false);
-        final category = categorysData.findByType(widget.id);
+        final category = categorysData.findById(widget.id);
         setState(() {
           products = category.products;
         });
@@ -80,7 +80,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
     if (search == '') {
       setState(() {
         final categorysData = Provider.of<Categorys>(context, listen: false);
-        final category = categorysData.findByType(widget.id);
+        final category = categorysData.findById(widget.id);
         setState(() {
           products = category.products;
         });
