@@ -21,7 +21,6 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
 
   late TableItemProvidor tableItemProvidor;
   late TableItemsProvidor tIP;
-  List<int> selected = [];
 
 
   @override
@@ -48,7 +47,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
     return Column(
       children: [
         const SizedBox(height: 15,),
-        Text("noch " + (productPro.side_product_number - selected.length).toString() + " Beilage"+(selected.length != 1 ? "":"n" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
+        Text("noch " + (productPro.side_product_number - tableItemProvidor.side_product.length).toString() + " Beilage"+(tableItemProvidor.side_product.length != 1 ? "":"n" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: GridView.count(
@@ -63,27 +62,26 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
               var product = productProvidor.findById(sideProductID);
               return GestureDetector(
                   onTap: (){
-                    if(selected.contains(sideProductID)){
-                      selected.remove(sideProductID);
+                    if(tableItemProvidor.side_product.contains(sideProductID)){
+                      tableItemProvidor.removeSideProducts(context: context, side_pro: sideProductID);
                     }
                     else{
-                      if(selected.length == productPro.side_product_number){
+                      if(tableItemProvidor.side_product.length == productPro.side_product_number){
                         return;
                       }
-                      selected.add(sideProductID);
+                      tableItemProvidor.setSideProducts(context: context, new_side_product: sideProductID);
                     }
-                    if(selected.length != productPro.side_product_number){
+                    if(tableItemProvidor.side_product.length != productPro.side_product_number){
                       setState(() {});
-                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xBeilage" : "xBeilagen"),stay: true);
+                      widget.goToNextPos(indicator: tableItemProvidor.side_product.length.toStringAsFixed(0) + (tableItemProvidor.side_product.length == 1 ? "xBeilage" : "xBeilagen"),stay: true);
                       return;
                     }
-                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xBeilage" : "xBeilagen"));
-                    tableItemProvidor.setSideProducts(context: context, new_side_product: selected);
+                    widget.goToNextPos(indicator: tableItemProvidor.side_product.length.toStringAsFixed(0) + (tableItemProvidor.side_product.length == 1 ? "xBeilage" : "xBeilagen"));
                   },
                   child: Container(
                     height: 10,
                     decoration: BoxDecoration(
-                      color: selected.contains(sideProductID) ? const Color(0xFFD3E03A) : Colors.transparent,
+                      color: tableItemProvidor.side_product.contains(sideProductID) ? const Color(0xFFD3E03A) : Colors.transparent,
                       border: Border.all(
                           color: Colors.grey,
                           width: 0.5),

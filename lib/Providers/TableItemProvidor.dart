@@ -48,21 +48,33 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void setSelectedPrice({required context, required new_selected_price}){
+  void setSelectedPrice({required context, required int new_selected_price}){
     if(isFromServer()) return;
     selected_price = new_selected_price;
     notify(context);
   }
 
-  void setSideProducts({required context, required new_side_product}){
+  void setSideProducts({required context, required int new_side_product}){
     if(isFromServer()) return;
-    side_product = new_side_product;
+    side_product.add(new_side_product);
     notify(context);
   }
 
-  void setDips({required context, required new_dip}){
+  void setDips({required context, required int new_dip}){
     if(isFromServer()) return;
-    dips = new_dip;
+    dips.add(new_dip);
+    notify(context);
+  }
+
+  void removeSideProducts({required context, required int side_pro}){
+    if(isFromServer()) return;
+    side_product.remove(side_pro);
+    notify(context);
+  }
+
+  void removeDips({required context, required dip}){
+    if(isFromServer()) return;
+    dips.remove(dip);
     notify(context);
   }
 
@@ -190,6 +202,7 @@ class TableItemProvidor with ChangeNotifier {
     var jsonResponse = response as Map<String, dynamic>;
     return TableItemProvidor(
       id: jsonResponse["id"] as int,
+      dips: [],//List<int>.from(jsonResponse["dips"] as List<dynamic>),
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,
       table: jsonResponse["table"] as int,

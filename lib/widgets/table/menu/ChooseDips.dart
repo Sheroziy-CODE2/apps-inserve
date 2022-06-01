@@ -22,14 +22,14 @@ class _ChooseDipsState extends State<ChooseDips> {
 
   late TableItemProvidor tableItemProvidor;
   late TableItemsProvidor tIP;
-  List<int> selected = [];
 
 
   @override
   Widget build(BuildContext context) {
+    print("reload Dips page!");
     var tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
-    var productProvidor = Provider.of<Products>(context, listen: false);
-    var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
+    var productProvidor = Provider.of<Products>(context, listen: true);
+    var dipsProvidor = Provider.of<DipsProvider>(context, listen: true);
     try {
       tIP = Provider
           .of<Tables>(context, listen: true)
@@ -37,6 +37,7 @@ class _ChooseDipsState extends State<ChooseDips> {
           .tIP;
       final int x = tableItemChangeProvidor.getActProduct()!;
       tableItemProvidor = tIP.tableItems[x];
+      print("new TableItem Product Pos is now: " + x.toString());
     }
     catch (e){
       print("Table ID: " + widget.tableName.toString());
@@ -45,12 +46,13 @@ class _ChooseDipsState extends State<ChooseDips> {
     }
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
+    print("new Product is now: " + productPro.name);
 
 
     return Column(
       children: [
         const SizedBox(height: 15,),
-        Text("noch " + (productPro.dips_number - selected.length).toString() + " Dip"+(selected.length != 1 ? "":"s" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
+        Text("noch " + (productPro.dips_number - tableItemProvidor.dips.length).toString() + " Dip"+(tableItemProvidor.dips.length != 1 ? "":"s" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: GridView.count(
@@ -63,27 +65,26 @@ class _ChooseDipsState extends State<ChooseDips> {
             dipsProvidor.items.map((dips) {
               return GestureDetector(
                   onTap: (){
-                    if(selected.contains(dips.id)){
-                      selected.remove(dips.id);
+                    if(tableItemProvidor.dips.contains(dips.id)){
+                      tableItemProvidor.removeDips(context: context, dip: dips.id);
                     }
                     else{
-                      if(selected.length == productPro.dips_number){
+                      if(tableItemProvidor.dips.length == productPro.dips_number){
                         return;
                       }
-                      selected.add(dips.id);
+                      tableItemProvidor.setDips(context: context, new_dip: dips.id);
                     }
-                    if(selected.length != productPro.dips_number){
+                    if(tableItemProvidor.dips.length != productPro.dips_number){
                       setState(() {});
-                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xDip" : "xDips"),stay: true);
+                      widget.goToNextPos(indicator: tableItemProvidor.dips.length.toStringAsFixed(0) + (tableItemProvidor.dips.length == 1 ? "xDip" : "xDips"),stay: true);
                       return;
                     }
-                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xDip" : "xDips"));
-                    tableItemProvidor.setDips(context: context, new_dip: selected);
+                    widget.goToNextPos(indicator: tableItemProvidor.dips.length.toStringAsFixed(0) + (tableItemProvidor.dips.length == 1 ? "xDip" : "xDips"));
                   },
                   child: Container(
                     height: 10,
                     decoration: BoxDecoration(
-                      color: selected.contains(dips.id) ? const Color(0xFFD3E03A) : Colors.transparent,
+                      color: tableItemProvidor.dips.contains(dips.id) ? const Color(0xFFD3E03A) : Colors.transparent,
                       border: Border.all(
                           color: Colors.grey,
                           width: 0.5),
