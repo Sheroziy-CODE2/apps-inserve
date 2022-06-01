@@ -188,7 +188,23 @@ class TableItemsProvidor with ChangeNotifier {
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     var productssProvidor = Provider.of<Products>(context, listen: false);
 
-    value += productssProvidor.findById(_tableItems[pos].product).product_price.firstWhere((element) => element.id == _tableItems[pos].selected_price!).price;
+    try { //This can happen when there is no item in the list
+      value += productssProvidor
+          .findById(_tableItems[pos].product)
+          .product_price
+          .firstWhere((element) =>
+      element.id == _tableItems[pos].selected_price!).price;
+    }catch(e){
+      final priceList = productssProvidor
+          .findById(_tableItems[pos].product)
+          .product_price;
+      if(priceList.where((element) => !element.isSD).isNotEmpty) {
+        value += priceList.where((element) => !element.isSD).first.price;
+      }
+      else if(priceList.isNotEmpty){
+        value += priceList.first.price;
+      }
+    }
     _tableItems[pos].added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });

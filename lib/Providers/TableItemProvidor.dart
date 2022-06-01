@@ -115,9 +115,12 @@ class TableItemProvidor with ChangeNotifier {
     var productProvidor = Provider.of<Products>(context, listen: false);
     List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
     double value = 0;
+    if(!productPriceList.isNotEmpty){
+      if(selected_price!=null) value +=  productPriceList.firstWhere((element) => element.id == selected_price!).price;
+    }
+
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
-    if(selected_price!=null) value +=  productPriceList.firstWhere((element) => element.id == selected_price!).price;
     added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
