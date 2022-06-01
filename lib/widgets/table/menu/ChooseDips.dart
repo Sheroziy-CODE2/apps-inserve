@@ -74,10 +74,10 @@ class _ChooseDipsState extends State<ChooseDips> {
                     }
                     if(selected.length != productPro.dips_number){
                       setState(() {});
-                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Dip" : "x Dips"),stay: true);
+                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xDip" : "xDips"),stay: true);
                       return;
                     }
-                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Dip" : "x Dips"));
+                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xDip" : "xDips"));
                     tableItemProvidor.setDips(context: context, new_dip: selected);
                   },
                   child: Container(

@@ -1,6 +1,4 @@
 
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,9 +44,6 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
 
-    // if(productPro.side_products.isEmpty){
-    //   widget.goToNextPos(indicator: "---");
-    // }
 
     return Column(
       children: [
@@ -72,17 +67,17 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                       selected.remove(sideProductID);
                     }
                     else{
-                      if(selected.length != productPro.side_product_number){
+                      if(selected.length == productPro.side_product_number){
                         return;
                       }
                       selected.add(sideProductID);
                     }
                     if(selected.length != productPro.side_product_number){
                       setState(() {});
-                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Beilage" : "x Beilagen"),stay: true);
+                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xBeilage" : "xBeilagen"),stay: true);
                       return;
                     }
-                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Beilage" : "x Beilagen"));
+                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "xBeilage" : "xBeilagen"));
                     tableItemProvidor.setSideProducts(context: context, new_side_product: selected);
                   },
                   child: Container(

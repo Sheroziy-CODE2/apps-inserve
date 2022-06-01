@@ -296,6 +296,8 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                             Text(
                               widget.tableItemProvidor.getExtrasWithSemicolon(
                                   context: context),
+                              overflow: TextOverflow.fade,
+                              maxLines: 3,
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,

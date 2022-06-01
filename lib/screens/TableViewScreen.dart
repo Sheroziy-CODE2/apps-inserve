@@ -51,11 +51,16 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
           MediaQuery.of(context).size.width * actPos,
           duration:  const Duration(milliseconds: 500),
           curve: Curves.easeInOutQuart);
+      horizontalScrollControllerSteps.animateTo(
+          actPos * 35,
+          duration:  const Duration(milliseconds: 200),
+          curve: Curves.easeInOutQuart);
     });
   }
 
   int actPos = 0;
   ScrollController horizontalScrollController = ScrollController();
+  ScrollController horizontalScrollControllerSteps = ScrollController();
   List<String> buttonNames = [];
 
   @override
@@ -121,12 +126,13 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
                         )
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 38,
                       child:
                       Row(
                         children: [
                           Flexible(
                             child: ListView.builder(
+                              controller: horizontalScrollControllerSteps,
                               scrollDirection: Axis.horizontal,
                               itemCount:chooseProductWidget.length,
                               itemBuilder: (context, index) =>
@@ -134,25 +140,35 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
 
                               GestureDetector(
                                 onTap: (){
-                                  //if(index > actPos) return;
                                   setState(() {
                                     actPos = index;
                                     horizontalScrollController.animateTo(
                                         MediaQuery.of(context).size.width * actPos,
                                         duration:  const Duration(milliseconds: 500),
                                         curve: Curves.easeInOutQuart);
+                                     horizontalScrollControllerSteps.animateTo(
+                                         actPos * 35,
+                                         duration:  const Duration(milliseconds: 200),
+                                         curve: Curves.easeInOutQuart);
                                   });
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(3),
+                                  padding: const EdgeInsets.all(2),
                                   child: Container(
+                                      width: 75,
                                       padding: const EdgeInsets.only(right: 5, left: 5),
                                       decoration: BoxDecoration(
                                         color: actPos == index? const Color(0xFFD3E03A) : const Color(0xFFF3F3F3),
                                         borderRadius: BorderRadius.circular(20),
                                         border: buttonNames.length > index ? Border.all() : null,
                                       ),
-                                      child: Center(child: Text((buttonNames.length > index ? buttonNames[index] : (index+1).toString() + ". " +  chooseProductWidget.keys.toList()[index])))),
+                                      child: Center(
+                                          child: Text(
+                                              (buttonNames.length > index ? buttonNames[index] : /*(index+1).toString() + "." + */ chooseProductWidget.keys.toList()[index]),
+                                          style: const TextStyle(fontSize: 10,),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ))),
                                 ),
                               ),
                             ),
@@ -170,8 +186,12 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
                                     actPos = 0;
                                     buttonNames = [];
                                     horizontalScrollController.animateTo(
-                                        MediaQuery.of(context).size.width * actPos,
+                                        0,
                                         duration:  const Duration(milliseconds: 500),
+                                        curve: Curves.easeInOutQuart);
+                                    horizontalScrollControllerSteps.animateTo(
+                                        0,
+                                        duration:  const Duration(milliseconds: 200),
                                         curve: Curves.easeInOutQuart);
                                   });
                                 },

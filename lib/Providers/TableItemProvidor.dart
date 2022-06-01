@@ -5,6 +5,7 @@ import 'package:inspery_pos/Models/ProductPrice.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 
+import 'DipsProvider.dart';
 import 'Ingredients.dart';
 import 'Products.dart';
 import 'SideProducts.dart';
@@ -124,16 +125,21 @@ class TableItemProvidor with ChangeNotifier {
     List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
     double value = 0;
     if(!productPriceList.isNotEmpty){
-      if(selected_price!=null) value +=  productPriceList.firstWhere((element) => element.id == selected_price).price;
+      value +=  productPriceList.firstWhere((element) => element.id == selected_price).price;
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
+    var dipsProductProvidor = Provider.of<DipsProvider>(context, listen: false);
+
     added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
-    side_product.forEach((sd) {
-      value += sideProductProvidor.findById(sd).price;
+    side_product.forEach((sp) {
+      value += sideProductProvidor.findById(sp).price;
+    });
+    dips.forEach((di) {
+      value += dipsProductProvidor.findById(di).price;
     });
     if (checkout ?? paymode) {
       value *= getAmountInCard();
@@ -145,23 +151,23 @@ class TableItemProvidor with ChangeNotifier {
 
   String getExtrasWithSemicolon({required context}) {
     String ret = "";
-    var sideDishProvidor = Provider.of<SideProducts>(context, listen: false);
     var productProvidor = Provider.of<Products>(context, listen: false);
+    var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
     var productPro = productProvidor.findById(product);
-      ret += productPro.product_price.firstWhere((element) => element.id == selected_price).description + ", ";
+    ret += productPro.product_price.firstWhere((element) => element.id == selected_price).description + ", ";
 
-    side_product.forEach((element) {
-      ret += productProvidor.findById(sideDishProvidor.findById(element).product).name + ", ";
-    });
+    for (var element in side_product) {
+      ret += productProvidor.findById(element).name + ", ";
+    }
+    for (var element in dips) {
+      ret += dipsProvidor.findById(element).name + ", ";
+    }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     added_ingredients.forEach((element) {
       ret += /* "+" + */ ingredientsProvidor.findById(element).name + ", ";
     });
     if(ret == ", ") ret = "";
-    //deleted_ingredients.forEach((element) {
-    //  ret += "-" + ingredientsProvidor.findById(element).name + ", ";
-    //});
     return ret;
   }
 
