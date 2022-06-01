@@ -1,7 +1,6 @@
 
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inspery_pos/Providers/DipsProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Providers/Products.dart';
@@ -10,16 +9,16 @@ import '../../../Providers/TableItemProvidor.dart';
 import '../../../Providers/TableItemsProvidor.dart';
 import '../../../Providers/Tables.dart';
 
-class ChooseSideProduct extends StatefulWidget {
-  const ChooseSideProduct({Key? key, required this.tableName, required this.goToNextPos}) : super(key: key);
+class ChooseDips extends StatefulWidget {
+  const ChooseDips({Key? key, required this.tableName, required this.goToNextPos}) : super(key: key);
   final int tableName;
   final Function goToNextPos;
 
   @override
-  State<ChooseSideProduct> createState() => _ChooseSideProductState();
+  State<ChooseDips> createState() => _ChooseDipsState();
 }
 
-class _ChooseSideProductState extends State<ChooseSideProduct> {
+class _ChooseDipsState extends State<ChooseDips> {
 
   late TableItemProvidor tableItemProvidor;
   late TableItemsProvidor tIP;
@@ -30,6 +29,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
   Widget build(BuildContext context) {
     var tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
     var productProvidor = Provider.of<Products>(context, listen: false);
+    var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
     try {
       tIP = Provider
           .of<Tables>(context, listen: true)
@@ -40,55 +40,50 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
     }
     catch (e){
       print("Table ID: " + widget.tableName.toString());
-      print("CSP coulden't get Table: " + e.toString());
-      return const Center(child: Text('Beilagen Fehler'));
+      print("CD coulden't get Table: " + e.toString());
+      return const Center(child: Text('Dips Fehler'));
     }
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
 
-    // if(productPro.side_products.isEmpty){
-    //   widget.goToNextPos(indicator: "---");
-    // }
 
     return Column(
       children: [
         const SizedBox(height: 15,),
-        Text("noch " + (productPro.side_product_number - selected.length).toString() + " Beilage"+(selected.length != 1 ? "":"n" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
+        Text("noch " + (productPro.dips_number - selected.length).toString() + " Dip"+(selected.length != 1 ? "":"s" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: GridView.count(
-            //physics: const NeverScrollableScrollPhysics(),
             childAspectRatio: (1 / 1),
             crossAxisSpacing: 5,
             mainAxisSpacing: 5,
             shrinkWrap: true,
             crossAxisCount: 5,
             children:
-            productPro.side_products.map((sideProductID) {
-              var product = productProvidor.findById(sideProductID);
+            dipsProvidor.items.map((dips) {
               return GestureDetector(
                   onTap: (){
-                    if(selected.contains(sideProductID)){
-                      selected.remove(sideProductID);
+                    if(selected.contains(dips.id)){
+                      selected.remove(dips.id);
                     }
                     else{
-                      if(selected.length != productPro.side_product_number){
+                      if(selected.length == productPro.dips_number){
                         return;
                       }
-                      selected.add(sideProductID);
+                      selected.add(dips.id);
                     }
-                    if(selected.length != productPro.side_product_number){
+                    if(selected.length != productPro.dips_number){
                       setState(() {});
-                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Beilage" : "x Beilagen"),stay: true);
+                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Dip" : "x Dips"),stay: true);
                       return;
                     }
-                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Beilage" : "x Beilagen"));
-                    tableItemProvidor.setSideProducts(context: context, new_side_product: selected);
+                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Dip" : "x Dips"));
+                    tableItemProvidor.setDips(context: context, new_dip: selected);
                   },
                   child: Container(
                     height: 10,
                     decoration: BoxDecoration(
-                      color: selected.contains(sideProductID) ? const Color(0xFFD3E03A) : Colors.transparent,
+                      color: selected.contains(dips.id) ? const Color(0xFFD3E03A) : Colors.transparent,
                       border: Border.all(
                           color: Colors.grey,
                           width: 0.5),
@@ -101,8 +96,8 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                     child: Column(
                         children: [
                           const Spacer(),
-                          Text(product.name, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
-                          Text(product.product_price.firstWhere((element) => element.isSD).price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
+                          Text(dips.name, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
+                          Text(dips.price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
                           const Spacer(),
                         ]
                     ),

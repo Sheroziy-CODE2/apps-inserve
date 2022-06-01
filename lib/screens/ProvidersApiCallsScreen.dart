@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspery_pos/Providers/DipsProvider.dart';
 import '../Providers/Authy.dart';
 
 import 'package:provider/provider.dart';
@@ -9,7 +10,6 @@ import '../Providers/Products.dart';
 import './HomePageScreen.dart';
 
 class ProvidersApiCalls extends StatefulWidget {
-  // const LoadProviders({Key? key}) : super(key: key);
   static const routeName = '/Load-providers';
 
   @override
@@ -56,10 +56,9 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
         final token_provider = Provider.of<Authy>(context, listen: false);
         _isInit = false;
         final token = token_provider.token;
-        //await Provider.of<SideProducts>(context, listen: false).addSideProducts(token: token); Removed in backend, 31 Mai Andi
         await Provider.of<Ingredients>(context, listen: false).addIngredients(token: token, context: context);
-        //Provider.of<Prices>(context, listen: false).addPrices(token: token);
         await Provider.of<Products>(context, listen: false).addProducts(token: token, context: context);
+        await Provider.of<DipsProvider>(context, listen: false).addDips(token: token, context: context);
 
 
         //optimise time to load, test Andi 31.Mai

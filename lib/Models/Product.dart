@@ -5,7 +5,6 @@ import 'package:inspery_pos/Models/ProductPrice.dart';
 import 'Ingredient.dart';
 
 class Product {
-//this class is the product class
   late final int id;
   final String name;
   final List<ProductPrice> product_price;

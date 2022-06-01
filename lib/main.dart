@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inspery_pos/Providers/SideProducts.dart';
 import 'package:provider/provider.dart';
 
+import 'Providers/DipsProvider.dart';
 import 'Providers/TableItemChangeProvidor.dart';
 import 'Providers/TableItemProvidor.dart';
 import 'Providers/TableItemsProvidor.dart';
@@ -68,6 +69,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => TableItemsProvidor(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => DipsProvider(),
         ),
       ],
       child: Consumer<Authy>(

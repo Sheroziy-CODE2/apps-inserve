@@ -22,6 +22,7 @@ class TableItemProvidor with ChangeNotifier {
   int selected_price;
   int date;
   List<int> side_product;
+  List<int> dips;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
 
@@ -55,9 +56,16 @@ class TableItemProvidor with ChangeNotifier {
 
   void setSideProducts({required context, required new_side_product}){
     if(isFromServer()) return;
-    side_product.add(new_side_product);
+    side_product = new_side_product;
     notify(context);
   }
+
+  void setDips({required context, required new_dip}){
+    if(isFromServer()) return;
+    dips = new_dip;
+    notify(context);
+  }
+
 
   int getInCard() {
     return _inCart;
@@ -169,6 +177,7 @@ class TableItemProvidor with ChangeNotifier {
      this.side_product = const [],
      this.added_ingredients = const [],
      this.deleted_ingredients = const [],
+     this.dips = const [],
      this.date = 0,
   });
 

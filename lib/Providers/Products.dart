@@ -13,7 +13,6 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProducts({required token, required context}) async {
-    // this function will add all products to the _items List
     final url = Uri.parse(
       'https://www.inspery.com/menu/all_products/',
     );
@@ -27,13 +26,12 @@ class Products with ChangeNotifier {
         //print("Product Name: " + pro.name + "  ID: " + pro.id.toString());
       }
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      print('Products: Request failed with status: ${response.statusCode}.');
     }
     notifyListeners();
   }
 
   Product findById(int id) {
-    //this function will search for a Product by ID
     final Product debug = _items.firstWhere((t) => t.id == id,
         orElse: () => Product(
               id: 0,

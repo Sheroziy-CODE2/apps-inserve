@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspery_pos/widgets/table/menu/ChooseDips.dart';
 import 'package:inspery_pos/widgets/table/menu/ChooseExtraOptionsWidget.dart';
 import 'package:inspery_pos/widgets/table/menu/ChooseProductSize.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +85,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
       "Dips" :SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 2 - 40,
-        child: const Center(child: Text('Dips')),
+        child: ChooseDips(tableName: tableId, goToNextPos: goToNextPos,),
       ),
       "Extras" :SizedBox(
         width: MediaQuery.of(context).size.width,
