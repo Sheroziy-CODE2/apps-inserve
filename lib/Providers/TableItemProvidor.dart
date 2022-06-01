@@ -145,6 +145,7 @@ class TableItemProvidor with ChangeNotifier {
     side_product.forEach((element) {
       ret += productProvidor.findById(sideDishProvidor.findById(element).product).name + ", ";
     });
+
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     added_ingredients.forEach((element) {
       ret += /* "+" + */ ingredientsProvidor.findById(element).name + ", ";
