@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:inspery_pos/Providers/Products.dart';
 import 'package:provider/provider.dart';
 import 'Ingredients.dart';
-import 'SideProducts.dart';
 import 'TableItemProvidor.dart';
 
 import 'Tables.dart';
@@ -208,9 +207,9 @@ class TableItemsProvidor with ChangeNotifier {
     _tableItems[pos].added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
-    var sideProductsProvidor = Provider.of<SideProducts>(context, listen: false);
+    //var sideProductsProvidor = Provider.of<SideProducts>(context, listen: false);
     _tableItems[pos].side_product.forEach((sd) {
-      value += sideProductsProvidor.findById(sd).price;
+      value += productssProvidor.findById(sd).product_price.firstWhere((element) => element.isSD).price;
     });
     if (paymode) {
       value *= _tableItems[pos].getAmountInCard();

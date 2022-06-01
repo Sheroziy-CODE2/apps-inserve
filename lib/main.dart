@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/Providers/SideProducts.dart';
 import 'package:provider/provider.dart';
 
 import 'Providers/DipsProvider.dart';
@@ -43,9 +42,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Authy(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => SideProducts(),
-        ),
+        // ChangeNotifierProvider(
+        //   create: (ctx) => SideProducts(),
+        // ),
         ChangeNotifierProvider(
           create: (ctx) => Tables(),
         ),

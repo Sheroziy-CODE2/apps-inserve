@@ -8,7 +8,6 @@ import 'package:web_socket_channel/io.dart';
 import 'DipsProvider.dart';
 import 'Ingredients.dart';
 import 'Products.dart';
-import 'SideProducts.dart';
 import 'Tables.dart';
 import 'package:intl/intl.dart';
 
@@ -129,18 +128,18 @@ class TableItemProvidor with ChangeNotifier {
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
+    //var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
     var dipsProductProvidor = Provider.of<DipsProvider>(context, listen: false);
 
-    added_ingredients.forEach((inc) {
+    for (var inc in added_ingredients) {
       value += ingredientsProvidor.findById(inc).price;
-    });
-    side_product.forEach((sp) {
-      value += sideProductProvidor.findById(sp).price;
-    });
-    dips.forEach((di) {
+    }
+    for (var sp in side_product) {
+      value += productProvidor.findById(sp).product_price.firstWhere((element) => element.isSD).price;
+    }
+    for (var di in dips) {
       value += dipsProductProvidor.findById(di).price;
-    });
+    }
     if (checkout ?? paymode) {
       value *= getAmountInCard();
     } else {
