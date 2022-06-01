@@ -193,7 +193,7 @@ class TableItemsProvidor with ChangeNotifier {
           .findById(_tableItems[pos].product)
           .product_price
           .firstWhere((element) =>
-      element.id == _tableItems[pos].selected_price!).price;
+      element.id == _tableItems[pos].selected_price).price;
     }catch(e){
       final priceList = productssProvidor
           .findById(_tableItems[pos].product)
@@ -223,7 +223,7 @@ class TableItemsProvidor with ChangeNotifier {
   ///search for a specific price from ProductProvidor in given position
   double getSingleItemPriceByPos({required context, required pos}) {
     var productssProvidor = Provider.of<Products>(context, listen: false);
-    return productssProvidor.findById(_tableItems[pos].product).product_price[_tableItems[pos].selected_price!].price;
+    return productssProvidor.findById(_tableItems[pos].product).product_price[_tableItems[pos].selected_price].price;
   }
 
   ///search for a specific OrderID from ProductProvidor in given position

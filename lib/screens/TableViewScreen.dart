@@ -34,7 +34,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  goToNextPos({required String indicator}){
+  goToNextPos({required String indicator, bool stay = false}){
     print("############");
     print("Go to next pos: " + indicator.toString());
     setState(() {
@@ -44,6 +44,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
       else{
         buttonNames[actPos] = indicator;
       }
+      if(stay) return;
       actPos++;
       horizontalScrollController.animateTo(
           MediaQuery.of(context).size.width * actPos,
@@ -71,14 +72,14 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
         child: ChooseProductForm(tableName: tableId, goToNextPos: goToNextPos, categorieTypeLeft: "food", categorieTypeRight: "drinks",),
       ),
       "Size" : SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: (MediaQuery.of(context).size.height / 2) -40,
-          child: ChooseProductSize(tableName: tableId, goToNextPos: goToNextPos,),
+        width: MediaQuery.of(context).size.width,
+        height: (MediaQuery.of(context).size.height / 2) -40,
+        child: ChooseProductSize(tableName: tableId, goToNextPos: goToNextPos,),
       ),
       "Beilagen" : SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: (MediaQuery.of(context).size.height / 2) -40,
-          child: ChooseSideProduct(tableName: tableId, goToNextPos: goToNextPos,),
+        width: MediaQuery.of(context).size.width,
+        height: (MediaQuery.of(context).size.height / 2) -40,
+        child: ChooseSideProduct(tableName: tableId, goToNextPos: goToNextPos,),
       ),
       "Dips" :SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -118,15 +119,44 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
                           children: chooseProductWidget.values.toList(),
                         )
                     ),
-                    Center(
-                      child: SizedBox(
-                        height: 40,
-                        child:
-                        ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount:chooseProductWidget.length+1,
-                          itemBuilder: (context, index) =>
-                          index == chooseProductWidget.length ?
+                    SizedBox(
+                      height: 40,
+                      child:
+                      Row(
+                        children: [
+                          Flexible(
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount:chooseProductWidget.length,
+                              itemBuilder: (context, index) =>
+                              //index == chooseProductWidget.length ?
+
+                              GestureDetector(
+                                onTap: (){
+                                  //if(index > actPos) return;
+                                  setState(() {
+                                    actPos = index;
+                                    horizontalScrollController.animateTo(
+                                        MediaQuery.of(context).size.width * actPos,
+                                        duration:  const Duration(milliseconds: 500),
+                                        curve: Curves.easeInOutQuart);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Container(
+                                      padding: const EdgeInsets.only(right: 5, left: 5),
+                                      decoration: BoxDecoration(
+                                        color: actPos == index? const Color(0xFFD3E03A) : const Color(0xFFF3F3F3),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: buttonNames.length > index ? Border.all() : null,
+                                      ),
+                                      child: Center(child: Text((buttonNames.length > index ? buttonNames[index] : (index+1).toString() + ". " +  chooseProductWidget.keys.toList()[index])))),
+                                ),
+                              ),
+                            ),
+                          ),
+
                           Padding(
                             padding: const EdgeInsets.all(3),
                             child: SizedBox(
@@ -166,36 +196,16 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
                                     )),
                               ),
                             ),
-                          )
-                              : GestureDetector(
-                            onTap: (){
-                              //if(index > actPos) return;
-                              setState(() {
-                                actPos = index;
-                                horizontalScrollController.animateTo(
-                                    MediaQuery.of(context).size.width * actPos,
-                                    duration:  const Duration(milliseconds: 500),
-                                    curve: Curves.easeInOutQuart);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(3),
-                              child: Container(
-                                  padding: const EdgeInsets.only(right: 5, left: 5),
-                                  decoration: BoxDecoration(
-                                    color: actPos == index? const Color(0xFFD3E03A) : const Color(0xFFF3F3F3),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: buttonNames.length > index ? Border.all() : null,
-                                  ),
-                                  child: Center(child: Text((buttonNames.length > index ? buttonNames[index] : (index+1).toString() + ". " +  chooseProductWidget.keys.toList()[index])))),
-                            ),
                           ),
-                        ),
-
+                        ],
                       ),
+
                     ),
+
                   ],
+
                 ),
+
                 ),
               ],
               )

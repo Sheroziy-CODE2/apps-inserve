@@ -19,7 +19,7 @@ class TableItemProvidor with ChangeNotifier {
   int saved_table;
   int user;
   int product;
-  int? selected_price;
+  int selected_price;
   int date;
   List<int> side_product;
   List<int> added_ingredients;
@@ -55,7 +55,7 @@ class TableItemProvidor with ChangeNotifier {
 
   void setSideProducts({required context, required new_side_product}){
     if(isFromServer()) return;
-    selected_price = new_side_product;
+    side_product.add(new_side_product);
     notify(context);
   }
 
@@ -116,7 +116,7 @@ class TableItemProvidor with ChangeNotifier {
     List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
     double value = 0;
     if(!productPriceList.isNotEmpty){
-      if(selected_price!=null) value +=  productPriceList.firstWhere((element) => element.id == selected_price!).price;
+      if(selected_price!=null) value +=  productPriceList.firstWhere((element) => element.id == selected_price).price;
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
@@ -158,18 +158,18 @@ class TableItemProvidor with ChangeNotifier {
   }
 
   TableItemProvidor({
-    this.id = 0,
-    this.quantity = 0,
-    this.table = 0,
+     this.id = 0,
+     this.quantity = 0,
+     this.table = 0,
     //this.total_price = 0.0,
-    this.saved_table = 0,
-    this.user = 0,
-    this.product = 0,
-    this.selected_price = 0,
-    this.side_product = const [],
-    this.added_ingredients = const [],
-    this.deleted_ingredients = const [],
-    this.date = 0,
+     this.saved_table = 0,
+     this.user = 0,
+     this.product = 0,
+     this.selected_price = 0,
+     this.side_product = const [],
+     this.added_ingredients = const [],
+     this.deleted_ingredients = const [],
+     this.date = 0,
   });
 
   factory TableItemProvidor.fromResponse(response) {

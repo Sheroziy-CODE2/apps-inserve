@@ -53,7 +53,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
     return Column(
       children: [
         const SizedBox(height: 15,),
-        Text((productPro.side_product_number - selected.length).toString() + " Beilagen Wählen", style: const TextStyle(color: Colors.black,fontSize: 20,),),
+        Text("noch " + (productPro.side_product_number - selected.length).toString() + " Beilage"+(selected.length != 1 ? "":"n" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: GridView.count(
@@ -75,9 +75,11 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                       selected.add(sideProductID);
                     }
                     if(selected.length != productPro.side_product_number){
+                      setState(() {});
+                      widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Beilage" : "x Beilagen"),stay: true);
                       return;
                     }
-                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + "x Beilagen");
+                    widget.goToNextPos(indicator: selected.length.toStringAsFixed(0) + (selected.length == 1 ? "x Beilage" : "x Beilagen"));
                     tableItemProvidor.setSideProducts(context: context, new_side_product: selected);
                   },
                   child: Container(
@@ -96,7 +98,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                     child: Column(
                         children: [
                           const Spacer(),
-                          Text(product.name, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
+                          Text(product.name, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
                           Text(product.product_price.firstWhere((element) => element.isSD).price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
                           const Spacer(),
                         ]

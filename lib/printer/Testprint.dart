@@ -44,7 +44,7 @@ class TestPrint {
         bluetooth.printNewLine();
         for (int x = 0; x < 3; x++) {
           var element = tableItemsProvidor.tableItems[x];
-          var productPrice = productsProvidor.findById(element.product).product_price[element.selected_price!];
+          var productPrice = productsProvidor.findById(element.product).product_price[element.selected_price];
           bluetooth.print4Column(
               element.quantity.toString(),
               productsProvidor.findById(element.product).name + " " + productPrice.description,

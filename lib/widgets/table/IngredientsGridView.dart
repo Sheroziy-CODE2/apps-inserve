@@ -115,7 +115,9 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
                   ),
                   child: Column(
                       children: [
-                        Text(e.name, style: const
+                        Text(e.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: const
                         TextStyle(color: Colors.black,fontSize: 10),),
                         Text(e.price.toStringAsFixed(2) + "€", style: const
                         TextStyle(color: Colors.black,fontSize: 12, fontWeight: FontWeight.bold),),
