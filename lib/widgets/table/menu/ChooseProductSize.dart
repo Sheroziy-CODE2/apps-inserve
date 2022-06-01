@@ -45,10 +45,6 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
 
-    if(productPro.side_products.length<2){
-      widget.goToNextPos(indicator: productPro.product_price[productPro.side_products.first].description);
-    }
-
     return Column(
       children: [
         const SizedBox(height: 15,),
