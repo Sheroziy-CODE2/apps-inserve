@@ -140,7 +140,7 @@ class TableItemProvidor with ChangeNotifier {
     var sideDishProvidor = Provider.of<SideProducts>(context, listen: false);
     var productProvidor = Provider.of<Products>(context, listen: false);
     var productPro = productProvidor.findById(product);
-    ret += productPro.product_price.firstWhere((element) => element.id == selected_price).description + ", ";
+      ret += productPro.product_price.firstWhere((element) => element.id == selected_price).description + ", ";
 
     side_product.forEach((element) {
       ret += productProvidor.findById(sideDishProvidor.findById(element).product).name + ", ";
