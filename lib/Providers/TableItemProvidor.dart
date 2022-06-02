@@ -126,7 +126,7 @@ class TableItemProvidor with ChangeNotifier {
 
   void addQuantity({required int amountToAdd, required context}) {
     quantity += amountToAdd;
-    if (quantity < 0) quantity = 0;
+    if (quantity < 1) quantity = 1;
     notify(context);
     notifyListeners();
   }
