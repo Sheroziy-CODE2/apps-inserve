@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
+import 'package:inspery_pos/Providers/DipsProvider.dart';
 import 'package:inspery_pos/Providers/Products.dart';
 import 'package:inspery_pos/Providers/TableItemChangeProvidor.dart';
 import 'package:provider/provider.dart';
@@ -173,6 +174,7 @@ class TableItemsProvidor with ChangeNotifier {
     double value = 0;
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     var productssProvidor = Provider.of<Products>(context, listen: false);
+    var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
 
     try { //This can happen when there is no item in the list
       value += productssProvidor
@@ -191,6 +193,10 @@ class TableItemsProvidor with ChangeNotifier {
         value += priceList.first.price;
       }
     }
+    _tableItems[pos].dips.forEach((dip) {
+      value += dipsProvidor.findById(dip).price;
+    });
+
     _tableItems[pos].added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
