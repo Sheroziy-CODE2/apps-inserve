@@ -12,9 +12,9 @@ class ChooseProductForm extends StatefulWidget {
   late List<Product> products;
   final int tableName;
   final Function goToNextPos;
-  final int categorieIDLeft;
-  final int categorieIDRight;
-  ChooseProductForm({required this.tableName, required this.goToNextPos, required this.categorieIDLeft, required this.categorieIDRight});
+  final String categorieTypeLeft;
+  final String categorieTypeRight;
+  ChooseProductForm({required this.tableName, required this.goToNextPos, required this.categorieTypeLeft, required this.categorieTypeRight});
 
   @override
   State<ChooseProductForm> createState() => _ChooseProductFormState();
@@ -37,11 +37,15 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
 
   @override
   Widget build(BuildContext context) {
-
+    Future.delayed(const Duration(milliseconds: 300)).then((value) {
+      list_key[0].currentState!.setState(() {});
+      list_key[1].currentState!.setState(() {});
+    }
+    );
     final hight = MediaQuery
         .of(context)
         .size
-        .height / 2 -20;
+        .height / 2 +20;
     return GestureDetector(
       onPanUpdate: (details) {
         updateListWidgets();
@@ -67,8 +71,8 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
                 CategorysColumn(
                     key: list_key[0],
                     id: id,
-                    name: 'Getränke',
-                    categorieID: widget.categorieIDLeft,
+                    type: widget.categorieTypeLeft,
+                    //categorieID: widget.categorieIDLeft,
                     categoryHandler: changeCategory,
                 ),
                 Positioned(
@@ -125,10 +129,9 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
             child: Stack(
               children: [
                 CategorysColumn(
-                    key: list_key[1],
                     id: id,
-                    name: 'Speisen',
-                  categorieID: widget.categorieIDRight,
+                    key: list_key[1],
+                    type: widget.categorieTypeRight,
                     categoryHandler: changeCategory,
                 ),
                 Positioned(

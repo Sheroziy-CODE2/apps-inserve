@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:inspery_pos/Providers/DipsProvider.dart';
 import '../Providers/Authy.dart';
 
 import 'package:provider/provider.dart';
-import '../Providers/SideProducts.dart';
 import '../Providers/Tables.dart';
 import '../Providers/Categorys.dart';
 import '../Providers/Ingredients.dart';
@@ -10,7 +10,6 @@ import '../Providers/Products.dart';
 import './HomePageScreen.dart';
 
 class ProvidersApiCalls extends StatefulWidget {
-  // const LoadProviders({Key? key}) : super(key: key);
   static const routeName = '/Load-providers';
 
   @override
@@ -57,18 +56,24 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
         final token_provider = Provider.of<Authy>(context, listen: false);
         _isInit = false;
         final token = token_provider.token;
-        await Provider.of<SideProducts>(context, listen: false).addSideProducts(token: token);
         await Provider.of<Ingredients>(context, listen: false).addIngredients(token: token, context: context);
-        //Provider.of<Prices>(context, listen: false).addPrices(token: token);
         await Provider.of<Products>(context, listen: false).addProducts(token: token, context: context);
+        await Provider.of<DipsProvider>(context, listen: false).addDips(token: token, context: context);
 
+
+        //optimise time to load, test Andi 31.Mai
+        var futures1 = <Future>[];
+        var futures2 = <Future>[];
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
-          await tablesData.connectSocket(
-              id: table.id, context: context, token: token);
-          await tablesData.listenSocket(
-              id: table.id, context: context, token: token);
+          futures1.add(tablesData.connectSocket(id: table.id, context: context, token: token));
         }
+        for (var i = 0; i < tablesData.items.length; i++) {
+          var table = tablesData.items[i];
+          futures2.add(tablesData.listenSocket(id: table.id, context: context, token: token));
+        }
+        await Future.wait(futures1);
+        await Future.wait(futures2);
         setState(() {
           _isLoading = false;
         });

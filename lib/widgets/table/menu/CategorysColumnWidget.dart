@@ -1,27 +1,24 @@
 import "package:flutter/material.dart";
-import '../../../Providers/Tables.dart';
-import '../../../screens/TableViewScreen.dart';
 import 'package:provider/provider.dart';
 
-import '../../../Models/TableModel.dart';
 import '../../../Providers/Categorys.dart';
 import '../../../Providers/Category.dart';
 
 class CategorysColumn extends StatefulWidget {
   // this is the column of categorys in ChooseProductForm
-  String name = 'categorys';
   final Function categoryHandler;
-  int id = 0;
+  final String type;
+  int id;
   ScrollController scrollController = ScrollController();
   final elementsShown = 6;
-  final int categorieID;
+  //final String categorieID;
 
   CategorysColumn({
     Key? key,
     required this.id,
-    required this.name,
+    required this.type,
     required this.categoryHandler,
-    required this.categorieID
+    //required this.categorieID
   }) : super(key: key);
 
   @override
@@ -41,6 +38,9 @@ class CategorysColumnState extends State<CategorysColumn> {
     pressedCategpry = category;
     widget.categoryHandler(category);
   }
+  double elementHight = 99;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,27 +48,29 @@ class CategorysColumnState extends State<CategorysColumn> {
       context,
     ); //category provider
     final categorieitems = categorysData.items.where((i) =>
-      i.category_type == widget.categorieID
+      i.product_type == widget.type
     ).toList();
 
-    int id = widget.id.toInt();
 
-    Widget icon = widget.name == 'Getränke' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
+    Widget icon = widget.type == 'food' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
 
 
-     late final double elementHight;
+
     try {
       final box = context.findRenderObject() as RenderBox;
       final hight = box.size.height;
       elementHight = ((hight-25) / widget.elementsShown)-10;
     } catch(e){
-      print("Coud not get RenderBox to calculate the higt of the widget, error: " + e.toString());
-      elementHight = 43.0;
+      print("Coud not get RenderBox to calculate the hight of the widget, error: " + e.toString());
+      //Kann fehler verursachen!!! -> Loop
+      setState(() {
+        print("setState xxx");
+      });
     }
 
 
     while(categorieitems.length % widget.elementsShown != 0){
-      categorieitems.add(Category(id: -1, name: "Platzhalter", category_type: 0, product_type: '', type: null, picture: ''));
+      categorieitems.add(Category(id: -1, name: "Platzhalter", category_type: 0, product_type: '', picture: ''));
     }
 
 
@@ -88,19 +90,19 @@ class CategorysColumnState extends State<CategorysColumn> {
                     child: Container(),
                     backgroundColor:
                     selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                    categorieitems[selectedIndex].id == id
+                    categorieitems[selectedIndex].id == widget.id
                         ? const Color(0xFFD3E03A)
                         : const Color(0xFFD1D1D1),
                   ),
                   const SizedBox(width: 3,),
                   Text(
-                    widget.name,
+                    widget.type,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                      categorieitems[selectedIndex].id == id
+                      categorieitems[selectedIndex].product_type == widget.type
                           ? const Color(0xFF1B262C)
                           : const Color(0xFFD1D1D1),
                     ),
@@ -153,7 +155,8 @@ class CategorysColumnState extends State<CategorysColumn> {
                           decoration: BoxDecoration(
                             // border:
                             //     Border.all(color: Colors.blueAccent),
-                            color: categorieitems[index].id == id
+                            color:
+                            categorieitems[index].id == widget.id
                                 ? const Color(0xFFD3E03A)
                                 : const Color(0xFFD1D1D1),
 
@@ -165,7 +168,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              widget.name == 'Getränke' ? rotate
+                              widget.type == 'food' ? rotate
                                   ? icon
                                   : Container() : !rotate ? icon : Container(),
                               Expanded(
@@ -187,7 +190,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                                   ),
                                 ),
                               ),
-                              widget.name == 'Getränke' ? !rotate
+                              widget.type == 'food' ? !rotate
                                   ? icon
                                   : Container() : rotate ? icon : Container(),
                             ],

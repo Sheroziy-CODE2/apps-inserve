@@ -47,7 +47,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
 
     return GestureDetector(
       onTap: () async {
-        tableItemChangeProvidor.showProduct(index: widget.index, context: context);
+        tableItemChangeProvidor.showProduct(index: widget.index, context: context, toggle: true);
       },
       child: AnimatedContainer(
           decoration: BoxDecoration(
@@ -296,6 +296,8 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                             Text(
                               widget.tableItemProvidor.getExtrasWithSemicolon(
                                   context: context),
+                              overflow: TextOverflow.fade,
+                              maxLines: 3,
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,

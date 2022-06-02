@@ -62,6 +62,19 @@ class Categorys with ChangeNotifier {
     notifyListeners();
   }
 
+  Category findByType(String type) {
+    //this function will search for a category by ID
+    return _items.firstWhere((t) => t.product_type == type,
+        orElse: () => Category(
+          id: 0,
+          name: '0',
+          category_type: 0,
+          product_type: '',
+          picture: '',
+          //type: null,
+        ));
+  }
+
   Category findById(int id) {
     //this function will search for a category by ID
     return _items.firstWhere((t) => t.id == id,
@@ -71,7 +84,7 @@ class Categorys with ChangeNotifier {
               category_type: 0,
               product_type: '',
               picture: '',
-              type: null,
+              //type: null,
             ));
   }
 }

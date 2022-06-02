@@ -5,9 +5,9 @@ import 'package:inspery_pos/Models/ProductPrice.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 
+import 'DipsProvider.dart';
 import 'Ingredients.dart';
 import 'Products.dart';
-import 'SideProducts.dart';
 import 'Tables.dart';
 import 'package:intl/intl.dart';
 
@@ -19,9 +19,10 @@ class TableItemProvidor with ChangeNotifier {
   int saved_table;
   int user;
   int product;
-  int? selected_price;
+  int selected_price;
   int date;
   List<int> side_product;
+  List<int> dips;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
 
@@ -47,9 +48,33 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void setSelectedPrice({required context, required new_selected_price}){
+  void setSelectedPrice({required context, required int new_selected_price}){
     if(isFromServer()) return;
     selected_price = new_selected_price;
+    notify(context);
+  }
+
+  void setSideProducts({required context, required int new_side_product}){
+    if(isFromServer()) return;
+    side_product.add(new_side_product);
+    notify(context);
+  }
+
+  void setDips({required context, required int new_dip}){
+    if(isFromServer()) return;
+    dips.add(new_dip);
+    notify(context);
+  }
+
+  void removeSideProducts({required context, required int side_pro}){
+    if(isFromServer()) return;
+    side_product.remove(side_pro);
+    notify(context);
+  }
+
+  void removeDips({required context, required dip}){
+    if(isFromServer()) return;
+    dips.remove(dip);
     notify(context);
   }
 
@@ -101,7 +126,7 @@ class TableItemProvidor with ChangeNotifier {
 
   void addQuantity({required int amountToAdd, required context}) {
     quantity += amountToAdd;
-    if (quantity < 0) quantity = 0;
+    if (quantity < 1) quantity = 1;
     notify(context);
     notifyListeners();
   }
@@ -110,15 +135,23 @@ class TableItemProvidor with ChangeNotifier {
     var productProvidor = Provider.of<Products>(context, listen: false);
     List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
     double value = 0;
+    if(productPriceList.isNotEmpty){
+      value +=  productPriceList.firstWhere((element) => element.id == selected_price).price;
+    }
+
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
-    if(selected_price!=null) value +=  productPriceList[selected_price!].price;
-    added_ingredients.forEach((inc) {
+    //var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
+    var dipsProductProvidor = Provider.of<DipsProvider>(context, listen: false);
+
+    for (var inc in added_ingredients) {
       value += ingredientsProvidor.findById(inc).price;
-    });
-    side_product.forEach((sd) {
-      value += sideProductProvidor.findById(sd).price;
-    });
+    }
+    for (var sp in side_product) {
+      value += productProvidor.findById(sp).product_price.firstWhere((element) => element.isSD).price;
+    }
+    for (var di in dips) {
+      value += dipsProductProvidor.findById(di).price;
+    }
     if (checkout ?? paymode) {
       value *= getAmountInCard();
     } else {
@@ -129,44 +162,47 @@ class TableItemProvidor with ChangeNotifier {
 
   String getExtrasWithSemicolon({required context}) {
     String ret = "";
-    var sideDishProvidor = Provider.of<SideProducts>(context, listen: false);
     var productProvidor = Provider.of<Products>(context, listen: false);
+    var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
     var productPro = productProvidor.findById(product);
-    ret += productPro.product_price[selected_price!].description + ", ";
+    ret += productPro.product_price.firstWhere((element) => element.id == selected_price).description + ", ";
 
-    side_product.forEach((element) {
-      ret += productProvidor.findById(sideDishProvidor.findById(element).product).name + ", ";
-    });
+    for (var element in side_product) {
+      ret += productProvidor.findById(element).name + ", ";
+    }
+    for (var element in dips) {
+      ret += dipsProvidor.findById(element).name + ", ";
+    }
+
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     added_ingredients.forEach((element) {
       ret += /* "+" + */ ingredientsProvidor.findById(element).name + ", ";
     });
     if(ret == ", ") ret = "";
-    //deleted_ingredients.forEach((element) {
-    //  ret += "-" + ingredientsProvidor.findById(element).name + ", ";
-    //});
     return ret;
   }
 
   TableItemProvidor({
-    this.id = 0,
-    this.quantity = 0,
-    this.table = 0,
+     this.id = 0,
+     this.quantity = 0,
+     this.table = 0,
     //this.total_price = 0.0,
-    this.saved_table = 0,
-    this.user = 0,
-    this.product = 0,
-    this.selected_price = 0,
-    this.side_product = const [],
-    this.added_ingredients = const [],
-    this.deleted_ingredients = const [],
-    this.date = 0,
+     this.saved_table = 0,
+     this.user = 0,
+     this.product = 0,
+     this.selected_price = 0,
+     this.side_product = const [],
+     this.added_ingredients = const [],
+     this.deleted_ingredients = const [],
+     this.dips = const [],
+     this.date = 0,
   });
 
   factory TableItemProvidor.fromResponse(response) {
     var jsonResponse = response as Map<String, dynamic>;
     return TableItemProvidor(
       id: jsonResponse["id"] as int,
+      dips: [],//List<int>.from(jsonResponse["dips"] as List<dynamic>),
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,
       table: jsonResponse["table"] as int,

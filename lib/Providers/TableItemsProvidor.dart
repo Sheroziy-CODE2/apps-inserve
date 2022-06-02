@@ -4,10 +4,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
+import 'package:inspery_pos/Providers/DipsProvider.dart';
 import 'package:inspery_pos/Providers/Products.dart';
+import 'package:inspery_pos/Providers/TableItemChangeProvidor.dart';
 import 'package:provider/provider.dart';
 import 'Ingredients.dart';
-import 'SideProducts.dart';
 import 'TableItemProvidor.dart';
 
 import 'Tables.dart';
@@ -165,21 +166,7 @@ class TableItemsProvidor with ChangeNotifier {
     return total;
   }
 
-  String getExtrasWithSemicolon({required context, required int pos}) {
-    String ret = "";
-    // var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-    // _tableItems[pos].side_dish.forEach((element) {
-    //   ret += sideDishProvidor.findById(element.toString()).name + ", ";
-    // });
-    var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    _tableItems[pos].added_ingredients.forEach((element) {
-      ret += "+" + ingredientsProvidor.findById(element).name + ", ";
-    });
-    _tableItems[pos].deleted_ingredients.forEach((element) {
-      ret += "-" + ingredientsProvidor.findById(element).name + ", ";
-    });
-    return ret;
-  }
+
 
   ///returns the total Price of a single Product
   double getTotalPriceOfProductByPos(
@@ -187,14 +174,35 @@ class TableItemsProvidor with ChangeNotifier {
     double value = 0;
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
     var productssProvidor = Provider.of<Products>(context, listen: false);
+    var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
 
-    value += productssProvidor.findById(_tableItems[pos].product).product_price[_tableItems[pos].selected_price!].price;
+    try { //This can happen when there is no item in the list
+      value += productssProvidor
+          .findById(_tableItems[pos].product)
+          .product_price
+          .firstWhere((element) =>
+      element.id == _tableItems[pos].selected_price).price;
+    }catch(e){
+      final priceList = productssProvidor
+          .findById(_tableItems[pos].product)
+          .product_price;
+      if(priceList.where((element) => !element.isSD).isNotEmpty) {
+        value += priceList.where((element) => !element.isSD).first.price;
+      }
+      else if(priceList.isNotEmpty){
+        value += priceList.first.price;
+      }
+    }
+    _tableItems[pos].dips.forEach((dip) {
+      value += dipsProvidor.findById(dip).price;
+    });
+
     _tableItems[pos].added_ingredients.forEach((inc) {
       value += ingredientsProvidor.findById(inc).price;
     });
-    var sideProductsProvidor = Provider.of<SideProducts>(context, listen: false);
+    //var sideProductsProvidor = Provider.of<SideProducts>(context, listen: false);
     _tableItems[pos].side_product.forEach((sd) {
-      value += sideProductsProvidor.findById(sd).price;
+      value += productssProvidor.findById(sd).product_price.firstWhere((element) => element.isSD).price;
     });
     if (paymode) {
       value *= _tableItems[pos].getAmountInCard();
@@ -207,7 +215,7 @@ class TableItemsProvidor with ChangeNotifier {
   ///search for a specific price from ProductProvidor in given position
   double getSingleItemPriceByPos({required context, required pos}) {
     var productssProvidor = Provider.of<Products>(context, listen: false);
-    return productssProvidor.findById(_tableItems[pos].product).product_price[_tableItems[pos].selected_price!].price;
+    return productssProvidor.findById(_tableItems[pos].product).product_price[_tableItems[pos].selected_price].price;
   }
 
   ///search for a specific OrderID from ProductProvidor in given position
@@ -239,6 +247,7 @@ class TableItemsProvidor with ChangeNotifier {
 
   //remove a singel item
   void removeSingelProduct({required pos, required context}){
+     Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
     _tableItems.removeAt(pos);
     notifyListeners();
     notify(context: context);

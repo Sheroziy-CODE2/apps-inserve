@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inspery_pos/Providers/Products.dart';
 import 'package:provider/provider.dart';
 
-import '../../Providers/SideProducts.dart';
 import '../reusable/CenterText.dart';
 
 class InvoiceItemSideDishWidget extends StatelessWidget {
@@ -12,9 +11,7 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sideDishProvider = Provider.of<SideProducts>(context, listen: false);
-    final sideDish = sideDishProvider.findById(id);
-    final product = Provider.of<Products>(context, listen: false).findById(sideDish.product);
+    final product = Provider.of<Products>(context, listen: false).findById(id).product_price.firstWhere((element) => element.isSD);
     return Material(
       type: MaterialType.transparency,
       child: Container(
@@ -39,12 +36,12 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 4,
-                  child: CenterText(text: product.name),
+                  child: CenterText(text: product.description),
                 ),
                 Expanded(
                   flex: 4,
                   child: Text(
-                    '  ${sideDish.price} Euro',
+                    '  ${product.price} Euro',
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
