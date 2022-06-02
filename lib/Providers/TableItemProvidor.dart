@@ -135,7 +135,7 @@ class TableItemProvidor with ChangeNotifier {
     var productProvidor = Provider.of<Products>(context, listen: false);
     List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
     double value = 0;
-    if(!productPriceList.isNotEmpty){
+    if(productPriceList.isNotEmpty){
       value +=  productPriceList.firstWhere((element) => element.id == selected_price).price;
     }
 

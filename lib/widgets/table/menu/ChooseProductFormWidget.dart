@@ -37,11 +37,15 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
 
   @override
   Widget build(BuildContext context) {
-
+    Future.delayed(const Duration(milliseconds: 300)).then((value) {
+      list_key[0].currentState!.setState(() {});
+      list_key[1].currentState!.setState(() {});
+    }
+    );
     final hight = MediaQuery
         .of(context)
         .size
-        .height / 2 -20;
+        .height / 2 +20;
     return GestureDetector(
       onPanUpdate: (details) {
         updateListWidgets();

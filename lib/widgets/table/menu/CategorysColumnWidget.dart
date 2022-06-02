@@ -38,6 +38,9 @@ class CategorysColumnState extends State<CategorysColumn> {
     pressedCategpry = category;
     widget.categoryHandler(category);
   }
+  double elementHight = 99;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +55,17 @@ class CategorysColumnState extends State<CategorysColumn> {
     Widget icon = widget.type == 'food' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
 
 
-     late final double elementHight;
+
     try {
       final box = context.findRenderObject() as RenderBox;
       final hight = box.size.height;
       elementHight = ((hight-25) / widget.elementsShown)-10;
     } catch(e){
-      print("Coud not get RenderBox to calculate the higt of the widget, error: " + e.toString());
-      elementHight = 43.0;
+      print("Coud not get RenderBox to calculate the hight of the widget, error: " + e.toString());
+      //Kann fehler verursachen!!! -> Loop
+      setState(() {
+        print("setState xxx");
+      });
     }
 
 

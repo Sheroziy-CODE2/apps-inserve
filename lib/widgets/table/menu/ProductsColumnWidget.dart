@@ -14,6 +14,8 @@ class ProductsColumn extends StatefulWidget {
 
   ProductsColumn({required this.id, required this.tableID, required this.goToNextPos});
 
+
+
   @override
   State<ProductsColumn> createState() => _ProductsColumnState();
 }
@@ -68,6 +70,12 @@ class _ProductsColumnState extends State<ProductsColumn> {
         });
       });
     }
+  }
+
+  @override
+  void dispose() {
+    Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
+    super.dispose();
   }
 
   // Category category = category;
@@ -148,7 +156,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
                       itemPos = itemList.getLength()-1;
                     }
                     itemList.editItemFromWaiter(context: context, itemPos: itemPos ,product: productsList[index].id);
-                    widget.goToNextPos(indicator: productsList[index].name);
+                    widget.goToNextPos(indicator: productsList[index].name, dontStoreIndicator: true);
                   },
                   child: Container(
                     padding: const EdgeInsets.only(

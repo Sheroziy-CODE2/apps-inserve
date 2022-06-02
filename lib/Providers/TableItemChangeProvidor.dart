@@ -29,7 +29,7 @@ class TableItemChangeProvidor extends ChangeNotifier {
     try{
       selectedPriceOfProductID = selectedProduct.product_price.firstWhere((element) => !element.isSD).id;
     }catch(e){
-      ProductPrice pp = ProductPrice(price: 0.0, description: "Not Found", id: 99, isSD: false);
+      ProductPrice pp = ProductPrice(price: 0.0, description: "keine größe angegeben", id: 99, isSD: false);
       selectedProduct.product_price.add(pp);
     }
     items.addItemFromWaiter(
@@ -70,11 +70,18 @@ class TableItemChangeProvidor extends ChangeNotifier {
 
   ///Call this Function to change the shown Product in the TableItemWidget
   ///It will not effect the data of any product
-  showProduct({required index, required context}){
-    _productPosInItem = index;
+  showProduct({required index, required context, bool toggle = false}){
+    if(toggle && _productPosInItem == index){
+      if(_productPosInItem != null) _productPosInItem = null;
+      else _productPosInItem = index;
+    }
+    else {
+      _productPosInItem = index;
+    }
     notify(context: context);
     notifyListeners();
   }
+
 
   ///Call this Function to get all the ProductID from the givenProduct that is shown
   ///if it is null, no Product should be shown in the TableOverviewChangeProduct Widget

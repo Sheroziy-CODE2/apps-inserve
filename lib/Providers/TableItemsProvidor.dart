@@ -5,6 +5,7 @@ import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
 import 'package:inspery_pos/Providers/Products.dart';
+import 'package:inspery_pos/Providers/TableItemChangeProvidor.dart';
 import 'package:provider/provider.dart';
 import 'Ingredients.dart';
 import 'TableItemProvidor.dart';
@@ -164,21 +165,7 @@ class TableItemsProvidor with ChangeNotifier {
     return total;
   }
 
-  String getExtrasWithSemicolon({required context, required int pos}) {
-    String ret = "";
-    // var sideDishProvidor = Provider.of<SideDishes>(context, listen: false);
-    // _tableItems[pos].side_dish.forEach((element) {
-    //   ret += sideDishProvidor.findById(element.toString()).name + ", ";
-    // });
-    var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    _tableItems[pos].added_ingredients.forEach((element) {
-      ret += "+" + ingredientsProvidor.findById(element).name + ", ";
-    });
-    _tableItems[pos].deleted_ingredients.forEach((element) {
-      ret += "-" + ingredientsProvidor.findById(element).name + ", ";
-    });
-    return ret;
-  }
+
 
   ///returns the total Price of a single Product
   double getTotalPriceOfProductByPos(
@@ -254,6 +241,7 @@ class TableItemsProvidor with ChangeNotifier {
 
   //remove a singel item
   void removeSingelProduct({required pos, required context}){
+     Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
     _tableItems.removeAt(pos);
     notifyListeners();
     notify(context: context);

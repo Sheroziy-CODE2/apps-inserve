@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inspery_pos/widgets/table/TableOverviewProductItem.dart';
 import 'package:provider/provider.dart';
 
-import '../../Providers/TableItemChangeProvidor.dart';
 import '../../Providers/TableItemsProvidor.dart';
 import '../../Providers/Tables.dart';
 
@@ -37,7 +36,9 @@ class _TableOverviewProductListState extends State<TableOverviewProductList> {
         itemBuilder: (_, index) {
           return GestureDetector(
             onPanEnd: tableItemsProvidor.tableItems[index].isFromServer() ? null : (x){
-              tableItemsProvidor.removeSingelProduct(pos: index, context: context);
+              if(x.velocity.pixelsPerSecond.distance > 500) {
+                tableItemsProvidor.removeSingelProduct(pos: index, context: context);
+              }
             },
             child: TableOverviewProductItem(
               width: width,

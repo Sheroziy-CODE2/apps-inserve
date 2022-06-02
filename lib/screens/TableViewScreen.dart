@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspery_pos/Providers/Products.dart';
 import 'package:inspery_pos/widgets/table/menu/ChooseDips.dart';
 import 'package:inspery_pos/widgets/table/menu/ChooseExtraOptionsWidget.dart';
 import 'package:inspery_pos/widgets/table/menu/ChooseProductSize.dart';
 import 'package:provider/provider.dart';
 import '../Providers/TableItemChangeProvidor.dart';
+import '../Providers/TableItemProvidor.dart';
+import '../Providers/TableItemsProvidor.dart';
+import '../Providers/Tables.dart';
 import '../widgets/table/TableOverviewFrame.dart';
 import '../widgets/table/menu/ChooseProductFormWidget.dart';
 import '../widgets/table/menu/ChooseSideProduct.dart';
@@ -20,7 +24,8 @@ class TableView extends StatefulWidget {
 
 class _TableViewState extends State<TableView> with TickerProviderStateMixin{
   // const TableView({Key? key}) : super(key: key);
-
+  Map<String, Widget> chooseProductWidget = {};
+  late TableItemChangeProvidor tableItemChangeProvidor;
 
   // Animation
   @override
@@ -35,49 +40,71 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  goToNextPos({required String indicator, bool stay = false}){
+  goToNextPos({required String indicator, bool stay = false, bool dontStoreIndicator = false}){
     print("############");
     print("Go to next pos: " + indicator.toString());
     setState(() {
-      if((buttonNames.length-1) < actPos){
-        buttonNames.add(indicator);
-      }
-      else{
-        buttonNames[actPos] = indicator;
+      if(!dontStoreIndicator) {
+        if ((buttonNames.length - 1) < actPos) {
+          buttonNames.add(indicator);
+        }
+        else {
+          buttonNames[actPos] = indicator;
+        }
       }
       if(stay) return;
       actPos++;
+      // print("Length " + chooseProductWidget.length.toString() + " vs " + actPos.toString());
+      // if(actPos > chooseProductWidget.length-1){
+      //   productReadyToEnter();
+      //   return;
+      // }
       horizontalScrollController.animateTo(
           MediaQuery.of(context).size.width * actPos,
           duration:  const Duration(milliseconds: 500),
           curve: Curves.easeInOutQuart);
-      horizontalScrollControllerSteps.animateTo(
+      if(actPos > 1) {
+        horizontalScrollControllerSteps.animateTo(
           actPos * 35,
+          duration:  const Duration(milliseconds: 200),
+          curve: Curves.easeInOutQuart);
+      }
+    });
+
+  }
+
+  productReadyToEnter(){
+    tableItemChangeProvidor.showProduct(index: null, context: context);
+    setState(() {
+      actPos = 0;
+      buttonNames = [];
+      horizontalScrollController.animateTo(
+          0,
+          duration:  const Duration(milliseconds: 500),
+          curve: Curves.easeInOutQuart);
+      horizontalScrollControllerSteps.animateTo(
+          0,
           duration:  const Duration(milliseconds: 200),
           curve: Curves.easeInOutQuart);
     });
   }
 
+
   int actPos = 0;
+  String posName = "";
   ScrollController horizontalScrollController = ScrollController();
   ScrollController horizontalScrollControllerSteps = ScrollController();
   List<String> buttonNames = [];
+  int lastSelectedItem = 0;
 
-  @override
-  Widget build(BuildContext context) {
-
-    final id = int.parse(ModalRoute.of(context)?.settings.arguments
-    as String); //the id we got from the Link
-
-    final int tableId = id;
-
+  Widget getElements({required String key, required tableId, required context}){
     final Map<String, Widget> chooseProductWidget = {
-      "Product" : SizedBox(
+      "Produkt" : SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2)-40,
+        height: (MediaQuery.of(context).size.height / 2),
         child: ChooseProductForm(tableName: tableId, goToNextPos: goToNextPos, categorieTypeLeft: "food", categorieTypeRight: "drinks",),
       ),
-      "Size" : SizedBox(
+      "Größe" : SizedBox(
         width: MediaQuery.of(context).size.width,
         height: (MediaQuery.of(context).size.height / 2) -40,
         child: ChooseProductSize(tableName: tableId, goToNextPos: goToNextPos,),
@@ -87,19 +114,84 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
         height: (MediaQuery.of(context).size.height / 2) -40,
         child: ChooseSideProduct(tableName: tableId, goToNextPos: goToNextPos,),
       ),
-      "Dips" :SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2 - 40,
-        child: ChooseDips(tableName: tableId, goToNextPos: goToNextPos,),
-      ),
+     "Dips" :SizedBox(
+         width: MediaQuery.of(context).size.width,
+         height: MediaQuery.of(context).size.height / 2 - 40,
+         child: ChooseDips(tableName: tableId, goToNextPos: goToNextPos,),
+       ),
       "Extras" :SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 2 - 40,
         child: ChooseExtraOptionWidget(tableName: tableId),
       ),
     };
+    return chooseProductWidget[key]!;
+  }
+  late TableItemProvidor tableItemProvidor;
+  late TableItemsProvidor tIP;
 
+  @override
+  Widget build(BuildContext context) {
 
+    final id = int.parse(ModalRoute.of(context)?.settings.arguments
+    as String); //the id we got from the Link
+
+    final int tableId = id;
+
+    //generating the set of Widgets for the selected Product
+     tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
+    chooseProductWidget = {};
+    try {
+      tIP = Provider
+          .of<Tables>(context, listen: true)
+          .findById(tableId)
+          .tIP;
+      final int x = tableItemChangeProvidor.getActProduct()!;
+
+      tableItemProvidor = tIP.tableItems[x];
+      var product = Provider.of<Products>(context, listen: true).findById(tableItemProvidor.product);
+      if(product.product_price.where((element) => !element.isSD).length > 1){
+        chooseProductWidget.putIfAbsent("Größe", () => getElements(key: "Größe", tableId: tableId, context: context));
+      }
+      if(product.side_product_number > 0){
+        chooseProductWidget.putIfAbsent("Beilagen", () => getElements(key: "Beilagen", tableId: tableId, context: context));
+      }
+      if(product.dips_number > 0){
+        chooseProductWidget.putIfAbsent("Dips", () => getElements(key: "Dips", tableId: tableId, context: context));
+      }
+      chooseProductWidget.putIfAbsent("Extras", () => getElements(key: "Extras", tableId: tableId, context: context));
+      if(lastSelectedItem != x) { //when select other item in List
+        buttonNames = [];
+        try {
+          actPos = chooseProductWidget.keys.toList().indexOf(posName);
+          if(actPos ==-1) actPos = 0;
+        }
+        catch(e){
+          actPos = 0;
+        }
+        horizontalScrollController.animateTo(
+            MediaQuery.of(context).size.width * actPos,
+            duration:  const Duration(milliseconds: 500),
+            curve: Curves.easeInOutQuart);
+        if(actPos > 1) {
+          horizontalScrollControllerSteps.animateTo(
+            actPos * 35,
+            duration:  const Duration(milliseconds: 200),
+            curve: Curves.easeInOutQuart);
+        }
+      }
+      lastSelectedItem = x;
+    }
+    catch (e){
+      chooseProductWidget.putIfAbsent("Produkt", () => getElements(key: "Produkt", tableId: tableId, context: context));
+    }
+    if(actPos!=-1) {
+      try {
+        posName = chooseProductWidget.keys.toList()[actPos];
+      }catch(e){
+        actPos = 0;
+      }
+    }
     return
       Scaffold(
         body: Container(
@@ -116,118 +208,106 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
                   id: tableId,
                 ),
                 Expanded(child: Column(
-                  children: [
-                    SingleChildScrollView(
-                        controller: horizontalScrollController,
-                        scrollDirection: Axis.horizontal,
-                        physics: const NeverScrollableScrollPhysics(),
-                        child: Row(
-                          children: chooseProductWidget.values.toList(),
-                        )
-                    ),
-                    SizedBox(
-                      height: 38,
-                      child:
-                      Row(
-                        children: [
-                          Flexible(
-                            child: ListView.builder(
-                              controller: horizontalScrollControllerSteps,
-                              scrollDirection: Axis.horizontal,
-                              itemCount:chooseProductWidget.length,
-                              itemBuilder: (context, index) =>
-                              //index == chooseProductWidget.length ?
+                 children: [
+                   SingleChildScrollView(
+                       controller: horizontalScrollController,
+                       scrollDirection: Axis.horizontal,
+                       physics: const NeverScrollableScrollPhysics(),
+                       child: Row(
+                         children: chooseProductWidget.values.toList(),
+                       )
+                   ),
+                   chooseProductWidget.keys.where((element) => element != "Produkt").isNotEmpty ? SizedBox(
+                     height: 38,
+                     child: Row(
+                       children: [
+                         Flexible(
+                           child: ListView.builder(
+                             controller: horizontalScrollControllerSteps,
+                             scrollDirection: Axis.horizontal,
+                             itemCount:chooseProductWidget.length,
+                             itemBuilder: (context, index) =>
+                             //index == chooseProductWidget.length ?
 
-                              GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    actPos = index;
-                                    horizontalScrollController.animateTo(
-                                        MediaQuery.of(context).size.width * actPos,
-                                        duration:  const Duration(milliseconds: 500),
-                                        curve: Curves.easeInOutQuart);
+                             GestureDetector(
+                               onTap: (){
+                                 setState(() {
+                                   actPos = index;
+                                   horizontalScrollController.animateTo(
+                                       MediaQuery.of(context).size.width * actPos,
+                                       duration:  const Duration(milliseconds: 500),
+                                       curve: Curves.easeInOutQuart);
+                                   if(actPos > 1) {
                                      horizontalScrollControllerSteps.animateTo(
-                                         actPos * 35,
-                                         duration:  const Duration(milliseconds: 200),
-                                         curve: Curves.easeInOutQuart);
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: Container(
-                                      width: 75,
-                                      padding: const EdgeInsets.only(right: 5, left: 5),
-                                      decoration: BoxDecoration(
-                                        color: actPos == index? const Color(0xFFD3E03A) : const Color(0xFFF3F3F3),
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: buttonNames.length > index ? Border.all() : null,
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                              (buttonNames.length > index ? buttonNames[index] : /*(index+1).toString() + "." + */ chooseProductWidget.keys.toList()[index]),
-                                          style: const TextStyle(fontSize: 10,),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ))),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.all(3),
-                            child: SizedBox(
-                              height: 40,
-                              width: 100,
-                              child: GestureDetector(
-                                onTap: (){
-                                  Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
-                                  setState(() {
-                                    actPos = 0;
-                                    buttonNames = [];
-                                    horizontalScrollController.animateTo(
-                                        0,
-                                        duration:  const Duration(milliseconds: 500),
-                                        curve: Curves.easeInOutQuart);
-                                    horizontalScrollControllerSteps.animateTo(
-                                        0,
+                                        actPos * 35,
                                         duration:  const Duration(milliseconds: 200),
                                         curve: Curves.easeInOutQuart);
-                                  });
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFF3F3F3),
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                          child: Icon(Icons.arrow_circle_up, color: Colors.black.withOpacity(0.4),),
-                                        ),
-                                        const SizedBox(width: 5,),
-                                        const Text("Fertig"),
-                                      ],
-                                    )),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                                   }
+                                 });
+                               },
+                               child: Padding(
+                                 padding: const EdgeInsets.all(2),
+                                 child: Container(
+                                     width: 75,
+                                     padding: const EdgeInsets.only(right: 5, left: 5),
+                                     decoration: BoxDecoration(
+                                       color: actPos == index? const Color(0xFFD3E03A) : const Color(0xFFF3F3F3),
+                                       borderRadius: BorderRadius.circular(20),
+                                       border: buttonNames.length > index ? Border.all() : null,
+                                     ),
+                                     child: Center(
+                                         child: Text(
+                                             (buttonNames.length > index ? buttonNames[index] : /*(index+1).toString() + "." + */ chooseProductWidget.keys.toList()[index]),
+                                         style: const TextStyle(fontSize: 10,),
+                                           overflow: TextOverflow.ellipsis,
+                                           maxLines: 2,
+                                         ))),
+                               ),
+                             ),
+                           ),
+                         ),
 
-                    ),
+                         Padding(
+                           padding: const EdgeInsets.all(3),
+                           child: SizedBox(
+                             height: 40,
+                             width: 100,
+                             child: GestureDetector(
+                               onTap: (){
+                                 productReadyToEnter();
+                               },
+                               child: Container(
+                                   decoration: BoxDecoration(
+                                     color: tableItemChangeProvidor.getActProduct() != null ? const Color(0xFFD3E03A) : Colors.white,
+                                     borderRadius: BorderRadius.circular(20),
+                                   ),
+                                   child: Row(
+                                     children: [
+                                       Container(
+                                         height: 40,
+                                         width: 40,
+                                         decoration: BoxDecoration(
+                                           color: tableItemChangeProvidor.getActProduct() != null ? const Color(0xFFE3F05A) : const Color(0xFFF3F3F3),
+                                           borderRadius: BorderRadius.circular(20),
+                                         ),
+                                         child: Icon(Icons.arrow_circle_up, color: Colors.black.withOpacity(0.4),),
+                                       ),
+                                       const SizedBox(width: 5,),
+                                       const Text("Fertig"),
+                                     ],
+                                   )),
+                             ),
+                           ),
+                         ),
+                       ],
+                     ),
+                   ): Container(),
 
-                  ],
+                 ],
 
-                ),
+                  ),
 
-                ),
+                  ),
               ],
               )
           ),

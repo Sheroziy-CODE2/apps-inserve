@@ -37,7 +37,6 @@ class _ChooseDipsState extends State<ChooseDips> {
           .tIP;
       final int x = tableItemChangeProvidor.getActProduct()!;
       tableItemProvidor = tIP.tableItems[x];
-      print("new TableItem Product Pos is now: " + x.toString());
     }
     catch (e){
       print("Table ID: " + widget.tableName.toString());
@@ -46,7 +45,6 @@ class _ChooseDipsState extends State<ChooseDips> {
     }
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
-    print("new Product is now: " + productPro.name);
 
 
     return Column(
@@ -76,10 +74,10 @@ class _ChooseDipsState extends State<ChooseDips> {
                     }
                     if(tableItemProvidor.dips.length != productPro.dips_number){
                       setState(() {});
-                      widget.goToNextPos(indicator: tableItemProvidor.dips.length.toStringAsFixed(0) + (tableItemProvidor.dips.length == 1 ? "xDip" : "xDips"),stay: true);
+                      widget.goToNextPos(indicator: tableItemProvidor.dips.length.toStringAsFixed(0) + (tableItemProvidor.dips.length == 1 ? "xDip" : "xDips"),stay: true, dontStoreIndicator: false);
                       return;
                     }
-                    widget.goToNextPos(indicator: tableItemProvidor.dips.length.toStringAsFixed(0) + (tableItemProvidor.dips.length == 1 ? "xDip" : "xDips"));
+                    widget.goToNextPos(indicator: tableItemProvidor.dips.length.toStringAsFixed(0) + (tableItemProvidor.dips.length == 1 ? "xDip" : "xDips"), dontStoreIndicator: false);
                   },
                   child: Container(
                     height: 10,
