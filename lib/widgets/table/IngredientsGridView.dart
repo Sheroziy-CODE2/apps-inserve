@@ -96,9 +96,11 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
 
             return GestureDetector(
                 onTap: (){
-                  if(tableItemProvidor.paymode || tableItemProvidor.isFromServer()) return;
-                  tableItemProvidor.added_ingredients.add(e.id);
-                  tableItemProvidor.notify(context);
+                  setState((){
+                    if(tableItemProvidor.paymode || tableItemProvidor.isFromServer()) return;
+                    tableItemProvidor.added_ingredients.add(e.id);
+                    tableItemProvidor.notify(context);
+                  });
                 },
                 child: Container(
                   height: 10,

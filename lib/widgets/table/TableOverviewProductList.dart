@@ -36,7 +36,7 @@ class _TableOverviewProductListState extends State<TableOverviewProductList> {
         itemBuilder: (_, index) {
           return GestureDetector(
             onPanEnd: tableItemsProvidor.tableItems[index].isFromServer() ? null : (x){
-              if(x.velocity.pixelsPerSecond.distance > 500) {
+              if(x.velocity.pixelsPerSecond.distance > 150) {
                 tableItemsProvidor.removeSingelProduct(pos: index, context: context);
               }
             },

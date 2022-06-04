@@ -78,7 +78,9 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      tableItemProvidor.addQuantity(amountToAdd: -1, context: context);
+                      setState((){
+                        tableItemProvidor.addQuantity(amountToAdd: -1, context: context);
+                      });
                     },
                     child: Container(
                       width: 40,
@@ -119,7 +121,9 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      tableItemProvidor.addQuantity(amountToAdd: 1, context: context);
+                      setState((){
+                        tableItemProvidor.addQuantity(amountToAdd: 1, context: context);
+                      });
                     },
                     child: Container(
                       width: 40,
@@ -202,11 +206,13 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                         List.generate(tableItemProvidor.added_ingredients.length, (index) {
                           return GestureDetector(
                             onTap: (){
-                              if(!(tableItemProvidor.getPaymode() || tableItemProvidor.isFromServer())) {
-                                tableItemProvidor.added_ingredients.removeAt(
-                                    index);
-                                tableItemProvidor.notify(context);
-                              }
+                              setState((){
+                                if(!(tableItemProvidor.getPaymode() || tableItemProvidor.isFromServer())) {
+                                  tableItemProvidor.added_ingredients.removeAt(
+                                      index);
+                                  tableItemProvidor.notify(context);
+                                }
+                              });
                             },
                             child: Container(
                                 height: 10,

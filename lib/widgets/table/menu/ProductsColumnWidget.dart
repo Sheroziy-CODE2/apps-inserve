@@ -72,19 +72,25 @@ class _ProductsColumnState extends State<ProductsColumn> {
     }
   }
 
-  @override
-  void dispose() {
-    Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   try {
+  //     Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(
+  //         index: null, context: context);
+  //   } catch(e){
+  //     print("Error on Dispose when reset TableItemChangeProvider: " + e.toString());
+  //   }
+  //   super.dispose();
+  // }
 
   // Category category = category;
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(milliseconds: 50), () {
-      scrollController.jumpTo(0);
-    });
-
+    if(products.isNotEmpty){
+      Future.delayed(const Duration(milliseconds: 50), () {
+        scrollController.jumpTo(0);
+      });
+    }
     if (search == '') {
       setState(() {
         final categorysData = Provider.of<Categorys>(context, listen: false);
@@ -155,7 +161,8 @@ class _ProductsColumnState extends State<ProductsColumn> {
                         .addProduct(context: context, productID: productsList[index].id, tableID: widget.tableID, refresh: false);
                       itemPos = itemList.getLength()-1;
                     }
-                    itemList.editItemFromWaiter(context: context, itemPos: itemPos ,product: productsList[index].id);
+                    print("Index: " + index.toString() + " ProductList: " + productsList[1].id.toString() + " ItemPos " + itemPos.toString());
+                    itemList.editItemFromWaiter(context: context, itemPos: itemPos, product: productsList[index].id);
                     widget.goToNextPos(indicator: productsList[index].name, dontStoreIndicator: true);
                   },
                   child: Container(

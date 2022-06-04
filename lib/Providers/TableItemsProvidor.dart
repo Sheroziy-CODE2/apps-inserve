@@ -8,6 +8,7 @@ import 'package:inspery_pos/Providers/DipsProvider.dart';
 import 'package:inspery_pos/Providers/Products.dart';
 import 'package:inspery_pos/Providers/TableItemChangeProvidor.dart';
 import 'package:provider/provider.dart';
+import '../main.dart';
 import 'Ingredients.dart';
 import 'TableItemProvidor.dart';
 
@@ -36,8 +37,13 @@ class TableItemsProvidor with ChangeNotifier {
     _tableItems.remove(item);
   }
 
-  void notify({required context}) {
-    Provider.of<Tables>(context, listen: false).notify();
+  void notify() {
+    final _context = MyApp.navKey.currentContext;
+    if(_context == null) {
+      print("Global context in checkState on dispose TableOverviewFrame is null");
+      return;
+    }
+    Provider.of<Tables>(_context, listen: false).notify();
   }
 
   void setItems(newItems) {
@@ -103,7 +109,7 @@ class TableItemsProvidor with ChangeNotifier {
     for (int x = 0; x < _tableItems.length; x++) {
       _tableItems[x].zeroAmountInCard(context: context);
     }
-    notify(context: context);
+    notify();
     notifyListeners();
   }
 
@@ -117,20 +123,19 @@ class TableItemsProvidor with ChangeNotifier {
   }
 
   ///Set all Items in the TableOverviewProductItem Widget to paymode
-  void setItemsPaymode({required bool paymode, required context}) {
+  void setItemsPaymode({required bool paymode}) {
     try {
       for (int x = 0; x < _tableItems.length; x++) {
         _tableItems[x].paymode = paymode;
       }
-      notify(context: context);
+      //notify();
       notifyListeners();
     }
     catch(e){print("SetPaymode failed: " + e.toString());}
   }
 
-  void setHightModeExtendet({required hight_mode_extendet, required context}){
+  void setHightModeExtendet({required hight_mode_extendet}){
     this.hight_mode_extendet = hight_mode_extendet;
-    notify(context: context);
     notifyListeners();
   }
 
@@ -141,10 +146,10 @@ class TableItemsProvidor with ChangeNotifier {
 
   ///Adds quantity of product in a given position
   void addQuantity(
-      {required int id, required int amountToAdd, required context}) {
+      {required int id, required int amountToAdd}) {
     _tableItems[id].quantity += amountToAdd;
     notifyListeners();
-    notify(context: context);
+    notify();
   }
 
   ///returns the total Price of all Products the given table
@@ -201,9 +206,11 @@ class TableItemsProvidor with ChangeNotifier {
       value += ingredientsProvidor.findById(inc).price;
     });
     //var sideProductsProvidor = Provider.of<SideProducts>(context, listen: false);
+    try{
     _tableItems[pos].side_product.forEach((sd) {
       value += productssProvidor.findById(sd).product_price.firstWhere((element) => element.isSD).price;
-    });
+    });}
+    catch(e){}
     if (paymode) {
       value *= _tableItems[pos].getAmountInCard();
     } else {
@@ -250,7 +257,7 @@ class TableItemsProvidor with ChangeNotifier {
      Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
     _tableItems.removeAt(pos);
     notifyListeners();
-    notify(context: context);
+    notify();
   }
 
 
@@ -292,6 +299,10 @@ class TableItemsProvidor with ChangeNotifier {
     List<int>? added_ingredients,
     List<int>? deleted_ingredients,
   }){
+    print("Item Pos");
+    print(itemPos);
+    print("Table Items");
+    print(_tableItems);
     if(_tableItems[itemPos].isFromServer()){
       print("You are not allowed to Addid this item");
       return;
@@ -306,7 +317,7 @@ class TableItemsProvidor with ChangeNotifier {
     if(added_ingredients!= null){_tableItems[itemPos].added_ingredients = added_ingredients;}
     if(deleted_ingredients!= null){_tableItems[itemPos].deleted_ingredients = deleted_ingredients;}
     _tableItems[itemPos].fromWaiter = true;
-    notify(context: context);
+    notify();
   }
 
 
