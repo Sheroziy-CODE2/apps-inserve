@@ -1,12 +1,13 @@
 
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/widgets/table/TableOverviewChangeProduct.dart';
 import 'package:inspery_pos/widgets/table/TableOverviewProductList.dart';
 
 import 'package:provider/provider.dart';
 import '../../Models/TableModel.dart';
+import '../../Providers/TableItemChangeProvidor.dart';
 import '../../Providers/TableItemsProvidor.dart';
 import '../../Providers/Tables.dart';
+import '../../main.dart';
 
 //we have to rename this widget
 class TableOverviewWidgetFrame extends StatefulWidget {
@@ -162,14 +163,13 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                     child: GestureDetector(
                       onTap: (){
                         tableItemProvidor.setItemsPaymode(
-                            context: context,
                             paymode: !paymode);
                         setState(() {
                           paymode = !paymode;
                           tableItemProvidor.setHightModeExtendet(
-                              hight_mode_extendet: false,
-                              context: context);
+                              hight_mode_extendet: false,);
                         });
+                        Provider.of<Tables>(context, listen: false).notify();
                       },
                       child: Container(
                           decoration: BoxDecoration(
@@ -235,7 +235,8 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                     width: 105,
                     child: GestureDetector(
                       onTap: (){
-                        tableItemProvidor.setHightModeExtendet(hight_mode_extendet: !tableItemProvidor.hight_mode_extendet, context: context);
+                        tableItemProvidor.setHightModeExtendet(hight_mode_extendet: !tableItemProvidor.hight_mode_extendet);
+                        Provider.of<Tables>(context, listen: false).notify();
                       },
                       child: Container(
                           decoration: BoxDecoration(
@@ -334,11 +335,10 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                         width: 105,
                         child: GestureDetector(
                           onTap: (){
-                            tableItemProvidor.setItemsPaymode(
-                                context: context,
-                                paymode: !paymode);
+                            tableItemProvidor.setItemsPaymode(paymode: !paymode);
                             paymode = !paymode;
-                            tableItemProvidor.setHightModeExtendet(hight_mode_extendet: true, context: context);
+                            tableItemProvidor.setHightModeExtendet( hight_mode_extendet: true);
+                            Provider.of<Tables>(context, listen: false).notify();
                           },
                           child: Container(
                               decoration: BoxDecoration(
@@ -380,13 +380,17 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
   }
   @override
   void dispose() {
-    print('on dispose');
-    try {
-      tableItemProvidor.setItemsPaymode(context: context, paymode: false);
-      tableItemProvidor.setHightModeExtendet(
-          hight_mode_extendet: false, context: context);
-      tablesprov.checkoutItemsToSocket(context: context, tableID: widget.id);
-    }catch(e){}
+    print('TableOverviewFrame dispose');
+      try {tableItemProvidor.setItemsPaymode(paymode: false);}catch(e){print("#Have to be fixed# 1 TableOverviewFrame dispose: " + e.toString());}
+      try {tableItemProvidor.setHightModeExtendet(hight_mode_extendet: false);}catch(e){print("#Have to be fixed# 2 TableOverviewFrame dispose: " + e.toString());}
+      try {tablesprov.checkoutItemsToSocket(context: context, tableID: widget.id);}catch(e){print("#Have to be fixed# 3 TableOverviewFrame dispose: " + e.toString());}
+    print(context);
+    final _context = MyApp.navKey.currentContext;
+    if(_context == null) {
+      print("Global context in checkState on dispose TableOverviewFrame is null");
+      return;
+    }
+    try {Provider.of<TableItemChangeProvidor>(_context, listen: false).showProduct(index: null, context: _context);}catch(e){print("#Have to be fixed# 4 TableOverviewFrame dispose: " + e.toString());}
     super.dispose();
   }
 }

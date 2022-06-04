@@ -70,16 +70,27 @@ class TableItemChangeProvidor extends ChangeNotifier {
 
   ///Call this Function to change the shown Product in the TableItemWidget
   ///It will not effect the data of any product
-  showProduct({required index, required context, bool toggle = false}){
-    if(toggle && _productPosInItem == index){
-      if(_productPosInItem != null) _productPosInItem = null;
-      else _productPosInItem = index;
+  showProduct({required int? index, required context, bool toggle = false}){
+    if(index == null){
+      _productPosInItem = null;
+      return;
     }
-    else {
-      _productPosInItem = index;
+    try {
+      if (toggle && _productPosInItem == index) {
+        if (_productPosInItem != null)
+          _productPosInItem = null;
+        else
+          _productPosInItem = index;
+      }
+      else {
+        _productPosInItem = index;
+      }
+      notify(context: context);
+      notifyListeners();
     }
-    notify(context: context);
-    notifyListeners();
+    catch(e){
+      print("TableItemProvider showProduct: " + e.toString());
+    }
   }
 
 

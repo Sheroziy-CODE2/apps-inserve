@@ -8,7 +8,6 @@ import 'package:inspery_pos/Providers/TableItemProvidor.dart';
 import 'package:inspery_pos/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import '../Models/TableModel.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -20,6 +19,7 @@ import 'package:path_provider/path_provider.dart';
 import '../main.dart';
 import 'Authy.dart';
 import 'Products.dart';
+import 'package:intl/intl.dart';
 
 class Tables with ChangeNotifier {
   List<TableModel> _items = [];
@@ -37,7 +37,11 @@ class Tables with ChangeNotifier {
   }
 
   notify() {
-    notifyListeners();
+    try {
+      notifyListeners();
+    }catch(e){
+      print("Error on Tables.notify: " + e.toString());
+    }
   }
 
   //write to app path, this belongs to the printer
@@ -55,6 +59,7 @@ class Tables with ChangeNotifier {
     return false;
   }
 
+
   Future<void> checkoutItemsToSocket(
       {required context, required int tableID}) async {
     var table = findById(tableID);
@@ -71,9 +76,12 @@ class Tables with ChangeNotifier {
         "side_products": elements[i].side_product,
         "added_ingredients": elements[i].added_ingredients,
         "deleted_ingredients": elements[i].deleted_ingredients,
+        "dips" : elements[i].dips,
       };
       jsonElemnts.add(j);
     }
+    print("## Package to send: ");
+    print(jsonElemnts);
     for (int i = 0; i < elements.length; i++) {
       findById(tableID).tIP.delete(elements[i]);
     }
@@ -83,13 +91,13 @@ class Tables with ChangeNotifier {
       }
     }
     if (jsonElemnts.isEmpty) {
-      findById(tableID).tIP.notify(context: context);
+      findById(tableID).tIP.notify();
       return;
     }
-    final WebSocketSink socket = table.channel?.sink;
-    socket.add(
+    //final WebSocketSink socket = table.channel?.sink;
+    table.channel.sink.add(
         jsonEncode({"command": "new_table_items", "table_items": jsonElemnts}));
-    findById(tableID).tIP.notify(context: context);
+    findById(tableID).tIP.notify();
   }
 
   Future<void> checkout({required context, required int tableID}) async {
@@ -449,16 +457,16 @@ class Tables with ChangeNotifier {
           bluetooth.printCustom("INSPARY", 2, 1);
           bluetooth.printImage(pathImage);
           bluetooth.printNewLine();
-          bluetooth.printCustom("Rechnung/Bon-Nr: " + jsonReturn["id"].toString(), 0, 2);
-          bluetooth.printCustom(jsonReturn["date"].split(".")[0].replaceFirst("T"," "), 0, 2);
+          bluetooth.printCustom("Rechnung/Bon-Nr: " + jsonReturn["dailyInvoice"].toString(), 0, 2);
+          bluetooth.printCustom(DateFormat('hh:mm dd-MM-yyy').format(DateTime.fromMillisecondsSinceEpoch(int.parse(jsonReturn["date"])*1000)),0,2);
           bluetooth.printCustom("Tisch: " + jsonReturn["table"].toString(), 0, 2);
           bluetooth.printNewLine();
 
-          List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
-          for (var item in items) {
+          //List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
+          for (var item in jsonReturn["invoice_items"]) {
             bluetooth.print4Column(
-                item["fields"]["quantity"].toString(),
-                productsProvider.findById(item["pk"]).name,
+                item["quantity"].toString(),
+                productsProvider.findById(item["id"]).name,
                 "?,??",
                 "?,??",
                 1,

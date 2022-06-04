@@ -41,7 +41,6 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
   }
 
   goToNextPos({required String indicator, bool stay = false, bool dontStoreIndicator = false}){
-    print("############");
     print("Go to next pos: " + indicator.toString());
     setState(() {
       if(!dontStoreIndicator) {

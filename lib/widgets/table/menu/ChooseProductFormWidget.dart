@@ -25,7 +25,7 @@ class _ChooseProductFormState extends State<ChooseProductForm> {
   int id = 0;
   bool rotate = false;
   final List<GlobalKey<CategorysColumnState>> list_key = List.generate(
-      2, (index) => GlobalObjectKey<CategorysColumnState>(index*Random().nextInt(100)));
+      2, (index) => GlobalObjectKey<CategorysColumnState>(index*Random().nextInt(10000)));
 
 
 

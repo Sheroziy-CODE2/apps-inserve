@@ -48,32 +48,61 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
+  void showSnackbar({required context, required String msg}){
+    final snackBar = SnackBar(
+      content:Text(msg),
+      // action: SnackBarAction(
+      //   label: 'OK',
+      //   onPressed: () {
+      //     // Some code to undo the change.
+      //   },
+      // ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+  }
+
   void setSelectedPrice({required context, required int new_selected_price}){
-    if(isFromServer()) return;
+    if(isFromServer()) {
+      showSnackbar(context: context, msg: "Produkt gesprerrt!");
+      return;
+    }
     selected_price = new_selected_price;
     notify(context);
   }
 
   void setSideProducts({required context, required int new_side_product}){
-    if(isFromServer()) return;
+    if(isFromServer()) {
+      showSnackbar(context: context, msg: "Produkt gesprerrt!");
+      return;
+    }
     side_product.add(new_side_product);
     notify(context);
   }
 
   void setDips({required context, required int new_dip}){
-    if(isFromServer()) return;
+    if(isFromServer()) {
+      showSnackbar(context: context, msg: "Produkt gesprerrt!");
+      return;
+    }
     dips.add(new_dip);
     notify(context);
   }
 
   void removeSideProducts({required context, required int side_pro}){
-    if(isFromServer()) return;
+    if(isFromServer()) {
+      showSnackbar(context: context, msg: "Produkt gesprerrt!");
+      return;
+    }
     side_product.remove(side_pro);
     notify(context);
   }
 
   void removeDips({required context, required dip}){
-    if(isFromServer()) return;
+    if(isFromServer()) {
+      showSnackbar(context: context, msg: "Produkt gesprerrt!");
+      return;
+    }
     dips.remove(dip);
     notify(context);
   }
@@ -147,7 +176,15 @@ class TableItemProvidor with ChangeNotifier {
       value += ingredientsProvidor.findById(inc).price;
     }
     for (var sp in side_product) {
-      value += productProvidor.findById(sp).product_price.firstWhere((element) => element.isSD).price;
+      try {//this try case while in backend not all products contain a "SD"-Price
+        value += productProvidor
+            .findById(sp)
+            .product_price
+            .firstWhere((element) => element.isSD)
+            .price;
+      } catch(e){
+        print("Missing SD-Preise for Product: " + productProvidor.findById(sp).name);
+      }
     }
     for (var di in dips) {
       value += dipsProductProvidor.findById(di).price;

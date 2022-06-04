@@ -63,9 +63,7 @@ class CategorysColumnState extends State<CategorysColumn> {
     } catch(e){
       print("Coud not get RenderBox to calculate the hight of the widget, error: " + e.toString());
       //Kann fehler verursachen!!! -> Loop
-      setState(() {
-        print("setState xxx");
-      });
+
     }
 
 
