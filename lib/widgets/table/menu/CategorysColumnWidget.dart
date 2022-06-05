@@ -48,11 +48,8 @@ class CategorysColumnState extends State<CategorysColumn> {
       context,
     ); //category provider
     final categorieitems = categorysData.items.where((i) =>
-      i.product_type == widget.type
+    i.product_type == widget.type
     ).toList();
-
-
-    Widget icon = widget.type == 'food' ? const Icon(Icons.local_drink_outlined) : const Icon(Icons.set_meal_rounded);
 
 
 
@@ -111,7 +108,7 @@ class CategorysColumnState extends State<CategorysColumn> {
             ),
             Expanded(
               child:
-            GestureDetector(
+              GestureDetector(
                 onVerticalDragUpdate: (details) {
                   int sensitivity = 8;
                   if (details.delta.dy > sensitivity) {
@@ -130,75 +127,78 @@ class CategorysColumnState extends State<CategorysColumn> {
                         curve: Curves.bounceInOut);
                   }
                 },
-              child: ListView.builder(
-                controller: widget.scrollController,
-                  physics: const NeverScrollableScrollPhysics(), // <-- this will disable scroll
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
-                  scrollDirection: Axis.vertical,
-                  itemCount:categorieitems.length,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      height: elementHight,
-                      child: categorieitems[index].id == -1 ? Container() :
+                child: ListView.builder(
+                    controller: widget.scrollController,
+                    physics: const NeverScrollableScrollPhysics(), // <-- this will disable scroll
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
+                    scrollDirection: Axis.vertical,
+                    itemCount:categorieitems.length,
+                    itemBuilder: (context, index) {
+                      return SizedBox(
+                        height: elementHight,
+                        child: categorieitems[index].id == -1 ? Container() :
                         GestureDetector(
-                        onTap: () {
-                          selectedIndex = index;
-                          changeCategory(
-                              categorieitems[index]);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              top: 1.5, left: 2.0, right: 2.0, bottom: 1.5),
-                          decoration: BoxDecoration(
-                            // border:
-                            //     Border.all(color: Colors.blueAccent),
-                            color:
-                            categorieitems[index].id == widget.id
-                                ? const Color(0xFFD3E03A)
-                                : const Color(0xFFD1D1D1),
+                          onTap: () {
+                            selectedIndex = index;
+                            changeCategory(
+                                categorieitems[index]);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                                top: 1.5, left: 2.0, right: 2.0, bottom: 1.5),
+                            decoration: BoxDecoration(
+                              // border:
+                              //     Border.all(color: Colors.blueAccent),
+                              color:
+                              categorieitems[index].id == widget.id
+                                  ? const Color(0xFFD3E03A)
+                                  : const Color(0xFFD1D1D1),
 
-                            boxShadow: const [],
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          margin: const EdgeInsets.only(
-                              top: 5.0, left: 7.5, right: 7.5, bottom: 5.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              widget.type == 'food' ? rotate
-                                  ? icon
-                                  : Container() : !rotate ? icon : Container(),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    categorieitems[index].name,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF1B262C)
-                                      /*widget.name == 'Getränke'
+                              boxShadow: const [],
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            margin: const EdgeInsets.only(
+                                top: 5.0, left: 7.5, right: 7.5, bottom: 5.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                categorieitems[index].picture.isNotEmpty ?
+                                widget.type == 'food' ? rotate
+                                    ? Padding(padding: const EdgeInsets.only(right: 5, left: 5), child: Image.network(categorieitems[index].picture, width: 20, height: 20,),)
+                                    : Container() : !rotate ? Padding(padding: const EdgeInsets.only(right: 5, left: 5), child: Image.network(categorieitems[index].picture, width: 20, height: 20,),) : Container() : Container(),
+
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      categorieitems[index].name,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFF1B262C)
+                                        /*widget.name == 'Getränke'
                                         ? drinks[index].id == id
                                             ? Color(0xFFF5F2E7)
                                             : Color(0xFF395B64)
                                         : food[index].id == id
                                             ? Color(0xFFF5F2E7)
                                             : Color(0xFF395B64),*/
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              widget.type == 'food' ? !rotate
-                                  ? icon
-                                  : Container() : rotate ? icon : Container(),
-                            ],
+                                categorieitems[index].picture.isNotEmpty ?
+                                widget.type == 'food' ? !rotate
+                                    ?  Padding(padding: const EdgeInsets.only(right: 5, left: 5), child: Image.network(categorieitems[index].picture, width: 20, height: 20,),)
+                                    : Container() : rotate ? Padding(padding: const EdgeInsets.only(right: 5, left: 5), child: Image.network(categorieitems[index].picture, width: 20, height: 20,),) : Container() : Container(),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }
+                      );
+                    }
+                ),
               ),
-            ),
             ),
           ],
         ),
