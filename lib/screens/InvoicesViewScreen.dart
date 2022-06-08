@@ -63,8 +63,14 @@ class _InvoicesScreen extends State<InvoicesView> {
               child: CircularProgressIndicator(),
             )
           : Container(
-              color: Theme.of(context).cardColor,
               width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.bottomRight,
+                      //stops: const [0, 1],
+                      colors: [
+                    const Color(0x00535353).withOpacity(.8),
+                    const Color(0xFF535353).withOpacity(.1)
+                  ])),
               child: Column(
                 children: [
                   const SizedBox(

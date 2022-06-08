@@ -45,4 +45,19 @@ class Products with ChangeNotifier {
             ));
     return debug;
   }
+
+  Product findByName(String name) {
+    final Product debug = _items.firstWhere((t) => t.name == name,
+        orElse: () => Product(
+              id: 0,
+              name: '0',
+              allergien: [],
+              side_products: [],
+              ingredients: [],
+              side_product_number: 0,
+              product_price: [],
+              dips_number: 0,
+            ));
+    return debug;
+  }
 }
