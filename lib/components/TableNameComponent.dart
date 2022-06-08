@@ -16,7 +16,7 @@ class TableNameComponent extends StatelessWidget {
       child: Text(
         '${table.name}',
         style: const TextStyle(
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.bold,
           color: Color(0xFF2C3333),
           fontSize: 22,
         ),

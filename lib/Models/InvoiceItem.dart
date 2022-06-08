@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'Ingredient.dart';
@@ -11,11 +12,12 @@ class InvoiceItem {
   // final String date;
   final double amount;
   final int quantity;
-  final int product;
-  final List sideDish;
-  final int price;
+  final String product;
+  final List side_products;
+  final double price;
   final List<int> added_ingredients;
   final List<int> deleted_ingredients;
+  final List<int> dips;
 
   // todo
   //side dish // products
@@ -26,27 +28,27 @@ class InvoiceItem {
     required this.amount,
     required this.quantity,
     required this.product,
-    required this.sideDish,
+    required this.side_products,
     required this.price,
     required this.added_ingredients,
     required this.deleted_ingredients,
+    required this.dips,
   });
 
   factory InvoiceItem.fromJson(response) {
     var jsonResponse = response as Map<String, dynamic>;
-    var jR_order_item = jsonResponse['order_item'];
-    final data = Map<String, dynamic>.from(jsonDecode(jR_order_item));
-
+    var data = jsonResponse['order'];
     return InvoiceItem(
       // date: jsonResponse["date"] as String,
       id: jsonResponse["id"] as int,
       amount: jsonResponse["amount"] as double,
       quantity: jsonResponse["quantity"] as int,
-      product: data['fields']["product"] as int,
-      sideDish: data['fields']["side_dish"] as List<dynamic>,
-      price: data['fields']["price"] as int,
-      added_ingredients: data['fields']["added_ingredients"].cast<int>(),
-      deleted_ingredients: data['fields']["deleted_ingredients"].cast<int>(),
+      product: data["product"] as String,
+      side_products: data["side_products"] as List<dynamic>,
+      price: data["selected_price"]["price"] as double,
+      added_ingredients: data["added_ingredients"].cast<int>(),
+      deleted_ingredients: data["deleted_ingredients"].cast<int>(),
+      dips: data["dips"].cast<int>(),
     );
   }
 }

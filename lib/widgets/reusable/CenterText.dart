@@ -11,7 +11,7 @@ class CenterText extends StatelessWidget {
       style: const TextStyle(
         fontWeight: FontWeight.w500,
         color: Color(0xFF2C3333),
-        fontSize: 20,
+        fontSize: 18,
       ),
     );
   }
