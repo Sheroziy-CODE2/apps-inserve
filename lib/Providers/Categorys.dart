@@ -40,7 +40,7 @@ class Categorys with ChangeNotifier {
   Future<void> addCategory({required context}) async {
     // this function will add categorys to the _items List
     final url = Uri.parse(
-      'https://www.inspery.com/menu/category/3',
+      'https://www.inspery.com/menu/category/4',
     );
     final headers = {"Content-type": "application/json"};
     final response = await http.get(url, headers: headers);
