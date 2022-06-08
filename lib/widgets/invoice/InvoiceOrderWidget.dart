@@ -82,8 +82,9 @@ class InvoiceOrderWidget extends StatelessWidget {
               invoiceItem.side_products.length > 0
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.side_products.length * 21,
+                        height: invoiceItem.side_products.length * 28,
                         child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.side_products.length,
                           itemBuilder: (context, index) =>
@@ -96,10 +97,11 @@ class InvoiceOrderWidget extends StatelessWidget {
               invoiceItem.dips.length > 0
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.side_products.length * 21,
+                        height: invoiceItem.dips.length * 28,
                         child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: invoiceItem.side_products.length,
+                          itemCount: invoiceItem.dips.length,
                           itemBuilder: (context, index) =>
                               InvoiceItemDipWidget(id: invoiceItem.dips[index]),
                         ),
@@ -109,10 +111,11 @@ class InvoiceOrderWidget extends StatelessWidget {
               invoiceItem.added_ingredients.length > 0
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.added_ingredients.length * 21,
+                        height: invoiceItem.added_ingredients.length * 28,
                         child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: invoiceItem.side_products.length,
+                          itemCount: invoiceItem.added_ingredients.length,
                           itemBuilder: (context, index) =>
                               InvoiceItemIngredientsWidget(
                                   id: invoiceItem.added_ingredients[index],
@@ -124,8 +127,9 @@ class InvoiceOrderWidget extends StatelessWidget {
               invoiceItem.deleted_ingredients.length > 0
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.deleted_ingredients.length * 21,
+                        height: invoiceItem.deleted_ingredients.length * 28,
                         child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.deleted_ingredients.length,
                           itemBuilder: (context, index) =>
