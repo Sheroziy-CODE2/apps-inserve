@@ -46,6 +46,17 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
       return Container(color: Colors.red);
     }
 
+    var ingedienceProv_items = [];
+    if (_filterLetter != "#") {
+      for (var e in ingedienceProv.items) {
+        if (e.name.toUpperCase().startsWith(_filterLetter)) {
+          ingedienceProv_items.add(e);
+        }
+      }
+    }
+    else {
+      ingedienceProv_items = ingedienceProv.items;
+    }
 
     return Column(
       children: [
@@ -81,19 +92,13 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
           shrinkWrap: true,
           crossAxisCount: 5,
           children:
-          ingedienceProv.items.map((e) {
-            if(_filterLetter != "#"){
-              if(!e.name.toUpperCase().startsWith(_filterLetter)){
-                return Container();
-              }
-            }
+          ingedienceProv_items.map((e) {
             int amountOfItemsAlreadyAdded = 0;
             for (var element in tableItemProvidor.added_ingredients) {
-              if(element == e.id){
+              if (element == e.id) {
                 amountOfItemsAlreadyAdded ++;
               }
             }
-
             return GestureDetector(
                 onTap: (){
                   setState((){
