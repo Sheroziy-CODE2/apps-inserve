@@ -22,7 +22,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isInit = true;
 
   num gesammt = 0;
@@ -37,7 +37,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   void didChangeDependencies() {
-    bool isLoading = true;
     Future<void> getDailyInvoice() async {
       String token = Provider.of<Authy>(context, listen: false).token;
       final url = Uri.parse(
@@ -77,7 +76,6 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final authy = Provider.of<Authy>(context);
     final img = authy.photoLink;
-    final String userName = authy.userName;
     logout() {
       authy.logout();
       Navigator.of(context).pushNamed(

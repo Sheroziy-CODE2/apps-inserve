@@ -202,7 +202,13 @@ class TableItemProvidor with ChangeNotifier {
     var productProvidor = Provider.of<Products>(context, listen: false);
     var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
     var productPro = productProvidor.findById(product);
-    ret += productPro.product_price.firstWhere((element) => element.id == selected_price).description + ", ";
+    try {
+      ret += productPro.product_price
+          .firstWhere((element) => element.id == selected_price)
+          .description + ", ";
+    }catch(e){
+      ret += "keine Größe,";
+    }
 
     for (var element in side_product) {
       ret += productProvidor.findById(element).name + ", ";

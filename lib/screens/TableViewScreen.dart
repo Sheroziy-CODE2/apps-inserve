@@ -206,7 +206,8 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
                   width: MediaQuery.of(context).size.width,
                   id: tableId,
                 ),
-                Expanded(child: Column(
+                Expanded(
+                  child: Column(
                  children: [
                    SingleChildScrollView(
                        controller: horizontalScrollController,

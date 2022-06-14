@@ -60,7 +60,7 @@ class Tables with ChangeNotifier {
   }
 
   Future<void> checkoutItemsToSocket(
-      {required context, required int tableID}) async {
+      {required context, required int tableID, bool reload = false }) async {
     var table = findById(tableID);
     var tableItems = findById(tableID).tIP.tableItems;
     List<TableItemProvidor> elements =
@@ -89,7 +89,7 @@ class Tables with ChangeNotifier {
         jsonElemnts.removeAt(i);
       }
     }
-    if (jsonElemnts.isEmpty) {
+    if (reload) {
       findById(tableID).tIP.notify();
       return;
     }

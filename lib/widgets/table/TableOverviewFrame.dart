@@ -383,7 +383,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
     print('TableOverviewFrame dispose');
       try {tableItemProvidor.setItemsPaymode(paymode: false);}catch(e){print("#Have to be fixed# 1 TableOverviewFrame dispose: " + e.toString());}
       try {tableItemProvidor.setHightModeExtendet(hight_mode_extendet: false);}catch(e){print("#Have to be fixed# 2 TableOverviewFrame dispose: " + e.toString());}
-      try {tablesprov.checkoutItemsToSocket(context: context, tableID: widget.id);}catch(e){print("#Have to be fixed# 3 TableOverviewFrame dispose: " + e.toString());}
+      try {tablesprov.checkoutItemsToSocket(context: context, tableID: widget.id, reload: false);}catch(e){print("#Have to be fixed# 3 TableOverviewFrame dispose: " + e.toString());}
     print(context);
     final _context = MyApp.navKey.currentContext;
     if(_context == null) {
