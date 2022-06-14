@@ -69,15 +69,11 @@ class TableItemsProvidor with ChangeNotifier {
     }
   }
 
-  void deleteItemsFromServer(q, pk) {
-    // PK is primarykey ID
-    // q is quantity 'how many should be deleted from the quantity'
-    TableItemProvidor item = _tableItems.firstWhere((t) => t.id == pk);
-    if (item.quantity - 1 > 0) {
-      // ex: (4 water) - (3 water) = will have 1 water left
-      item.changeInCard(1);
+  void deleteItemsFromServer({required amount, required productID}) {
+    TableItemProvidor item = _tableItems.firstWhere((t) => t.id == productID);
+    if (item.quantity - amount > 0) {
+      item.changeInCard(amount);
     } else {
-      // ex: (4 water) - (4 water) = nothing left => delete everything
       delete(item);
     }
     notifyListeners();

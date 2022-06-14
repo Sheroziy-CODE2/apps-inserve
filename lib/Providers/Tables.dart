@@ -8,6 +8,7 @@ import 'package:inspery_pos/Providers/TableItemProvidor.dart';
 import 'package:inspery_pos/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
+import '../Models/CheckoutModel.dart';
 import '../Models/TableModel.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';
 import 'Authy.dart';
+import 'Ingredients.dart';
 import 'Products.dart';
 import 'package:intl/intl.dart';
 
@@ -119,6 +121,7 @@ class Tables with ChangeNotifier {
         final _context = MyApp.navKey.currentContext;
         if (_context != null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            duration: Duration(seconds: 1),
             backgroundColor: Colors.orange,
             content: Text("Kein Produkt gewählt"),
           ));
@@ -487,13 +490,12 @@ class Tables with ChangeNotifier {
     });
     final response = await http.post(url, headers: headers, body: data);
     if (response.statusCode == 201) {
-      print("Response: " + jsonDecode(response.body).toString());
-      var jsonReturn = jsonDecode(response.body);
+      print("Tables Bill Response: " + jsonDecode(response.body).toString());
+      CheckoutModel checkoutModel = CheckoutModel.fromJson(jsonDecode(response.body), _context);
 
-      //Ingredients ingredientsProvider = Provider.of<Ingredients>(_context, listen: false);
-      //SideDishes sideDishProvider = Provider.of<SideDishes>(_context, listen: false);
-      Products productsProvider =
-          Provider.of<Products>(_context, listen: false);
+      Ingredients ingredientsProvider = Provider.of<Ingredients>(_context, listen: false);
+      //SideProducts sideDishProvider = Provider.of<SideProducts>(_context, listen: false);
+      Products productsProvider = Provider.of<Products>(_context, listen: false);
 
       print("connection " + (await _configPrinter.checkState()).toString());
 
@@ -512,62 +514,59 @@ class Tables with ChangeNotifier {
 
       bluetooth.isConnected.then((isConnected) {
         if (isConnected ?? false) {
-          bluetooth.printCustom("INSPARY", 2, 1);
+          bluetooth.printCustom("INSPERY", 2, 1);
           bluetooth.printImage(pathImage);
           bluetooth.printNewLine();
           bluetooth.printCustom(
-              "Rechnung/Bon-Nr: " + jsonReturn["dailyInvoice"].toString(),
+              "Rechnung/Bon-Nr: " + checkoutModel.dailyInvoice.toString(),
               0,
               2);
           bluetooth.printCustom(
-              DateFormat('hh:mm dd-MM-yyy').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                      int.parse(jsonReturn["date"]) * 1000)),
+              DateFormat('hh:mm dd-MM-yyy').format(checkoutModel.dateTime),
               0,
               2);
           bluetooth.printCustom(
-              "Tisch: " + jsonReturn["table"].toString(), 0, 2);
+              "Tisch: " + checkoutModel.tableID.toString(), 0, 2);
           bluetooth.printNewLine();
 
           //List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
-          for (var item in jsonReturn["invoice_items"]) {
-            bluetooth.print4Column(item["quantity"].toString(),
-                productsProvider.findById(item["id"]).name, "?,??", "?,??", 1,
-                format: "%2s %15s %5s %5s %n");
+          for (var item in checkoutModel.invoiceItemList) {
+              bluetooth.print4Column(item.quantity.toString(),
+                  item.order.product,"", item.order.total_price.toStringAsFixed(2), 1,
+                  format: "%2s %15s %5s %5s %n");
 
-            /*
-            List<int> sideDishes = element[x].side_dish;
+              bluetooth.printCustom("------1", 1, 0);
+            List<int> sideDishes = item.order.side_products;
             Map<int, int> sd_map = {};
-            sideDishes.forEach((sd) {
+            for (var sd in sideDishes) {
               if (!sd_map.containsKey(sd)) {
                 sd_map[sd] = 1;
               } else {
                 sd_map[sd] = sd_map[sd] ?? 0 + 1;
               }
-            });
-            sd_map.keys.forEach((id) {
+            }
+            for (var id in sd_map.keys) {
               bluetooth.print4Column(
                   sd_map[id].toString(),
-                  sideDishProvider.findById(id).name,
-                  sideDishProvider
-                      .findById(id)
-                      .secondary_price
+                  productsProvider.findById(id).name,
+                  productsProvider
+                      .findById(id).product_price.firstWhere((element) => element.isSD).price
                       .toStringAsFixed(2),
                   "",
                   0,
                   format: "%1s %20s %5s %5s %n");
-            });
-
-            List<int> added_ingredients = element[x].added_ingredients;
+            }
+              bluetooth.printCustom("------2", 1, 0);
+            List<int> added_ingredients = item.order.added_ingredients;
             Map<int, int> ai_map = {};
-            added_ingredients.forEach((sd) {
+            for (var sd in added_ingredients) {
               if (!ai_map.containsKey(sd)) {
                 ai_map[sd] = 1;
               } else {
                 ai_map[sd] = ai_map[sd] ?? 0 + 1;
               }
-            });
-            ai_map.keys.forEach((id) {
+            }
+            for (var id in ai_map.keys) {
               bluetooth.print4Column(
                   ai_map[id].toString(),
                   ingredientsProvider.findById(id).name,
@@ -575,16 +574,13 @@ class Tables with ChangeNotifier {
                   "",
                   0,
                   format: "%1s %20s %5s %5s %n");
-            });*/
+            }
+            }
           }
 
           bluetooth.printCustom("--------------------------------", 1, 0);
-          bluetooth.printLeftRight(
-              "SUMME",
-              findById(tableID)
-                      .tIP
-                      .getTotalCartTablePrice(context: _context)!
-                      .toStringAsFixed(2) +
+          bluetooth.printLeftRight("SUMME",
+              "NA " +
                   "EUR",
               3);
           bluetooth.printCustom("--------------------------------", 1, 0);
@@ -594,7 +590,6 @@ class Tables with ChangeNotifier {
           bluetooth.printNewLine();
           bluetooth.printNewLine();
           bluetooth.paperCut();
-        }
       });
 
       if (payment == "Bar") {
@@ -678,9 +673,9 @@ class Tables with ChangeNotifier {
               case 'deleted_table_items':
                 //if the type is deleted_table_items the app has to delete this items
                 var jsonResponse = data['deleted_table_items']['invoice_items'];
-                for (var body in jsonDecode(jsonResponse)) {
-                  this._items[i].tIP.deleteItemsFromServer(
-                      body['fields']['quantity'], body['fields']['order']);
+                for (var body in jsonResponse) {
+                  this._items[i].tIP.deleteItemsFromServer(amount:
+                      body['quantity'], productID: body['order']['id']);
                 }
                 _items[i].timeHistory["Loeschung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
