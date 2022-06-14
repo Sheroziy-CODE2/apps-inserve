@@ -133,7 +133,7 @@ class TableItemProvidor with ChangeNotifier {
   void addAmountInCard({required int amount, required context}) {
     _inCart += amount;
     if (_inCart < 0) _inCart = 0;
-    if (_inCart > quantity) _inCart = quantity;
+    if (_inCart > quantity) _inCart = 0;
     notify(context);
   }
 
