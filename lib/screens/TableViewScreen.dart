@@ -152,7 +152,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
       if(product.product_price.where((element) => !element.isSD).length > 1){
         chooseProductWidget.putIfAbsent("Größe", () => getElements(key: "Größe", tableId: tableId, context: context));
       }
-      if(product.side_product_number > 0){
+      if(product.productSelection.isNotEmpty){
         chooseProductWidget.putIfAbsent("Beilagen", () => getElements(key: "Beilagen", tableId: tableId, context: context));
       }
       if(product.dips_number > 0){

@@ -37,11 +37,10 @@ class Products with ChangeNotifier {
               id: 0,
               name: '0',
               allergien: [],
-              side_products: [],
               ingredients: [],
-              side_product_number: 0,
               product_price: [],
               dips_number: 0,
+              productSelection: [],
             ));
     return debug;
   }
@@ -52,11 +51,10 @@ class Products with ChangeNotifier {
               id: 0,
               name: '0',
               allergien: [],
-              side_products: [],
               ingredients: [],
-              side_product_number: 0,
               product_price: [],
               dips_number: 0,
+              productSelection: [],
             ));
     return debug;
   }
