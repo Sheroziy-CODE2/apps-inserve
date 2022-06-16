@@ -681,7 +681,6 @@ class Tables with ChangeNotifier {
                 item.order.product,"", item.order.total_price.toStringAsFixed(2), 1,
                 format: "%2s %15s %5s %5s %n");
 
-            bluetooth.printCustom("------1", 1, 0);
             List<int> sideDishes = item.order.side_products;
             Map<int, int> sd_map = {};
             for (var sd in sideDishes) {
@@ -702,7 +701,6 @@ class Tables with ChangeNotifier {
                   0,
                   format: "%1s %20s %5s %5s %n");
             }
-            bluetooth.printCustom("------2", 1, 0);
             List<int> added_ingredients = item.order.added_ingredients;
             Map<int, int> ai_map = {};
             for (var sd in added_ingredients) {
@@ -818,13 +816,14 @@ class Tables with ChangeNotifier {
 
               case 'deleted_table_items':
               //if the type is deleted_table_items the app has to delete this items
-                var jsonResponse = data['deleted_table_items']['invoice_items'];
-                for (var body in jsonResponse) {
+                var jsonResponse = data['deleted_table_items'];
+                for (var responseItems in jsonResponse) {
                   this._items[i].tIP.deleteItemsFromServer(amount:
-                  body['quantity'], productID: body['order']['id']);
+                  responseItems['quantity'], itemID: responseItems['id']);
                 }
                 _items[i].timeHistory["Loeschung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
+                notify();
                 break;
 
               case 'transfer_table_items':

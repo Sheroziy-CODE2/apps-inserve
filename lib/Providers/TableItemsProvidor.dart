@@ -69,8 +69,8 @@ class TableItemsProvidor with ChangeNotifier {
     }
   }
 
-  void deleteItemsFromServer({required amount, required productID}) {
-    TableItemProvidor item = _tableItems.firstWhere((t) => t.id == productID);
+  void deleteItemsFromServer({required amount, required itemID}) {
+    TableItemProvidor item = _tableItems.firstWhere((t) => t.id == itemID);
     if (item.quantity - amount > 0) {
       item.changeInCard(amount);
     } else {

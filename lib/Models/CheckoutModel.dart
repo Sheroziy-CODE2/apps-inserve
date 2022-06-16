@@ -100,7 +100,7 @@ class InvoiceOrderItemModel{
     var jsonResponse = response as Map<String, dynamic>;
     return InvoiceOrderItemModel(
       id:  jsonResponse["id"] as int,
-      table:  jsonResponse["table"] as int,
+      table:  jsonResponse["table"]??0 as int,
       saved_tabke:  jsonResponse["saved_table"] as int,
       user:  jsonResponse["user"] as int,
       product:  jsonResponse["product"] as String,
