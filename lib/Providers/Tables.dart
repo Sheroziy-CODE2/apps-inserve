@@ -66,7 +66,7 @@ class Tables with ChangeNotifier {
     var table = findById(tableID);
     var tableItems = findById(tableID).tIP.tableItems;
     List<TableItemProvidor> elements =
-        tableItems.where((element) => element.fromWaiter == true).toList();
+    tableItems.where((element) => element.fromWaiter == true).toList();
     List jsonElemnts = [];
     for (int i = 0; i < elements.length; i++) {
       var j = {
@@ -143,6 +143,7 @@ class Tables with ChangeNotifier {
       1: Icon(Icons.monetization_on_outlined,
           color: Colors.black.withOpacity(0.6))
     };
+    double tip = 0;
     showDialog(
       context: context,
       builder: (context) {
@@ -160,30 +161,175 @@ class Tables with ChangeNotifier {
                       child: Center(
                         child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text(
-                                table.name,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            const Text("Die Rechnung"),
+                            const SizedBox(height: 10,),
+                            const Text("Tisch"),
                             Text(
-                              totalPrice.toStringAsFixed(2) + "€",
+                              table.name,
                               style: const TextStyle(
                                 fontSize: 20,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
+                            const Text("Die Rechnung"),
+                            Text(
+                              (totalPrice + tip).toStringAsFixed(2) + "€",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text("Trinkgeld"),
+                            Text(
+                              tip.toStringAsFixed(2) + "€",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            const SizedBox(height: 10,),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10, right: 10),
+                              child: Row(
+                                children: [
+                                  const Spacer(),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF5F2E7),
+                                      borderRadius: BorderRadius.circular(28),
+                                    ),
+                                    width: 110,
+                                    height: 35,
+                                    child:
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5,left: 5, right: 5),
+                                      child: Stack(
+                                        children: [
+                                          const SizedBox(
+                                              width: 100,
+                                              child:
+                                              Text(
+                                                "Fix",
+                                                style: TextStyle(fontSize: 15),
+                                                textAlign: TextAlign.center,
+                                              )
+                                          ),
+                                          Positioned(
+                                              left: 0,
+                                              child:
+                                              SizedBox(
+                                                width: 50,
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                    tip -= 0.5;
+                                                    if(tip < 0) tip = 0;
+                                                    setState((){});
+                                                  },
+                                                  child:
+                                                  const Text(
+                                                    "-",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(fontWeight: FontWeight.bold
+                                                    ),
+                                                  ),
+                                                ),
+                                              )),
+                                          Positioned(
+                                              left: 50,
+                                              child:
+                                              SizedBox(
+                                                width: 50,
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                    tip += 0.5;
+                                                    setState((){});
+                                                  },
+                                                  child:
+                                                  const Text(
+                                                    "+",
+                                                    textAlign: TextAlign.right,
+                                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF5F2E7),
+                                      borderRadius: BorderRadius.circular(28),
+                                    ),
+                                    width: 110,
+                                    height: 35,
+                                    child:
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5,left: 5, right: 5),
+                                      child: Stack(
+                                        children: [
+                                          const SizedBox(
+                                              width: 100,
+                                              child:
+                                              Text(
+                                                "Runden",
+                                                style: TextStyle(fontSize: 15),
+                                                textAlign: TextAlign.center,
+                                              )
+                                          ),
+                                          Positioned(
+                                              left: 0,
+                                              child:
+                                              SizedBox(
+                                                width: 50,
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                    tip = (totalPrice + tip - 0.6).roundToDouble() - totalPrice;
+                                                    if(tip < 0) tip = 0;
+                                                    setState((){});
+                                                  },
+                                                  child:
+                                                  const Text(
+                                                    "-",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(fontWeight: FontWeight.bold
+                                                    ),
+                                                  ),
+                                                ),
+                                              )),
+                                          Positioned(
+                                              left: 50,
+                                              child:
+                                              SizedBox(
+                                                width: 50,
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                    tip = (totalPrice + tip + 0.5).roundToDouble() - totalPrice;
+                                                    setState((){});
+                                                  },
+                                                  child:
+                                                  const Text(
+                                                    "+",
+                                                    textAlign: TextAlign.right,
+                                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 20,),
                           ],
                         ),
                       ),
@@ -223,59 +369,59 @@ class Tables with ChangeNotifier {
                       children: paymentOptions.keys
                           .map(
                             (key) => Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      paymentMethod = key;
-                                    });
-                                  },
-                                  child: SizedBox(
-                                      height: 40,
-                                      width: 127,
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            top: 2,
-                                            left: 2,
-                                            child: Container(
-                                              height: 34,
-                                              width: 120,
-                                              padding: const EdgeInsets.only(
-                                                  left: 45, right: 15),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  border: paymentMethod != key
-                                                      ? null
-                                                      : Border.all(
-                                                          color: Colors.green,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          width: 4)),
-                                              child: Center(
-                                                  child: Text(
-                                                      paymentOptions[key]!)),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 40,
-                                            width: 40,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFE8E8E8),
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  paymentMethod = key;
+                                });
+                              },
+                              child: SizedBox(
+                                  height: 40,
+                                  width: 127,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        top: 2,
+                                        left: 2,
+                                        child: Container(
+                                          height: 34,
+                                          width: 120,
+                                          padding: const EdgeInsets.only(
+                                              left: 45, right: 15),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
                                               borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: paymentIcons[key],
-                                          ),
-                                        ],
-                                      )),
-                                ),
-                              ],
+                                              BorderRadius.circular(20),
+                                              border: paymentMethod != key
+                                                  ? null
+                                                  : Border.all(
+                                                  color: Colors.green,
+                                                  style:
+                                                  BorderStyle.solid,
+                                                  width: 4)),
+                                          child: Center(
+                                              child: Text(
+                                                  paymentOptions[key]!)),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFE8E8E8),
+                                          borderRadius:
+                                          BorderRadius.circular(20),
+                                        ),
+                                        child: paymentIcons[key],
+                                      ),
+                                    ],
+                                  )),
                             ),
-                          )
+                          ],
+                        ),
+                      )
                           .toList())
                 ],
               ),
@@ -298,7 +444,7 @@ class Tables with ChangeNotifier {
         return StatefulBuilder(
           builder: (context2, setState) {
             double rueckgeld = double.parse(
-                    typedInValue.replaceFirst(",", ".").replaceFirst("€", "")) -
+                typedInValue.replaceFirst(",", ".").replaceFirst("€", "")) -
                 amount;
             if (rueckgeld < 0) rueckgeld = 0;
             return AlertDialog(
@@ -337,20 +483,20 @@ class Tables with ChangeNotifier {
                                 mainAxisSize: MainAxisSize.max,
                                 children: List.generate(
                                     typedInValue.length,
-                                    (index) => Padding(
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: Text(
-                                            typedInValue[index],
-                                            style: TextStyle(
-                                                color: index == actPos
-                                                    ? Colors.green
-                                                    : Colors.black,
-                                                fontSize: 30,
-                                                fontWeight: index == actPos
-                                                    ? FontWeight.bold
-                                                    : FontWeight.normal),
-                                          ),
-                                        )),
+                                        (index) => Padding(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child: Text(
+                                        typedInValue[index],
+                                        style: TextStyle(
+                                            color: index == actPos
+                                                ? Colors.green
+                                                : Colors.black,
+                                            fontSize: 30,
+                                            fontWeight: index == actPos
+                                                ? FontWeight.bold
+                                                : FontWeight.normal),
+                                      ),
+                                    )),
                               ),
                               const SizedBox(
                                 height: 15,
@@ -358,8 +504,8 @@ class Tables with ChangeNotifier {
                               const Text("Rückgeld"),
                               Text(
                                 rueckgeld
-                                        .toStringAsFixed(2)
-                                        .replaceFirst(".", ",") +
+                                    .toStringAsFixed(2)
+                                    .replaceFirst(".", ",") +
                                     "€",
                                 style: const TextStyle(
                                     fontSize: 25,
@@ -389,64 +535,64 @@ class Tables with ChangeNotifier {
                         crossAxisCount: 3,
                         children: List.generate(
                             block.length,
-                            (index) => block[index] == -1
+                                (index) => block[index] == -1
                                 ? Container()
                                 : GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        typedInValue = typedInValue.substring(
-                                                0, actPos) +
-                                            block[index].toStringAsFixed(0) +
-                                            typedInValue.substring(actPos + 1);
-                                        actPos++;
-                                        if (actPos == typedInValue.length - 1)
-                                          actPos = 0;
-                                        if (typedInValue[actPos] == ",")
-                                          actPos++;
-                                        if (typedInValue[actPos] == "€")
-                                          actPos++;
-                                        isPressed[index] = true;
-                                      });
-                                      Future.delayed(
-                                          const Duration(milliseconds: 100),
-                                          () => setState(() {
-                                                isPressed[index] = false;
-                                              }));
-                                    },
-                                    child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 100),
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: const Color(0xFFF5F2E7),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 10,
-                                              offset: const Offset(-5, -5),
-                                              color: Colors.white,
-                                              blurStyle: isPressed[index]
-                                                  ? BlurStyle.outer
-                                                  : BlurStyle.inner,
-                                            ),
-                                            BoxShadow(
-                                              blurRadius: 10,
-                                              offset: const Offset(5, 5),
-                                              color: const Color(0xFFA7A9AF),
-                                              blurStyle: isPressed[index]
-                                                  ? BlurStyle.outer
-                                                  : BlurStyle.inner,
-                                            ),
-                                          ]),
-                                      child: Center(
-                                          child: Text(
-                                        block[index].toStringAsFixed(0),
-                                        style: const TextStyle(fontSize: 20),
-                                      )),
-                                    ),
-                                  ))),
+                              onTap: () {
+                                setState(() {
+                                  typedInValue = typedInValue.substring(
+                                      0, actPos) +
+                                      block[index].toStringAsFixed(0) +
+                                      typedInValue.substring(actPos + 1);
+                                  actPos++;
+                                  if (actPos == typedInValue.length - 1)
+                                    actPos = 0;
+                                  if (typedInValue[actPos] == ",")
+                                    actPos++;
+                                  if (typedInValue[actPos] == "€")
+                                    actPos++;
+                                  isPressed[index] = true;
+                                });
+                                Future.delayed(
+                                    const Duration(milliseconds: 100),
+                                        () => setState(() {
+                                      isPressed[index] = false;
+                                    }));
+                              },
+                              child: AnimatedContainer(
+                                duration:
+                                const Duration(milliseconds: 100),
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(15),
+                                    color: const Color(0xFFF5F2E7),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 10,
+                                        offset: const Offset(-5, -5),
+                                        color: Colors.white,
+                                        blurStyle: isPressed[index]
+                                            ? BlurStyle.outer
+                                            : BlurStyle.inner,
+                                      ),
+                                      BoxShadow(
+                                        blurRadius: 10,
+                                        offset: const Offset(5, 5),
+                                        color: const Color(0xFFA7A9AF),
+                                        blurStyle: isPressed[index]
+                                            ? BlurStyle.outer
+                                            : BlurStyle.inner,
+                                      ),
+                                    ]),
+                                child: Center(
+                                    child: Text(
+                                      block[index].toStringAsFixed(0),
+                                      style: const TextStyle(fontSize: 20),
+                                    )),
+                              ),
+                            ))),
                   ),
                 ],
               ),
@@ -467,8 +613,8 @@ class Tables with ChangeNotifier {
 
   Future<void> checkout_print(
       {required int tableID,
-      required jsonList,
-      required String payment}) async {
+        required jsonList,
+        required String payment}) async {
     final _context = MyApp.navKey.currentContext;
     if (_context == null) {
       print("Global context in checkState Tables checkout_printer is null");
@@ -531,11 +677,11 @@ class Tables with ChangeNotifier {
 
           //List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
           for (var item in checkoutModel.invoiceItemList) {
-              bluetooth.print4Column(item.quantity.toString(),
-                  item.order.product,"", item.order.total_price.toStringAsFixed(2), 1,
-                  format: "%2s %15s %5s %5s %n");
+            bluetooth.print4Column(item.quantity.toString(),
+                item.order.product,"", item.order.total_price.toStringAsFixed(2), 1,
+                format: "%2s %15s %5s %5s %n");
 
-              bluetooth.printCustom("------1", 1, 0);
+            bluetooth.printCustom("------1", 1, 0);
             List<int> sideDishes = item.order.side_products;
             Map<int, int> sd_map = {};
             for (var sd in sideDishes) {
@@ -556,7 +702,7 @@ class Tables with ChangeNotifier {
                   0,
                   format: "%1s %20s %5s %5s %n");
             }
-              bluetooth.printCustom("------2", 1, 0);
+            bluetooth.printCustom("------2", 1, 0);
             List<int> added_ingredients = item.order.added_ingredients;
             Map<int, int> ai_map = {};
             for (var sd in added_ingredients) {
@@ -575,28 +721,28 @@ class Tables with ChangeNotifier {
                   0,
                   format: "%1s %20s %5s %5s %n");
             }
-            }
           }
+        }
 
-          bluetooth.printCustom("--------------------------------", 1, 0);
-          bluetooth.printLeftRight("SUMME",
-              "NA " +
-                  "EUR",
-              3);
-          bluetooth.printCustom("--------------------------------", 1, 0);
-          bluetooth.printCustom("Zahlungsmethode: " + payment, 0, 2);
-          bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
-          bluetooth.printNewLine();
-          bluetooth.printNewLine();
-          bluetooth.printNewLine();
-          bluetooth.paperCut();
+        bluetooth.printCustom("--------------------------------", 1, 0);
+        bluetooth.printLeftRight("SUMME",
+            "NA " +
+                "EUR",
+            3);
+        bluetooth.printCustom("--------------------------------", 1, 0);
+        bluetooth.printCustom("Zahlungsmethode: " + payment, 0, 2);
+        bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
+        bluetooth.printNewLine();
+        bluetooth.paperCut();
       });
 
       if (payment == "Bar") {
         showCalculator(
           context: _context,
           amount:
-              findById(tableID).tIP.getTotalCartTablePrice(context: _context)!,
+          findById(tableID).tIP.getTotalCartTablePrice(context: _context)!,
         );
       }
     } else {
@@ -616,9 +762,9 @@ class Tables with ChangeNotifier {
       if (_items[i].id == id) {
         await _items[i].channel == null
             ? _items[i].channel = IOWebSocketChannel.connect(
-                Uri.parse(
-                    'ws://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
-              )
+          Uri.parse(
+              'ws://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
+        )
             : null;
       }
     }
@@ -631,19 +777,19 @@ class Tables with ChangeNotifier {
       if (_items[i].id == id) {
         _items[i].channel?.stream.listen(
           // listen to the updates from the channel
-          (message) {
+              (message) {
             var data = jsonDecode(message);
             switch (data['type']) {
               case 'fetch_table_items':
-                //if the type is fetch the app has to make a new list of table_items and delete the old one
+              //if the type is fetch the app has to make a new list of table_items and delete the old one
                 this._items[i].total_price =
-                    data['table']["total_price"].toDouble() as double;
+                data['table']["total_price"].toDouble() as double;
                 List<TableItemProvidor> _tIPItems = [];
                 var jsonResponse = data['table_items'] as List<dynamic>;
                 for (var body in jsonResponse) {
                   _tIPItems.add(TableItemProvidor.fromResponse(body));
                   _tIPItems.last.fromWaiter =
-                      false; //Set it to false, because it comes from the server
+                  false; //Set it to false, because it comes from the server
                 }
                 this._items[i].tIP.setItems(_tIPItems);
                 // notifyListeners();
@@ -654,7 +800,7 @@ class Tables with ChangeNotifier {
                 break;
 
               case 'table_items':
-                //if the type is table_items the app has add the new items to the list of table_items
+              //if the type is table_items the app has add the new items to the list of table_items
                 var jsonResponse = data['table_items']['table_items'];
                 List<TableItemProvidor> _tIPItems = [];
                 for (var body in jsonResponse) {
@@ -663,19 +809,19 @@ class Tables with ChangeNotifier {
                 }
                 this._items[i].tIP.addItemsFromServer(_tIPItems);
                 this._items[i].total_price =
-                    data['table_items']['table']['total_price'].toDouble()
-                        as double;
+                data['table_items']['table']['total_price'].toDouble()
+                as double;
                 _items[i].timeHistory["Buchung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
                 notifyListeners();
                 break;
 
               case 'deleted_table_items':
-                //if the type is deleted_table_items the app has to delete this items
+              //if the type is deleted_table_items the app has to delete this items
                 var jsonResponse = data['deleted_table_items']['invoice_items'];
                 for (var body in jsonResponse) {
                   this._items[i].tIP.deleteItemsFromServer(amount:
-                      body['quantity'], productID: body['order']['id']);
+                  body['quantity'], productID: body['order']['id']);
                 }
                 _items[i].timeHistory["Loeschung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
