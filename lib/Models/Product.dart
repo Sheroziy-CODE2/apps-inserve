@@ -43,7 +43,7 @@ class Product {
       //side_products: List<int>.from(jsonResponse["side_products"] as List<dynamic>),
       //category: jsonResponse["category"] as int,
       ingredients: List.generate((jsonResponse["ingredients"] as List<dynamic>).length, (index) => Ingredient.fromJson((jsonResponse["ingredients"] as List<dynamic>)[index], context: context)),
-      productSelection: List.generate((jsonResponse["side_product"] as List<dynamic>).length, (index) => ProductSelection.fromJson((jsonResponse["side_product"] as List<dynamic>)[index])),
+      productSelection: List.generate((jsonResponse["side_products"] as List<dynamic>).length, (index) => ProductSelection.fromJson((jsonResponse["side_products"] as List<dynamic>)[index])),
     );
   }
 }
