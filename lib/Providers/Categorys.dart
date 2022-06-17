@@ -40,7 +40,7 @@ class Categorys with ChangeNotifier {
   Future<void> addCategory({required context}) async {
     // this function will add categorys to the _items List
     final url = Uri.parse(
-      'https://www.inspery.com/menu/category/3',
+      'https://www.inspery.com/menu/category/4',
     );
     final headers = {"Content-type": "application/json"};
     final response = await http.get(url, headers: headers);
@@ -49,15 +49,14 @@ class Categorys with ChangeNotifier {
       for (int i = 0; i < data.length; i++) {
         var cat = Category.fromJson(data[i]);
         addProducts(
-          //adding the products to the category we are saving
-          cat,
-          context: context
-        );
+            //adding the products to the category we are saving
+            cat,
+            context: context);
         _items.add(cat);
       }
     } else {
       print(
-          'Request failed with status: ${response.statusCode}. /menu/category/3');
+          'Request failed with status: ${response.statusCode}. /menu/category/4');
     }
     notifyListeners();
   }
@@ -66,13 +65,13 @@ class Categorys with ChangeNotifier {
     //this function will search for a category by ID
     return _items.firstWhere((t) => t.product_type == type,
         orElse: () => Category(
-          id: 0,
-          name: '0',
-          category_type: 0,
-          product_type: '',
-          picture: '',
-          //type: null,
-        ));
+              id: 0,
+              name: '0',
+              category_type: 0,
+              product_type: '',
+              picture: '',
+              //type: null,
+            ));
   }
 
   Category findById(int id) {

@@ -77,9 +77,10 @@ class _InvoiceViewState extends State<InvoiceView> {
     // calculate the size of InvoiceItemsWidget
     int IIWidgetSize = invoiceItems.length;
     for (int i = 0; i < invoiceItems.length; i++) {
-      IIWidgetSize += invoiceItems[i].sideDish.length;
+      IIWidgetSize += invoiceItems[i].side_products.length;
       IIWidgetSize += invoiceItems[i].deleted_ingredients.length;
       IIWidgetSize += invoiceItems[i].added_ingredients.length;
+      IIWidgetSize += invoiceItems[i].dips.length;
     }
     IIWidgetSize *= 34;
     return _isLoading == true

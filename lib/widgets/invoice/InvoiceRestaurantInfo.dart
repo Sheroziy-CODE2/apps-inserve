@@ -21,7 +21,7 @@ class InvoiceRestaurantInfo extends StatelessWidget {
         type: MaterialType.transparency,
         child: Column(
           children: [
-            img != '' ? Image.network(img, scale: 1.0) : const Text(''),
+            Image.asset('assets/img/logo.png'),
             Text(address,
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,

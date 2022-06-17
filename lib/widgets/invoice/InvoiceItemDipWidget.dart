@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/Providers/Products.dart';
+import 'package:inspery_pos/Providers/DipsProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../reusable/CenterText.dart';
 
-class InvoiceItemSideDishWidget extends StatelessWidget {
-  // this widget is used to show a line of information about a side dish in the invoice
-  final String name;
-  const InvoiceItemSideDishWidget({required this.name});
+class InvoiceItemDipWidget extends StatelessWidget {
+  // this widget is used to show a line of information about a dip in the invoice
+  final int id;
+  const InvoiceItemDipWidget({required this.id});
 
   @override
   Widget build(BuildContext context) {
-    final product =
-        Provider.of<Products>(context, listen: false).findByName(name);
-    var productName =
-        product.name.length > 10 ? product.name.substring(0, 10) : product.name;
-    var price = 0.0;
-    for (var i = 0; i < product.product_price.length; i++) {
-      if (product.product_price[i].description == "SD") {
-        price = product.product_price[i].price;
-      }
-    }
-    // .product_price
-    // .firstWhere((element) => element.isSD);
+    final dip = Provider.of<DipsProvider>(context, listen: false).findById(id);
+    var name = dip.name.length > 10 ? dip.name.substring(0, 10) : dip.name;
     return Material(
       type: MaterialType.transparency,
       child: Container(
@@ -47,12 +37,12 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 4,
-                  child: CenterText(text: productName),
+                  child: CenterText(text: name),
                 ),
                 Expanded(
                   flex: 4,
                   child: Text(
-                    '  ${price} Euro',
+                    '  ${dip.price} Euro',
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),

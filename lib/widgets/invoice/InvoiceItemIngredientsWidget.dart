@@ -16,6 +16,9 @@ class InvoiceItemIngredientsWidget extends StatelessWidget {
     final ingredientsProvider =
         Provider.of<Ingredients>(context, listen: false);
     final ingredient = ingredientsProvider.findById(id);
+    var name = ingredient.name.length > 10
+        ? ingredient.name.substring(0, 10)
+        : ingredient.name;
 
     return Material(
       type: MaterialType.transparency,
@@ -41,7 +44,7 @@ class InvoiceItemIngredientsWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 4,
-                  child: CenterText(text: ingredient.name.toString()),
+                  child: CenterText(text: name),
                 ),
                 operator == '+'
                     ? Expanded(

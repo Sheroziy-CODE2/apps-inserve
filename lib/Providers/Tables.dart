@@ -674,6 +674,7 @@ class Tables with ChangeNotifier {
     );
     //fetch the table items
     _allTableschannel?.sink.add(jsonEncode({"command": "fetch_tables"}));
+
   }
 
   Future<void> connectSocket(

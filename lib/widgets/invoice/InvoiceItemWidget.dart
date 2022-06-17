@@ -113,8 +113,8 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Theme.of(context).cardColor,
-                  Theme.of(context).cardColor,
+                  Colors.transparent,
+                  Colors.transparent,
                 ])),
             child: Row(
               children: [
@@ -182,7 +182,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.normal,
+                                    fontWeight: FontWeight.bold,
                                     color: Color(0xFF2C3333),
                                   ),
                                 ),
@@ -190,20 +190,19 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                               Material(
                                 type: MaterialType.transparency,
                                 child: Container(
-                                  padding: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(6),
                                   margin: EdgeInsets.only(left: 6),
                                   decoration: new BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 204, 204, 185),
+                                    color: Theme.of(context).primaryColorDark,
                                     borderRadius:
                                         new BorderRadius.circular(16.0),
                                   ),
                                   child: Text(
                                     date,
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF2C3333),
+                                      color: Theme.of(context).cardColor,
                                       fontSize: 25,
                                     ),
                                   ),
@@ -258,7 +257,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                         Material(
                           type: MaterialType.transparency,
                           child: Text(
-                            invoiceDetails.amount.toString(),
+                            invoiceDetails.amount.toString() + ' €',
                             textAlign: TextAlign.center,
                             // textAlign: TextAlign.end,
                             style: const TextStyle(
