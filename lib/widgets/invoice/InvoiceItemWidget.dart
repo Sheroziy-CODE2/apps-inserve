@@ -1,5 +1,4 @@
 import 'dart:convert' as convert;
-import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -225,7 +224,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                   flex: 4,
                   child: Container(
                     height: 75,
-                    padding: EdgeInsets.only(top: 20, right: 15),
+                    padding: const EdgeInsets.only(top: 20, right: 15),
                     // color: Color.fromARGB(255, 21, 82, 71),
                     // padding: const EdgeInsets.all(5),
                     width: MediaQuery.of(context).size.width / 3,

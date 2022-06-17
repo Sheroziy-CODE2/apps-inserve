@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
 
 import '../widgets/NavBar.dart';
+import 'TableChangePopUp.dart';
+import 'WeiterChangePopUp.dart';
 
 class TablesView extends StatefulWidget {
   // const TablesView({Key? key}) : super(key: key);
@@ -15,7 +17,7 @@ class TablesView extends StatefulWidget {
 }
 
 class _TablesViewState extends State<TablesView> {
-  var _isInit = true;
+  final _isInit = true;
   var _isLoading = true;
   @override
   void initState() {
@@ -62,18 +64,23 @@ class _TablesViewState extends State<TablesView> {
             const Text("Offene Tische", style: TextStyle(fontSize: 16),),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(right: 15),
-                  child: Icon(Icons.multiple_stop, size: 28,color: Color(0xFF7B7B7B),),
+              children: <Widget>[
+                IconButton(
+                  padding: const EdgeInsets.only(right: 15),
+                  icon: const Icon(Icons.multiple_stop, size: 28,color: Color(0xFF7B7B7B),),
+                  onPressed: () { TableChange.getInstance()?.showTableChangeDialog(context);
+                    },
                 ),
-                Padding(
-                  padding: EdgeInsets.only(right: 15),
-                  child: Icon(Icons.supervised_user_circle_outlined, size: 28,color: Color(0xFF7B7B7B)),
+                IconButton(
+                  padding: const EdgeInsets.only(right: 15),
+                  icon: const Icon(Icons.supervised_user_circle_outlined, size: 28,color: Color(0xFF7B7B7B)),
+                  onPressed: () { WeiterChange.getInstance()?.showWeiterChangeDialog(context);
+                    },
                 ),
-                Padding(
-                  padding: EdgeInsets.only(right: 15),
-                  child: Icon(Icons.settings, size: 28,color: Color(0xFF7B7B7B)),
+                IconButton(
+                  padding: const EdgeInsets.only(right: 15),
+                  icon: const Icon(Icons.settings, size: 28,color: Color(0xFF7B7B7B)),
+                  onPressed: () { },
                 ),
               ],
             ),

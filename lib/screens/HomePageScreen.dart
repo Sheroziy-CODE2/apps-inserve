@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final tablesData = Provider.of<Tables>(context);
-    var id = tablesData.findByName("Table" + userText).id;
+    var id = tablesData.findByName(userText).id;
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       bottomNavigationBar: const NavBar(selectedIcon: 1),
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     const SizedBox(height: 70),
                     Container(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       alignment: Alignment.centerRight,
                       child: Text('Tisch: ' + userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
                     ),
@@ -76,8 +76,9 @@ class _HomePageState extends State<HomePage> {
                             }
                           },
                           buttonText: buttons[index],
-                          color: Color.fromARGB(255, 28, 114, 33),
+                          color: const Color.fromARGB(255, 28, 114, 33),
                           textColor: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(15)
                         );
                       }
                       // DEL button
@@ -88,16 +89,18 @@ class _HomePageState extends State<HomePage> {
                               userText = "";
                             });
                           },
-                          buttonText: buttons[index],
-                          color: Color.fromARGB(255, 165, 39, 30),
-                          textColor: Theme.of(context).cardColor,
+                            buttonText: buttons[index],
+                            color: const Color.fromARGB(255, 165, 39, 30),
+                            textColor: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(15),
                         );
                       }
                       // Empty Buttons
                       else if (index == 3 || index == 7 || index == 11) {
                         return MyButton(
-                          buttonText: buttons[index],
-                          color: Theme.of(context).cardColor,
+                            buttonText: buttons[index],
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(15)
                         );
                       } else {
                         return MyButton(
@@ -111,6 +114,7 @@ class _HomePageState extends State<HomePage> {
                           textColor: buttons[index] == " "
                               ? Theme.of(context).primaryColorDark
                               : Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(15),
                         );
                       }
                     }),

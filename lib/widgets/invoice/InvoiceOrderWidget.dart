@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../Models/InvoiceItem.dart';
@@ -40,12 +39,12 @@ class InvoiceOrderWidget extends StatelessWidget {
                   flex: 4,
                   child: ProductNameComponent(id: invoiceItem.product),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 2,
                   child: //PriceComponent(id: invoiceItem.price),
                   Text(
                    "??",
-                   style: const TextStyle(
+                   style: TextStyle(
                      fontWeight: FontWeight.w500,
                      color: Color(0xFF2C3333),
                      fontSize: 25,

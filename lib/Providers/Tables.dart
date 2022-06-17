@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:inspery_pos/Providers/TableItemProvidor.dart';
 import 'package:inspery_pos/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +21,9 @@ import 'Products.dart';
 import 'package:intl/intl.dart';
 
 class Tables with ChangeNotifier {
-  List<TableModel> _items = [];
+  final List<TableModel> _items = [];
+
+  IOWebSocketChannel? _allTableschannel;
   String? token;
 
   final ConfigPrinter _configPrinter = ConfigPrinter();
@@ -39,7 +40,7 @@ class Tables with ChangeNotifier {
   notify() {
     try {
       notifyListeners();
-    }catch(e){
+    } catch (e) {
       print("Error on Tables.notify: " + e.toString());
     }
   }
@@ -51,21 +52,20 @@ class Tables with ChangeNotifier {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
-  bool isItemFromWaiter({required int tableID}){
+  bool isItemFromWaiter({required int tableID}) {
     var tableItems = findById(tableID).tIP.tableItems;
     for (var element in tableItems) {
-      if(element.fromWaiter) return true;
+      if (element.fromWaiter) return true;
     }
     return false;
   }
-
 
   Future<void> checkoutItemsToSocket(
       {required context, required int tableID}) async {
     var table = findById(tableID);
     var tableItems = findById(tableID).tIP.tableItems;
     List<TableItemProvidor> elements =
-    tableItems.where((element) => element.fromWaiter == true).toList();
+        tableItems.where((element) => element.fromWaiter == true).toList();
     List jsonElemnts = [];
     for (int i = 0; i < elements.length; i++) {
       var j = {
@@ -76,7 +76,7 @@ class Tables with ChangeNotifier {
         "side_products": elements[i].side_product,
         "added_ingredients": elements[i].added_ingredients,
         "deleted_ingredients": elements[i].deleted_ingredients,
-        "dips" : elements[i].dips,
+        "dips": elements[i].dips,
       };
       jsonElemnts.add(j);
     }
@@ -94,17 +94,31 @@ class Tables with ChangeNotifier {
       findById(tableID).tIP.notify();
       return;
     }
-    //final WebSocketSink socket = table.channel?.sink;
     table.channel.sink.add(
         jsonEncode({"command": "new_table_items", "table_items": jsonElemnts}));
-    findById(tableID).tIP.notify();
+  }
+
+  Future<void> transferTableToAnotherUserSocket(
+      {required String newUserID, required List tableIDs}) async {
+    _allTableschannel?.sink.add(jsonEncode({
+      "command": "transfer_tables",
+      "new_user": newUserID,
+      "tables": tableIDs
+    }));
+  }
+
+  Future<void> transferAllItemsToSocket(
+      {required context, required int tableID, required int newTableID}) async {
+    //Looking for the old tableID to transfer its items to the new one
+    var table = findById(tableID);
+
+    table.channel.sink.add(jsonEncode(
+        {"command": "transfer_all_table_items", "new_table": newTableID}));
   }
 
   Future<void> checkout({required context, required int tableID}) async {
     var table = findById(tableID);
-    final totalPrice = table
-        .tIP
-        .getTotalCartTablePrice(context: context)!;
+    final totalPrice = table.tIP.getTotalCartTablePrice(context: context)!;
 
     var element = table.tIP.tableItems;
     List jsonList = [];
@@ -117,35 +131,31 @@ class Tables with ChangeNotifier {
       });
     }
 
-
-    if(jsonList.isEmpty){
+    if (jsonList.isEmpty) {
       try {
-            final _context = MyApp.navKey.currentContext;
-            if(_context!=null){
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    backgroundColor: Colors.orange,
-                    content: Text("Kein Produkt gewählt"),)
-              );
-              return;
-            }
-          }catch(e){
-            print("CurrentContext error: " + e.toString());
-            return;
-          }
+        final _context = MyApp.navKey.currentContext;
+        if (_context != null) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.orange,
+            content: Text("Kein Produkt gewählt"),
+          ));
+          return;
+        }
+      } catch (e) {
+        print("CurrentContext error: " + e.toString());
+        return;
+      }
     }
 
-    final Map<int,String> paymentOptions = {
-      0 : "Karte",
-      1 : "Bar"
+    final Map<int, String> paymentOptions = {0: "Karte", 1: "Bar"};
+    final Map<int, String> paymentImages = {
+      0: "assets/images/PayCard.png",
+      1: "assets/images/PayCash.png"
     };
-    final Map<int,String> paymentImages = {
-      0 : "assets/images/PayCard.png",
-      1 : "assets/images/PayCash.png"
-    };
-    final Map<int,Icon> paymentIcons = {
-      0 : Icon(Icons.credit_card,color: Colors.black.withOpacity(0.6)),
-      1 : Icon(Icons.monetization_on_outlined,color: Colors.black.withOpacity(0.6))
+    final Map<int, Icon> paymentIcons = {
+      0: Icon(Icons.credit_card, color: Colors.black.withOpacity(0.6)),
+      1: Icon(Icons.monetization_on_outlined,
+          color: Colors.black.withOpacity(0.6))
     };
     showDialog(
       context: context,
@@ -166,12 +176,28 @@ class Tables with ChangeNotifier {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text(table.name, style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline,),),
+                              child: Text(
+                                table.name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
                             ),
-                            const SizedBox(height: 30,),
+                            const SizedBox(
+                              height: 30,
+                            ),
                             const Text("Die Rechnung"),
-                            Text(totalPrice.toStringAsFixed(2) + "€", style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline,),),
-                            const SizedBox(height: 10,),
+                            Text(
+                              totalPrice.toStringAsFixed(2) + "€",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
                       ),
@@ -181,12 +207,17 @@ class Tables with ChangeNotifier {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Image.asset(paymentImages[paymentMethod]!),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.of(context).pop();
-                      checkout_print(tableID: tableID, jsonList: jsonList, payment: paymentOptions[paymentMethod]!);
+                      checkout_print(
+                          tableID: tableID,
+                          jsonList: jsonList,
+                          payment: paymentOptions[paymentMethod]!);
                     },
                     child: Container(
                       height: 46,
@@ -197,58 +228,69 @@ class Tables with ChangeNotifier {
                       child: const Center(child: Text("Ja")),
                     ),
                   ),
-                  const SizedBox(height: 40,),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: paymentOptions.keys.map((key) =>
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    paymentMethod = key;
-                                  });
-                                },
-                                child:
-                                SizedBox(
-                                    height: 40,
-                                    width: 127,
-                                    child:  Stack(
-                                      children: [
-                                        Positioned(
-                                          top: 2,
-                                          left: 2,
-                                          child: Container(
-                                            height: 34,
-                                            width: 120,
-                                            padding: const EdgeInsets.only(left: 45, right: 15),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(20),
-                                                border: paymentMethod != key ? null : Border.all(color: Colors.green, style: BorderStyle.solid, width: 4)
-
+                      children: paymentOptions.keys
+                          .map(
+                            (key) => Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      paymentMethod = key;
+                                    });
+                                  },
+                                  child: SizedBox(
+                                      height: 40,
+                                      width: 127,
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            top: 2,
+                                            left: 2,
+                                            child: Container(
+                                              height: 34,
+                                              width: 120,
+                                              padding: const EdgeInsets.only(
+                                                  left: 45, right: 15),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: paymentMethod != key
+                                                      ? null
+                                                      : Border.all(
+                                                          color: Colors.green,
+                                                          style:
+                                                              BorderStyle.solid,
+                                                          width: 4)),
+                                              child: Center(
+                                                  child: Text(
+                                                      paymentOptions[key]!)),
                                             ),
-                                            child: Center(child: Text(paymentOptions[key]!)),
                                           ),
-                                        ),
-                                        Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFE8E8E8),
-                                            borderRadius: BorderRadius.circular(20),
+                                          Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFE8E8E8),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: paymentIcons[key],
                                           ),
-                                          child: paymentIcons[key],
-                                        ),
-                                      ],
-                                    )),
-                              ),
-                            ],
-                          ),
-                      ).toList()
-                  )
+                                        ],
+                                      )),
+                                ),
+                              ],
+                            ),
+                          )
+                          .toList())
                 ],
               ),
             );
@@ -256,22 +298,23 @@ class Tables with ChangeNotifier {
         );
       },
     );
-
   }
 
-  Future<void> showCalculator({required context,required double amount}){
+  Future<void> showCalculator({required context, required double amount}) {
     return showDialog(
       context: context,
       builder: (context) {
         String typedInValue = "0000,00€";
         int actPos = 0;
-        final List<double> block = [7,8,9,4,5,6,1,2,3,-1,0,-1];
+        final List<double> block = [7, 8, 9, 4, 5, 6, 1, 2, 3, -1, 0, -1];
         List<bool> isPressed = List.generate(block.length, (index) => false);
 
         return StatefulBuilder(
           builder: (context2, setState) {
-            double rueckgeld = double.parse(typedInValue.replaceFirst(",", ".").replaceFirst("€", "")) - amount;
-            if(rueckgeld < 0) rueckgeld = 0;
+            double rueckgeld = double.parse(
+                    typedInValue.replaceFirst(",", ".").replaceFirst("€", "")) -
+                amount;
+            if (rueckgeld < 0) rueckgeld = 0;
             return AlertDialog(
               backgroundColor: const Color(0xFFF5F2E7),
               content: Column(
@@ -290,32 +333,53 @@ class Tables with ChangeNotifier {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text("Zu bezahlen:  "),
-                                  Text(amount.toStringAsFixed(2) + "€", style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline,),),
+                                  Text(
+                                    amount.toStringAsFixed(2) + "€",
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 20,),
+                              const SizedBox(
+                                height: 20,
+                              ),
                               const Text("Vom Kunde Gezahlt"),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.max,
-                                children: List.generate(typedInValue.length, (index) =>
-                                    Padding(
-                                      padding: const EdgeInsets.all(3.0),
-                                      child: Text(
-                                        typedInValue[index],style:
-                                      TextStyle(
-                                          color: index == actPos ? Colors.green : Colors.black,
-                                          fontSize: 30,
-                                          fontWeight: index == actPos ? FontWeight.bold : FontWeight.normal
-                                      ),
-                                      ),
-                                    )
-                                ),
+                                children: List.generate(
+                                    typedInValue.length,
+                                    (index) => Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: Text(
+                                            typedInValue[index],
+                                            style: TextStyle(
+                                                color: index == actPos
+                                                    ? Colors.green
+                                                    : Colors.black,
+                                                fontSize: 30,
+                                                fontWeight: index == actPos
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal),
+                                          ),
+                                        )),
                               ),
-                              const SizedBox(height: 15,),
+                              const SizedBox(
+                                height: 15,
+                              ),
                               const Text("Rückgeld"),
-                              Text(rueckgeld.toStringAsFixed(2).replaceFirst(".", ",") + "€",
-                                style: const TextStyle(fontSize: 25,decoration: TextDecoration.underline, fontWeight: FontWeight.bold),),
+                              Text(
+                                rueckgeld
+                                        .toStringAsFixed(2)
+                                        .replaceFirst(".", ",") +
+                                    "€",
+                                style: const TextStyle(
+                                    fontSize: 25,
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ],
                           ),
                         ),
@@ -337,51 +401,67 @@ class Tables with ChangeNotifier {
                         padding: const EdgeInsets.all(15),
                         shrinkWrap: false,
                         crossAxisCount: 3,
-                        children:
-                        List.generate(block.length, (index) =>
-                        block[index] == -1 ? Container() :
-                        GestureDetector(
-                          onTap: (){
-                            setState(() {
-                              typedInValue = typedInValue.substring(0,actPos) + block[index].toStringAsFixed(0) + typedInValue.substring(actPos+1);
-                              actPos ++;
-                              if(actPos == typedInValue.length-1) actPos = 0;
-                              if(typedInValue[actPos] == ",") actPos++;
-                              if(typedInValue[actPos] == "€") actPos++;
-                              isPressed[index] = true;
-                            });
-                            Future.delayed(const Duration(milliseconds: 100), () => setState((){isPressed[index] = false;}));
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 100),
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: const Color(0xFFF5F2E7),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 10,
-                                    offset: const Offset(-5,-5),
-                                    color: Colors.white,
-                                    blurStyle: isPressed[index] ? BlurStyle.outer : BlurStyle.inner,
-                                  ),
-                                  BoxShadow(
-                                    blurRadius: 10,
-                                    offset: const Offset(5,5),
-                                    color: const Color(0xFFA7A9AF),
-                                    blurStyle: isPressed[index] ? BlurStyle.outer : BlurStyle.inner,
-                                  ),
-                                ]
-                            ),
-                            child: Center(child: Text(block[index].toStringAsFixed(0), style: const TextStyle(fontSize: 20),)),
-                          ),
-                        )
-                        )
-
-                    ),
+                        children: List.generate(
+                            block.length,
+                            (index) => block[index] == -1
+                                ? Container()
+                                : GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        typedInValue = typedInValue.substring(
+                                                0, actPos) +
+                                            block[index].toStringAsFixed(0) +
+                                            typedInValue.substring(actPos + 1);
+                                        actPos++;
+                                        if (actPos == typedInValue.length - 1)
+                                          actPos = 0;
+                                        if (typedInValue[actPos] == ",")
+                                          actPos++;
+                                        if (typedInValue[actPos] == "€")
+                                          actPos++;
+                                        isPressed[index] = true;
+                                      });
+                                      Future.delayed(
+                                          const Duration(milliseconds: 100),
+                                          () => setState(() {
+                                                isPressed[index] = false;
+                                              }));
+                                    },
+                                    child: AnimatedContainer(
+                                      duration:
+                                          const Duration(milliseconds: 100),
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: const Color(0xFFF5F2E7),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius: 10,
+                                              offset: const Offset(-5, -5),
+                                              color: Colors.white,
+                                              blurStyle: isPressed[index]
+                                                  ? BlurStyle.outer
+                                                  : BlurStyle.inner,
+                                            ),
+                                            BoxShadow(
+                                              blurRadius: 10,
+                                              offset: const Offset(5, 5),
+                                              color: const Color(0xFFA7A9AF),
+                                              blurStyle: isPressed[index]
+                                                  ? BlurStyle.outer
+                                                  : BlurStyle.inner,
+                                            ),
+                                          ]),
+                                      child: Center(
+                                          child: Text(
+                                        block[index].toStringAsFixed(0),
+                                        style: const TextStyle(fontSize: 20),
+                                      )),
+                                    ),
+                                  ))),
                   ),
-
                 ],
               ),
               actions: <Widget>[
@@ -399,13 +479,12 @@ class Tables with ChangeNotifier {
     );
   }
 
-
-
-
-  Future<void> checkout_print({required int tableID, required jsonList, required String payment}) async {
-
+  Future<void> checkout_print(
+      {required int tableID,
+      required jsonList,
+      required String payment}) async {
     final _context = MyApp.navKey.currentContext;
-    if(_context == null) {
+    if (_context == null) {
       print("Global context in checkState Tables checkout_printer is null");
       return;
     }
@@ -425,16 +504,13 @@ class Tables with ChangeNotifier {
     });
     final response = await http.post(url, headers: headers, body: data);
     if (response.statusCode == 201) {
-
       print("Response: " + jsonDecode(response.body).toString());
       var jsonReturn = jsonDecode(response.body);
 
-
       //Ingredients ingredientsProvider = Provider.of<Ingredients>(_context, listen: false);
       //SideDishes sideDishProvider = Provider.of<SideDishes>(_context, listen: false);
-      Products productsProvider = Provider.of<Products>(_context, listen: false);
-
-
+      Products productsProvider =
+          Provider.of<Products>(_context, listen: false);
 
       print("connection " + (await _configPrinter.checkState()).toString());
 
@@ -444,7 +520,6 @@ class Tables with ChangeNotifier {
       //var formatter = DateFormat('HH:mm dd-MM-yyyy');
       //String formattedDate = formatter.format(now);
       //String restaurantPhoto = Provider.of<Authy>(context, listen: false).RestaurantPhotoLink;
-
 
       const filename = 'yourlogo.png';
       //var bytes = await rootBundle.load(restaurantPhoto);
@@ -457,19 +532,24 @@ class Tables with ChangeNotifier {
           bluetooth.printCustom("INSPARY", 2, 1);
           bluetooth.printImage(pathImage);
           bluetooth.printNewLine();
-          bluetooth.printCustom("Rechnung/Bon-Nr: " + jsonReturn["dailyInvoice"].toString(), 0, 2);
-          bluetooth.printCustom(DateFormat('hh:mm dd-MM-yyy').format(DateTime.fromMillisecondsSinceEpoch(int.parse(jsonReturn["date"])*1000)),0,2);
-          bluetooth.printCustom("Tisch: " + jsonReturn["table"].toString(), 0, 2);
+          bluetooth.printCustom(
+              "Rechnung/Bon-Nr: " + jsonReturn["dailyInvoice"].toString(),
+              0,
+              2);
+          bluetooth.printCustom(
+              DateFormat('hh:mm dd-MM-yyy').format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(jsonReturn["date"]) * 1000)),
+              0,
+              2);
+          bluetooth.printCustom(
+              "Tisch: " + jsonReturn["table"].toString(), 0, 2);
           bluetooth.printNewLine();
 
           //List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
           for (var item in jsonReturn["invoice_items"]) {
-            bluetooth.print4Column(
-                item["quantity"].toString(),
-                productsProvider.findById(item["id"]).name,
-                "?,??",
-                "?,??",
-                1,
+            bluetooth.print4Column(item["quantity"].toString(),
+                productsProvider.findById(item["id"]).name, "?,??", "?,??", 1,
                 format: "%2s %15s %5s %5s %n");
 
             /*
@@ -519,9 +599,10 @@ class Tables with ChangeNotifier {
           bluetooth.printLeftRight(
               "SUMME",
               findById(tableID)
-                  .tIP
-                  .getTotalCartTablePrice(context: _context)!
-                  .toStringAsFixed(2) + "EUR",
+                      .tIP
+                      .getTotalCartTablePrice(context: _context)!
+                      .toStringAsFixed(2) +
+                  "EUR",
               3);
           bluetooth.printCustom("--------------------------------", 1, 0);
           bluetooth.printCustom("Zahlungsmethode: " + payment, 0, 2);
@@ -533,23 +614,66 @@ class Tables with ChangeNotifier {
         }
       });
 
-
-      if(payment == "Bar") {
+      if (payment == "Bar") {
         showCalculator(
-            context: _context,
-            amount: findById(tableID).tIP.getTotalCartTablePrice(context: _context)!,
+          context: _context,
+          amount:
+              findById(tableID).tIP.getTotalCartTablePrice(context: _context)!,
         );
       }
-
     } else {
       print(
           'Request failed with status: ${response.statusCode}. invoice/invoices_items/');
       print(
           'Request failed with status: ${response.body}. invoice/invoices_items/');
     }
+  }
 
+  //Connect to the new Tables socket
+  Future<void> connectALlTablesSocket(
+      {required context, required token}) async {
+    // if there is no connection yet connect the channel
+    print('ws://inspery.com/ws/restaurant_tables/?=$token');
+    sleep(const Duration(milliseconds: 300));
+    _allTableschannel == null
+        ? _allTableschannel = IOWebSocketChannel.connect(
+            Uri.parse('ws://inspery.com/ws/restaurant_tables/?=$token'),
+          )
+        : null;
+  }
 
-
+  Future<void> listenToAllTabelsSocket(
+      {required context, required token}) async {
+    _allTableschannel?.stream.listen(
+      // listen to the updates from the channel
+      (message) {
+        var data = jsonDecode(message);
+        //print(data);
+        switch (data['type']) {
+          case 'fetch_tables':
+            //print(data);
+            break;
+          case 'transfered_tables':
+            for (var i = 0;
+                i < data['transfered_tables']["transfered_tables"].length;
+                i++) {
+              var table =
+                  findById(data['transfered_tables']["transfered_tables"][i]);
+              table.owner = data['transfered_tables']["owner"];
+            }
+            notifyListeners();
+            break;
+        }
+      },
+      onError: (error) => {
+        connectALlTablesSocket(context: context, token: token).then((_) {
+          listenToAllTabelsSocket(context: context, token: token);
+          print(error);
+        }),
+      },
+    );
+    //fetch the table items
+    _allTableschannel?.sink.add(jsonEncode({"command": "fetch_tables"}));
   }
 
   Future<void> connectSocket(
@@ -561,9 +685,9 @@ class Tables with ChangeNotifier {
       if (_items[i].id == id) {
         await _items[i].channel == null
             ? _items[i].channel = IOWebSocketChannel.connect(
-          Uri.parse(
-              'ws://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
-        )
+                Uri.parse(
+                    'ws://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
+              )
             : null;
       }
     }
@@ -576,28 +700,30 @@ class Tables with ChangeNotifier {
       if (_items[i].id == id) {
         _items[i].channel?.stream.listen(
           // listen to the updates from the channel
-              (message) {
+          (message) {
             var data = jsonDecode(message);
             switch (data['type']) {
               case 'fetch_table_items':
-              //if the type is fetch the app has to make a new list of table_items and delete the old one
+                //if the type is fetch the app has to make a new list of table_items and delete the old one
                 this._items[i].total_price =
-                data['table']["total_price"].toDouble() as double;
+                    data['table']["total_price"].toDouble() as double;
                 List<TableItemProvidor> _tIPItems = [];
                 var jsonResponse = data['table_items'] as List<dynamic>;
                 for (var body in jsonResponse) {
                   _tIPItems.add(TableItemProvidor.fromResponse(body));
                   _tIPItems.last.fromWaiter =
-                  false; //Set it to false, because it comes from the server
+                      false; //Set it to false, because it comes from the server
                 }
                 this._items[i].tIP.setItems(_tIPItems);
                 // notifyListeners();
-                _items[i].timeHistory["Buchung"] = _items[i].tIP.getTimeFromLastInputProduct();
-                _items[i].timeHistory["Syncronisierung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
+                _items[i].timeHistory["Buchung"] =
+                    _items[i].tIP.getTimeFromLastInputProduct();
+                _items[i].timeHistory["Syncronisierung"] =
+                    (DateTime.now().millisecondsSinceEpoch / 1000).round();
                 break;
 
               case 'table_items':
-              //if the type is table_items the app has add the new items to the list of table_items
+                //if the type is table_items the app has add the new items to the list of table_items
                 var jsonResponse = data['table_items']['table_items'];
                 List<TableItemProvidor> _tIPItems = [];
                 for (var body in jsonResponse) {
@@ -606,27 +732,48 @@ class Tables with ChangeNotifier {
                 }
                 this._items[i].tIP.addItemsFromServer(_tIPItems);
                 this._items[i].total_price =
-                data['table_items']['table']['total_price'].toDouble()
-                as double;
-                _items[i].timeHistory["Buchung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
+                    data['table_items']['table']['total_price'].toDouble()
+                        as double;
+                _items[i].timeHistory["Buchung"] =
+                    (DateTime.now().millisecondsSinceEpoch / 1000).round();
                 notifyListeners();
                 break;
 
               case 'deleted_table_items':
-              //if the type is deleted_table_items the app has to delete this items
+                //if the type is deleted_table_items the app has to delete this items
                 var jsonResponse = data['deleted_table_items']['invoice_items'];
                 for (var body in jsonDecode(jsonResponse)) {
                   this._items[i].tIP.deleteItemsFromServer(
                       body['fields']['quantity'], body['fields']['order']);
                 }
-                _items[i].timeHistory["Loeschung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
+                _items[i].timeHistory["Loeschung"] =
+                    (DateTime.now().millisecondsSinceEpoch / 1000).round();
                 break;
 
               case 'transfer_table_items':
                 List<int> products = data['transfer'];
                 var newTable = data['new_table'];
-                _items[i].tIP.transfereTableItem(newTable: newTable, products: products, context: context);
-                _items[i].timeHistory["Tischumbuchung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
+                _items[i].tIP.transfereTableItem(
+                    newTable: newTable, products: products, context: context);
+                _items[i].timeHistory["Tischumbuchung"] =
+                    (DateTime.now().millisecondsSinceEpoch / 1000).round();
+                notifyListeners();
+                break;
+
+              //Response from command that read transfer of all items from one table to another.
+              case 'transfer_all':
+                var table = findById(data['transfer_all']['old_table']['id']);
+                table.total_price =
+                    data['transfer_all']['old_table']['total_price'];
+                List allItemsTable = table.tIP.tableItems;
+                table.tIP.delete_items();
+                var newTable =
+                    findById(data['transfer_all']['new_table']['id']);
+                newTable.tIP.add_items(allItemsTable);
+                newTable.total_price =
+                    data['transfer_all']['new_table']['total_price'];
+                //_items[i].timeHistory["Tischumbuchung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
+                notifyListeners();
                 break;
 
               default:

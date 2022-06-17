@@ -43,6 +43,9 @@ dependencies:
   blue_thermal_printer: ^1.2.0
   path_provider: ^2.0.10
   flutter_secure_storage: ^5.0.2
+  group_button: ^5.0.1
+  custom_radio_grouped_button: ^2.1.2
+  another_flushbar: ^1.10.28
 
 dev_dependencies:
   flutter_test:

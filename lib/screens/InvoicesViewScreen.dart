@@ -1,12 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-// import 'package:inspery_pos/Providers/categoryss.dart';
-import '../widgets/table/TableItemWidget.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:provider/provider.dart';
-import '../Providers/Tables.dart';
 import '../Providers/Authy.dart';
 import '../Models/Invoice.dart';
 

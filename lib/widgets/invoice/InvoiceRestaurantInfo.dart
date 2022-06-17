@@ -48,8 +48,8 @@ class InvoiceRestaurantInfo extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Telefon:',
-                    style: const TextStyle(
+                const Text('Telefon:',
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
                       fontSize: 20,
