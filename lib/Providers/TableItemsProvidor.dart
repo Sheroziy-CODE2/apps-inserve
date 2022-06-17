@@ -33,6 +33,15 @@ class TableItemsProvidor with ChangeNotifier {
     return retunrTime;
   }
 
+  void add_items(items) {
+    _tableItems = [...items, ..._tableItems];
+    notifyListeners();
+  }
+  void delete_items() {
+    _tableItems = [];
+    notifyListeners();
+  }
+
   void delete(item) {
     _tableItems.remove(item);
   }

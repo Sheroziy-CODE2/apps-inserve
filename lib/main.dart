@@ -5,6 +5,7 @@ import 'Providers/DipsProvider.dart';
 import 'Providers/TableItemChangeProvidor.dart';
 import 'Providers/TableItemProvidor.dart';
 import 'Providers/TableItemsProvidor.dart';
+import 'Providers/WorkersProvider.dart';
 import 'screens/TablesViewScreen.dart';
 import 'screens/TableViewScreen.dart';
 
@@ -72,6 +73,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => DipsProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => WorkersProvider(),
+        ),
       ],
       child: Consumer<Authy>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -79,8 +83,8 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             theme: ThemeData(
               // the colors and font
-              primaryColorDark: Color(0xFF2C3333),
-              cardColor: Color(0xFFF5F2E7),
+              primaryColorDark: const Color(0xFF2C3333),
+              cardColor: const Color(0xFFF5F2E7),
               fontFamily: 'Quicksand',
             ),
             home: auth.isAuth

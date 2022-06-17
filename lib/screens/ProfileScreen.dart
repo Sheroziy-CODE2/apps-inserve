@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inspery_pos/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
