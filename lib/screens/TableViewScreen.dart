@@ -58,6 +58,20 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin{
       //   productReadyToEnter();
       //   return;
       // }
+      /*
+      if(actPos == chooseProductWidget.length && chooseProductWidget.keys.first != "Produkt"){
+        productReadyToEnter();
+        return;
+      }
+       */
+
+      //skip Extras, because they normaly don't have to be entered
+      if(chooseProductWidget.length > actPos) {
+        if (chooseProductWidget.keys.toList()[actPos] == "Extras") {
+          productReadyToEnter();
+          return;
+        }
+      }
       horizontalScrollController.animateTo(
           MediaQuery.of(context).size.width * actPos,
           duration:  const Duration(milliseconds: 500),
