@@ -23,7 +23,6 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
   late TableItemProvidor tableItemProvidor;
   late TableItemsProvidor tIP;
   bool fromServer = true;
-  List<List<bool>>? selectetProductsInLine;
 
 
   @override
@@ -98,7 +97,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
       );
     }
 
-    selectetProductsInLine ??= List.generate(productPro.productSelection.length, (index1) => List.generate(productPro.productSelection[index1].products.length, (index) => false));
+    tableItemProvidor.selectetProductsInLine ??= List.generate(productPro.productSelection.length, (index1) => List.generate(productPro.productSelection[index1].products.length, (index) => false));
 
     return Column(
       children: [
@@ -111,10 +110,10 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Wähle noch " + productPro.productSelection[0].number.toString() +"x Beilage", textAlign: TextAlign.left),
+              Text("Wähle noch " + productPro.productSelection[0].number.toString() +"x Beilagen", textAlign: TextAlign.left),
               ListView.separated(
                 shrinkWrap: true,
-                separatorBuilder: (_,index) => Text("Wähle noch " + productPro.productSelection[index+1].number.toString()+"x Beilage" ),
+                separatorBuilder: (_,index) => Text("Wähle noch " + productPro.productSelection[index+1].number.toString()+"x Beilagen" ),
                 itemCount: productPro.productSelection.length,
                 itemBuilder: (_, indexList) =>
 
@@ -131,20 +130,23 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                         var productSD = productProvidor.findById(productPro.productSelection[indexList].products[index]);
                         return GestureDetector(
                             onTap: (){
-                              if(!selectetProductsInLine![indexList][index]){
+                              if(!tableItemProvidor.selectetProductsInLine![indexList][index]){
                                 //so it should get true now;
-                                if(productPro.productSelection[indexList].number > selectetProductsInLine![indexList].where((element) => element).length){
-                                  selectetProductsInLine![indexList][index] = true;
+                                if(productPro.productSelection[indexList].number > tableItemProvidor.selectetProductsInLine![indexList].where((element) => element).length){
+                                  tableItemProvidor.selectetProductsInLine![indexList][index] = true;
                                   tableItemProvidor.setSideProducts(context: context, new_side_product: productPro.productSelection[indexList].products[index]);
+                                }
+                                else{ // because when you can not select one, you should also not go to the next page
+                                  return;
                                 }
                               }
                               else {
-                                selectetProductsInLine![indexList][index] = false;
+                                tableItemProvidor.selectetProductsInLine![indexList][index] = false;
                                 tableItemProvidor.removeSideProducts(context: context, side_pro: productPro.productSelection[indexList].products[index]);
                                 return;
                               }
                               int amountTrue = 0;
-                              for (var elementX in selectetProductsInLine!) {
+                              for (var elementX in tableItemProvidor.selectetProductsInLine!) {
                                 amountTrue += elementX.where((element) => element).length;
                               }
                               if(maxSelected == amountTrue){
@@ -154,7 +156,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                             child: Container(
                               height: 10,
                               decoration: BoxDecoration(
-                                color: selectetProductsInLine![indexList][index] ? const Color(0xFFD3E03A) : Colors.transparent,
+                                color: tableItemProvidor.selectetProductsInLine![indexList][index] ? const Color(0xFFD3E03A) : Colors.transparent,
                                 border: Border.all(
                                     color: Colors.grey,
                                     width: 0.5),

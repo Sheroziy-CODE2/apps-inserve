@@ -25,6 +25,7 @@ class TableItemProvidor with ChangeNotifier {
   List<int> dips;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
+  List<List<bool>>? selectetProductsInLine; // that is for SideProducts when they are not added to Server
 
   bool fromWaiter = false;
   int _inCart = 0;
