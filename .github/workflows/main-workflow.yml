@@ -1,0 +1,35 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "2.10.5"
+      - run: flutter clean
+      - run: flutter pub get
+      - run: flutter build apk
+      - name: Rename The Build
+        run: python ./.github/scripts/rename_build.py
+      - name: Get APK Path
+        id: apk-path
+        run: |
+          path=$(find . -name 'app-release-*.apk' -type f | head -1)
+          echo "::set-output name=path::$path"
+      - name: Upload APK To Slack
+        uses: adrey/slack-file-upload-action@master
+        with:
+            token: ${{ secrets.SLACK_BOT_TOKEN }}
+            path: "${{steps.apk-path.outputs.path}}"
+            channel: inspery_waiter_app
