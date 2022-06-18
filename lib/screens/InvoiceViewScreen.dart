@@ -245,7 +245,7 @@ class _InvoiceViewState extends State<InvoiceView> {
     List<InvoiceItem> items = [];
 
     if (response.statusCode == 200) {
-      final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      final data = List<Map<String, dynamic>>.from(jsonDecode(utf8.decode(response.bodyBytes)));
       for (int i = 0; i < data.length; i++) {
         var o = InvoiceItem.fromJson(data[i]);
         items.add(o);

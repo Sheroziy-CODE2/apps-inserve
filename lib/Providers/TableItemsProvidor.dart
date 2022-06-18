@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 
 import 'package:http/http.dart' as http;
@@ -269,7 +271,7 @@ class TableItemsProvidor with ChangeNotifier {
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       _tableItems.clear();
-      var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
+      var jsonResponse = convert.jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
       for (var body in jsonResponse) {
         _tableItems.add(TableItemProvidor.fromResponse(body));
       }

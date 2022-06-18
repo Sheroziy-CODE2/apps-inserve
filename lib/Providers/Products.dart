@@ -19,7 +19,7 @@ class Products with ChangeNotifier {
     final headers = {"Authorization": "Token ${token}"};
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      final data = List<Map<String, dynamic>>.from(jsonDecode(utf8.decode(response.bodyBytes)));
       for (int i = 0; i < data.length; i++) {
         var pro = Product.fromJson(data[i], context: context);
         _items.add(pro);

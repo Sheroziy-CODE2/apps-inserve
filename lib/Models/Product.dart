@@ -33,7 +33,7 @@ class Product {
     var jsonResponse = response as Map<String, dynamic>;
     return Product(
       id: jsonResponse["id"] as int,
-      name: (jsonResponse["name"] as String).replaceAll("[^A-Za-z0-9]", ""),
+      name: jsonResponse["name"],
       allergien: List<String>.from(jsonResponse["allergien"] as List<dynamic>),
       product_price: List.generate((jsonResponse["product_price"] as List<dynamic>).length, (index) => ProductPrice.fromJson((jsonResponse["product_price"] as List<dynamic>)[index])),
       //description: jsonResponse["description"] as String?,

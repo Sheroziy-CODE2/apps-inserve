@@ -23,7 +23,7 @@ class Categorys with ChangeNotifier {
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final productsData =
-          List<Map<String, dynamic>>.from(jsonDecode(response.body));
+          List<Map<String, dynamic>>.from(jsonDecode(utf8.decode(response.bodyBytes)));
       List<Product> proList = [];
       for (int i = 0; i < productsData.length; i++) {
         var p = Product.fromJson(productsData[i], context: context);
@@ -45,7 +45,7 @@ class Categorys with ChangeNotifier {
     final headers = {"Content-type": "application/json"};
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      final data = List<Map<String, dynamic>>.from(jsonDecode(utf8.decode(response.bodyBytes)));
       for (int i = 0; i < data.length; i++) {
         var cat = Category.fromJson(data[i]);
         addProducts(
