@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/widgets/table/TableOverviewProductItem.dart';
+import 'package:inspery_waiter/widgets/table/TableOverviewProductItem.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/TableItemsProvidor.dart';

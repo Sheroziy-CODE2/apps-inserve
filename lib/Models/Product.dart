@@ -1,8 +1,6 @@
 
-import 'package:inspery_pos/Models/Ingredient.dart';
-import 'package:inspery_pos/Models/ProductPrice.dart';
-
 import 'Ingredient.dart';
+import 'ProductPrice.dart';
 
 class Product {
   late final int id;

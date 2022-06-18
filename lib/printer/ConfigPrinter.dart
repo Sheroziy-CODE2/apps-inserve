@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
-import 'package:inspery_pos/printer/Testprint.dart';
+import 'package:inspery_waiter/printer/Testprint.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';

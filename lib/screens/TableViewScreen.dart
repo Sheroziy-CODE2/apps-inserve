@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspery_pos/Providers/Products.dart';
-import 'package:inspery_pos/widgets/table/menu/ChooseDips.dart';
-import 'package:inspery_pos/widgets/table/menu/ChooseExtraOptionsWidget.dart';
-import 'package:inspery_pos/widgets/table/menu/ChooseProductSize.dart';
+import 'package:inspery_waiter/Providers/Products.dart';
+import 'package:inspery_waiter/widgets/table/menu/ChooseDips.dart';
+import 'package:inspery_waiter/widgets/table/menu/ChooseExtraOptionsWidget.dart';
+import 'package:inspery_waiter/widgets/table/menu/ChooseProductSize.dart';
 import 'package:provider/provider.dart';
 import '../Providers/TableItemChangeProvidor.dart';
 import '../Providers/TableItemProvidor.dart';

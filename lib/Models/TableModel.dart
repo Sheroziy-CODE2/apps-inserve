@@ -2,7 +2,7 @@
 
 import 'package:web_socket_channel/io.dart';
 
-import 'package:inspery_pos/Providers/TableItemsProvidor.dart';
+import 'package:inspery_waiter/Providers/TableItemsProvidor.dart';
 
 class TableModel {
   late final int id;
