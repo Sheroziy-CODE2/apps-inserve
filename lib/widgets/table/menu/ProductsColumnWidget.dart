@@ -13,6 +13,7 @@ class ProductsColumn extends StatefulWidget {
   final Function goToNextPos;
 
   ProductsColumn({required this.id, required this.tableID, required this.goToNextPos});
+  final elementsShown = 7;
 
 
 
@@ -27,6 +28,10 @@ class _ProductsColumnState extends State<ProductsColumn> {
   String search = '';
   // var productsList = <Product>[];
   int get id => widget.id;
+  double elementHight = 99;
+
+
+
   @override
   void initState() {
     super.initState();
@@ -86,6 +91,20 @@ class _ProductsColumnState extends State<ProductsColumn> {
   // Category category = category;
   @override
   Widget build(BuildContext context) {
+
+
+    try {
+      final box = context.findRenderObject() as RenderBox;
+      final hight = box.size.height;
+      elementHight = ((hight) / widget.elementsShown)-10;
+    } catch(e){
+      print("Coud not get RenderBox to calculate the hight of the widget, error: " + e.toString());
+      //Kann fehler verursachen!!! -> Loop
+    }
+
+
+
+
     if(products.isNotEmpty){
       Future.delayed(const Duration(milliseconds: 50), () {
         scrollController.jumpTo(0);
@@ -101,6 +120,11 @@ class _ProductsColumnState extends State<ProductsColumn> {
       });
     }
     List<Product> productsList = this.products;
+
+    while(productsList.length % widget.elementsShown != 0){
+      productsList.add(Product(product_price: [], id: 0, name: "Platzhalter", allergien: [], ingredients: [], dips_number: 0, productSelection: []));
+    }
+
 
     return GridTile(
       child: Container(
@@ -145,42 +169,63 @@ class _ProductsColumnState extends State<ProductsColumn> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                controller: scrollController,
-                padding:
-                    const EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 0),
-                scrollDirection: Axis.vertical,
-                itemCount: productsList.length,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    final tip = Provider.of<TableItemChangeProvidor>(context, listen: false);
-                    int? itemPos = tip.getActProduct();
-                    var itemList = Provider.of<Tables>(context, listen: false).findById(widget.tableID).tIP;
-                    if(itemPos == null) {
-                      Provider.of<TableItemChangeProvidor>(context, listen: false)
-                        .addProduct(context: context, productID: productsList[index].id, tableID: widget.tableID, refresh: false);
-                      itemPos = itemList.getLength()-1;
-                    }
-                    print("Index: " + index.toString() + " ProductList: " + productsList[1].id.toString() + " ItemPos " + itemPos.toString());
-                    itemList.editItemFromWaiter(context: context, itemPos: itemPos, product: productsList[index].id);
-                    widget.goToNextPos(indicator: productsList[index].name, dontStoreIndicator: true);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        top: 1.5, left: 2.0, right: 2.0, bottom: 1.5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD3E03A),
-                      boxShadow: const [],
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    margin: const EdgeInsets.only(
-                        top: 4.0, left: 7.5, right: 7.5, bottom: 4.0),
-                    child: Text(
-                      productsList[index].name,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Color(0xFF1B262C),
+              child: GestureDetector(
+                onVerticalDragUpdate: (details) {
+                  int sensitivity = 8;
+                  if (details.delta.dy > sensitivity) {
+                    // Down Swipe
+                    scrollController.animateTo(
+                        scrollController.position.pixels - (elementHight*widget.elementsShown),
+                        duration: const Duration(milliseconds: 150),
+                        curve: Curves.linear);
+                  } else if(details.delta.dy < -sensitivity){
+                    // Up Swipe
+                    scrollController.animateTo(
+                        scrollController.position.pixels + (elementHight*widget.elementsShown),
+                        duration: const Duration(milliseconds: 150),
+                        curve: Curves.linear);
+                  }
+                },
+                child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(), // <-- this will disable scroll
+                  controller: scrollController,
+                  padding:
+                      const EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 0),
+                  scrollDirection: Axis.vertical,
+                  itemCount: productsList.length,
+                  itemBuilder: (context, index) =>
+                  productsList[index].name == "Platzhalter" ? Container(height: elementHight,) :
+                      GestureDetector(
+                    onTap: () {
+                      final tip = Provider.of<TableItemChangeProvidor>(context, listen: false);
+                      int? itemPos = tip.getActProduct();
+                      var itemList = Provider.of<Tables>(context, listen: false).findById(widget.tableID).tIP;
+                      if(itemPos == null) {
+                        Provider.of<TableItemChangeProvidor>(context, listen: false)
+                          .addProduct(context: context, productID: productsList[index].id, tableID: widget.tableID, refresh: false);
+                        itemPos = itemList.getLength()-1;
+                      }
+                      itemList.editItemFromWaiter(context: context, itemPos: itemPos, product: productsList[index].id);
+                      widget.goToNextPos(indicator: productsList[index].name, dontStoreIndicator: true);
+                    },
+                    child: Container(
+                      height: elementHight,
+                      padding: const EdgeInsets.only(
+                          top: 1.5, left: 2.0, right: 2.0, bottom: 1.5),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD3E03A),
+                        boxShadow: const [],
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      margin: const EdgeInsets.only(
+                          top: 4.0, left: 7.5, right: 7.5, bottom: 4.0),
+                      child: Text(
+                        productsList[index].name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Color(0xFF1B262C),
+                        ),
                       ),
                     ),
                   ),
