@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspery_waiter/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'Providers/DipsProvider.dart';
@@ -18,7 +19,6 @@ import 'Providers/Ingredients.dart';
 import './Providers/Authy.dart';
 
 //screens
-import 'package:inspery_pos/screens/SignInScreen.dart';
 import 'screens/SplashScreen.dart';
 import 'screens/InvoicesViewScreen.dart';
 import 'screens/InvoiceViewScreen.dart';

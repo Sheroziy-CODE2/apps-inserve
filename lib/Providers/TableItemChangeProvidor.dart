@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:inspery_pos/Models/ProductPrice.dart';
-import 'package:inspery_pos/Providers/TableItemProvidor.dart';
+import 'package:inspery_waiter/Models/ProductPrice.dart';
+import 'package:inspery_waiter/Providers/TableItemProvidor.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'Products.dart';

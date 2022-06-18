@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
-import 'package:inspery_pos/Providers/TableItemProvidor.dart';
-import 'package:inspery_pos/printer/ConfigPrinter.dart';
+import 'package:inspery_waiter/Providers/TableItemProvidor.dart';
+import 'package:inspery_waiter/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 import '../Models/TableModel.dart';
