@@ -16,7 +16,7 @@ class Dips {
     return Dips(
       price: jsonResponse["price"] as double,
       id: jsonResponse["id"] as int,
-      name: jsonResponse["name"] as String,
+      name: (jsonResponse["name"] as String).replaceAll("[^A-Za-z0-9]", ""),
     );
   }
 }

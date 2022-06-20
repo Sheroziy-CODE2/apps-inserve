@@ -19,7 +19,7 @@ class Products with ChangeNotifier {
     final headers = {"Authorization": "Token ${token}"};
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      final data = List<Map<String, dynamic>>.from(jsonDecode(utf8.decode(response.bodyBytes)));
       for (int i = 0; i < data.length; i++) {
         var pro = Product.fromJson(data[i], context: context);
         _items.add(pro);
@@ -37,11 +37,10 @@ class Products with ChangeNotifier {
               id: 0,
               name: '0',
               allergien: [],
-              side_products: [],
               ingredients: [],
-              side_product_number: 0,
               product_price: [],
               dips_number: 0,
+              productSelection: [],
             ));
     return debug;
   }
@@ -52,11 +51,10 @@ class Products with ChangeNotifier {
               id: 0,
               name: '0',
               allergien: [],
-              side_products: [],
               ingredients: [],
-              side_product_number: 0,
               product_price: [],
               dips_number: 0,
+              productSelection: [],
             ));
     return debug;
   }

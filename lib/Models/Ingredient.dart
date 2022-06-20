@@ -27,7 +27,7 @@ class Ingredient {
     var jsonResponse = response as Map<String, dynamic>;
     return Ingredient(
         ingredient_type: jsonResponse["ingredient_type"] as String?,
-        name: jsonResponse["name"] as String,
+        name: (jsonResponse["name"] as String).replaceAll("[^A-Za-z0-9]", ""),
         id: jsonResponse["id"] as int,
         price: jsonResponse["price1"] as double);
   }

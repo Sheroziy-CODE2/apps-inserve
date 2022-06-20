@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
-import 'package:inspery_waiter/screens/SignInScreen.dart';
+import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../Providers/Authy.dart';
@@ -21,7 +21,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isInit = true;
 
   num gesammt = 0;
@@ -36,7 +36,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   void didChangeDependencies() {
-    bool isLoading = true;
     Future<void> getDailyInvoice() async {
       String token = Provider.of<Authy>(context, listen: false).token;
       final url = Uri.parse(
@@ -76,7 +75,6 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final authy = Provider.of<Authy>(context);
     final img = authy.photoLink;
-    final String userName = authy.userName;
     logout() {
       authy.logout();
       Navigator.of(context).pushNamed(
@@ -174,33 +172,48 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    final ConfigPrinter _configPrinter = ConfigPrinter();
-                                    print("connection " + (await _configPrinter.checkState()).toString());
-                                    BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
+                                    final ConfigPrinter _configPrinter =
+                                        ConfigPrinter();
+                                    print("connection " +
+                                        (await _configPrinter.checkState())
+                                            .toString());
+                                    BlueThermalPrinter bluetooth =
+                                        BlueThermalPrinter.instance;
                                     var now = DateTime.now();
-                                    var formatter = DateFormat('HH:mm dd-MM-yyyy');
-                                    String formattedDate = formatter.format(now);
+                                    var formatter =
+                                        DateFormat('HH:mm dd-MM-yyyy');
+                                    String formattedDate =
+                                        formatter.format(now);
                                     bluetooth.isConnected.then((isConnected) {
                                       if (isConnected ?? false) {
                                         bluetooth.printNewLine();
-                                        bluetooth.printCustom("Tagesabrechnung", 2, 1);
+                                        bluetooth.printCustom(
+                                            "Tagesabrechnung", 2, 1);
                                         bluetooth.printNewLine();
-                                        bluetooth.printCustom(formattedDate, 1, 0);
-                                        bluetooth.printCustom(authy.userName, 1, 0);
+                                        bluetooth.printCustom(
+                                            formattedDate, 1, 0);
+                                        bluetooth.printCustom(
+                                            authy.userName, 1, 0);
                                         bluetooth.printNewLine();
-                                        bluetooth.printLeftRight("Gesammt", gesammt.toString(), 1);
-                                        bluetooth.printLeftRight("Karte", karte.toStringAsFixed(2), 1);
-                                        bluetooth.printLeftRight("Bar", bar.toStringAsFixed(2), 1);
-                                        bluetooth.printLeftRight("Tip", tip.toStringAsFixed(2), 1);
+                                        bluetooth.printLeftRight(
+                                            "Gesammt", gesammt.toString(), 1);
+                                        bluetooth.printLeftRight("Karte",
+                                            karte.toStringAsFixed(2), 1);
+                                        bluetooth.printLeftRight(
+                                            "Bar", bar.toStringAsFixed(2), 1);
+                                        bluetooth.printLeftRight(
+                                            "Tip", tip.toStringAsFixed(2), 1);
                                         bluetooth.printNewLine();
-                                        bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
+                                        bluetooth.printQRcode(
+                                            "https://www.inspery.com/",
+                                            150,
+                                            150,
+                                            1);
                                         bluetooth.printNewLine();
                                         bluetooth.printNewLine();
                                         bluetooth.printNewLine();
                                       }
                                     });
-
-
                                   },
                                   child: Icon(
                                     Icons.print,
@@ -235,7 +248,8 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Container(
-                                    margin: const EdgeInsets.only(top: 7, bottom: 7),
+                                    margin: const EdgeInsets.only(
+                                        top: 7, bottom: 7),
                                     child: Text(
                                       gesammt.toString(),
                                       textAlign: TextAlign.center,
@@ -273,7 +287,8 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Container(
-                                    margin: const EdgeInsets.only(top: 7, bottom: 7),
+                                    margin: const EdgeInsets.only(
+                                        top: 7, bottom: 7),
                                     child: Text(
                                       tip.toStringAsFixed(2),
                                       textAlign: TextAlign.center,
@@ -315,7 +330,8 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Container(
-                                    margin: const EdgeInsets.only(top: 7, bottom: 7),
+                                    margin: const EdgeInsets.only(
+                                        top: 7, bottom: 7),
                                     child: Text(
                                       karte.toStringAsFixed(2),
                                       textAlign: TextAlign.center,
@@ -353,7 +369,8 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Container(
-                                    margin: const EdgeInsets.only(top: 7, bottom: 7),
+                                    margin: const EdgeInsets.only(
+                                        top: 7, bottom: 7),
                                     child: Text(
                                       bar.toStringAsFixed(2),
                                       textAlign: TextAlign.center,
@@ -393,4 +410,3 @@ class _ProfileState extends State<Profile> {
           );
   }
 }
-

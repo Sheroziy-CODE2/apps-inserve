@@ -19,7 +19,6 @@ class InvoicesView extends StatefulWidget {
 }
 
 class _InvoicesScreen extends State<InvoicesView> {
-  var _isInit = true;
   var _isLoading = true;
   List<Invoice> invoices = [];
   @override
@@ -113,8 +112,7 @@ class _InvoicesScreen extends State<InvoicesView> {
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
-      final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
-      final List<Invoice> loededTables = [];
+      final data = List<Map<String, dynamic>>.from(jsonDecode(utf8.decode(response.bodyBytes)));
       List<Invoice> items = [];
       for (int i = 0; i < data.length; i++) {
         var o = Invoice.fromJson(data[i]);

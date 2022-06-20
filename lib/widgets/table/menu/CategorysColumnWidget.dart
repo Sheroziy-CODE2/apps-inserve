@@ -113,18 +113,16 @@ class CategorysColumnState extends State<CategorysColumn> {
                   int sensitivity = 8;
                   if (details.delta.dy > sensitivity) {
                     // Down Swipe
-                    print("Down " + widget.scrollController.position.pixels.toString());
                     widget.scrollController.animateTo(
                         widget.scrollController.position.pixels - (elementHight*widget.elementsShown),
                         duration: const Duration(milliseconds: 150),
-                        curve: Curves.bounceInOut);
+                        curve: Curves.linear);
                   } else if(details.delta.dy < -sensitivity){
                     // Up Swipe
-                    print("Up " + widget.scrollController.position.pixels.toString());
                     widget.scrollController.animateTo(
                         widget.scrollController.position.pixels + (elementHight*widget.elementsShown),
                         duration: const Duration(milliseconds: 150),
-                        curve: Curves.bounceInOut);
+                        curve: Curves.linear);
                   }
                 },
                 child: ListView.builder(

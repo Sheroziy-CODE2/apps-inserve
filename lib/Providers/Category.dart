@@ -25,7 +25,7 @@ class Category extends ChangeNotifier {
   factory Category.fromJson(response) {
     var jsonResponse = response as Map<String, dynamic>;
     return Category(
-      name: jsonResponse["name"] as String,
+      name: (jsonResponse["name"] as String).replaceAll("[^A-Za-z0-9]", ""),
       id: jsonResponse["id"] as int,
       category_type: jsonResponse["category_type"] as int,
       product_type: jsonResponse["products_type"],

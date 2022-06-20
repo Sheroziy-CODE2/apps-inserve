@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inspery_waiter/Providers/DipsProvider.dart';
+import '/Providers/DipsProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../reusable/CenterText.dart';
