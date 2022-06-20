@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inspery_waiter/screens/SignInScreen.dart';
+import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'Providers/DipsProvider.dart';
@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Authy>(
         builder: (ctx, auth, _) => MaterialApp(
-          navigatorKey: navKey,
+            navigatorKey: navKey,
             title: 'Flutter Demo',
             theme: ThemeData(
               // the colors and font

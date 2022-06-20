@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
-import 'package:inspery_waiter/Providers/DipsProvider.dart';
-import 'package:inspery_waiter/Providers/Products.dart';
-import 'package:inspery_waiter/Providers/TableItemChangeProvidor.dart';
+import '/Providers/DipsProvider.dart';
+import '/Providers/Products.dart';
+import '/Providers/TableItemChangeProvidor.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import 'Ingredients.dart';
@@ -27,10 +27,10 @@ class TableItemsProvidor with ChangeNotifier {
 
   //late TableItemProvidor _tableItemInBuffer; //This is a item that is just in configuration
 
-  int getTimeFromLastInputProduct(){
+  int getTimeFromLastInputProduct() {
     int retunrTime = 0;
     for (var element in _tableItems) {
-      if(retunrTime < element.date) retunrTime = element.date;
+      if (retunrTime < element.date) retunrTime = element.date;
     }
     return retunrTime;
   }
@@ -39,6 +39,7 @@ class TableItemsProvidor with ChangeNotifier {
     _tableItems = [...items, ..._tableItems];
     notifyListeners();
   }
+
   void delete_items() {
     _tableItems = [];
     notifyListeners();
@@ -50,8 +51,9 @@ class TableItemsProvidor with ChangeNotifier {
 
   void notify() {
     final _context = MyApp.navKey.currentContext;
-    if(_context == null) {
-      print("Global context in checkState on dispose TableOverviewFrame is null");
+    if (_context == null) {
+      print(
+          "Global context in checkState on dispose TableOverviewFrame is null");
       return;
     }
     Provider.of<Tables>(_context, listen: false).notify();
@@ -62,18 +64,20 @@ class TableItemsProvidor with ChangeNotifier {
     notifyListeners();
   }
 
-  void transfereTableItem({required newTable, required List<int> products, required context}){
-    var destinyTable = Provider.of<Tables>(context, listen: false).findById(newTable);
-    for(var product in products){
+  void transfereTableItem(
+      {required newTable, required List<int> products, required context}) {
+    var destinyTable =
+        Provider.of<Tables>(context, listen: false).findById(newTable);
+    for (var product in products) {
       var or = _tableItems.firstWhere((t) => t.id == product);
       //erste Table rein speichern
-      if(or.saved_table == 0){
+      if (or.saved_table == 0) {
         _tableItems.firstWhere((t) => t.id == product).saved_table = or.table;
       }
       //ausschneiden
       destinyTable.tIP.addSingleProduct(
-          //context: context,
-          product: or,
+        //context: context,
+        product: or,
       );
       //remove from old Table
       _tableItems.remove(or);
@@ -98,11 +102,12 @@ class TableItemsProvidor with ChangeNotifier {
     notifyListeners();
   }
 
-  void addItemFromWaiter({required TableItemProvidor newItem, bool refresh = true}) {
+  void addItemFromWaiter(
+      {required TableItemProvidor newItem, bool refresh = true}) {
     print("Add item from Waiter to list");
     _tableItems.add(newItem);
     _tableItems.last.fromWaiter = true;
-    if(refresh) {
+    if (refresh) {
       notifyListeners();
     }
   }
@@ -137,11 +142,12 @@ class TableItemsProvidor with ChangeNotifier {
       }
       //notify();
       notifyListeners();
+    } catch (e) {
+      print("SetPaymode failed: " + e.toString());
     }
-    catch(e){print("SetPaymode failed: " + e.toString());}
   }
 
-  void setHightModeExtendet({required hight_mode_extendet}){
+  void setHightModeExtendet({required hight_mode_extendet}) {
     this.hight_mode_extendet = hight_mode_extendet;
     notifyListeners();
   }
@@ -152,8 +158,7 @@ class TableItemsProvidor with ChangeNotifier {
   }
 
   ///Adds quantity of product in a given position
-  void addQuantity(
-      {required int id, required int amountToAdd}) {
+  void addQuantity({required int id, required int amountToAdd}) {
     _tableItems[id].quantity += amountToAdd;
     notifyListeners();
     notify();
@@ -178,8 +183,6 @@ class TableItemsProvidor with ChangeNotifier {
     return total;
   }
 
-
-
   ///returns the total Price of a single Product
   double getTotalPriceOfProductByPos(
       {required context, required pos, bool paymode = false}) {
@@ -188,20 +191,20 @@ class TableItemsProvidor with ChangeNotifier {
     var productssProvidor = Provider.of<Products>(context, listen: false);
     var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
 
-    try { //This can happen when there is no item in the list
+    try {
+      //This can happen when there is no item in the list
       value += productssProvidor
           .findById(_tableItems[pos].product)
           .product_price
-          .firstWhere((element) =>
-      element.id == _tableItems[pos].selected_price).price;
-    }catch(e){
-      final priceList = productssProvidor
-          .findById(_tableItems[pos].product)
-          .product_price;
-      if(priceList.where((element) => !element.isSD).isNotEmpty) {
+          .firstWhere(
+              (element) => element.id == _tableItems[pos].selected_price)
+          .price;
+    } catch (e) {
+      final priceList =
+          productssProvidor.findById(_tableItems[pos].product).product_price;
+      if (priceList.where((element) => !element.isSD).isNotEmpty) {
         value += priceList.where((element) => !element.isSD).first.price;
-      }
-      else if(priceList.isNotEmpty){
+      } else if (priceList.isNotEmpty) {
         value += priceList.first.price;
       }
     }
@@ -213,11 +216,15 @@ class TableItemsProvidor with ChangeNotifier {
       value += ingredientsProvidor.findById(inc).price;
     });
     //var sideProductsProvidor = Provider.of<SideProducts>(context, listen: false);
-    try{
-    _tableItems[pos].side_product.forEach((sd) {
-      value += productssProvidor.findById(sd).product_price.firstWhere((element) => element.isSD).price;
-    });}
-    catch(e){}
+    try {
+      _tableItems[pos].side_product.forEach((sd) {
+        value += productssProvidor
+            .findById(sd)
+            .product_price
+            .firstWhere((element) => element.isSD)
+            .price;
+      });
+    } catch (e) {}
     if (paymode) {
       value *= _tableItems[pos].getAmountInCard();
     } else {
@@ -229,7 +236,10 @@ class TableItemsProvidor with ChangeNotifier {
   ///search for a specific price from ProductProvidor in given position
   double getSingleItemPriceByPos({required context, required pos}) {
     var productssProvidor = Provider.of<Products>(context, listen: false);
-    return productssProvidor.findById(_tableItems[pos].product).product_price[_tableItems[pos].selected_price].price;
+    return productssProvidor
+        .findById(_tableItems[pos].product)
+        .product_price[_tableItems[pos].selected_price]
+        .price;
   }
 
   ///search for a specific OrderID from ProductProvidor in given position
@@ -254,19 +264,22 @@ class TableItemsProvidor with ChangeNotifier {
       required int newTable}) async {}
 
   ///add a singel Product do the Table
-  void addSingleProduct({required TableItemProvidor product, /*required context*/}){
+  void addSingleProduct({
+    required TableItemProvidor product,
+    /*required context*/
+  }) {
     _tableItems.add(product);
     //notify(context: context);
   }
 
   //remove a singel item
-  void removeSingelProduct({required pos, required context}){
-     Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
+  void removeSingelProduct({required pos, required context}) {
+    Provider.of<TableItemChangeProvidor>(context, listen: false)
+        .showProduct(index: null, context: context);
     _tableItems.removeAt(pos);
     notifyListeners();
     notify();
   }
-
 
   ///Override all Products with the Products from the Server
   Future<void> loadAllProduct({required String tableName}) async {
@@ -280,7 +293,8 @@ class TableItemsProvidor with ChangeNotifier {
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       _tableItems.clear();
-      var jsonResponse = convert.jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+      var jsonResponse =
+          convert.jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
       for (var body in jsonResponse) {
         _tableItems.add(TableItemProvidor.fromResponse(body));
       }
@@ -291,7 +305,6 @@ class TableItemsProvidor with ChangeNotifier {
           'TabelOverviewWidget: Request failed with status: ${response.statusCode}.');
     }
   }
-
 
   void editItemFromWaiter({
     required context,
@@ -305,28 +318,43 @@ class TableItemsProvidor with ChangeNotifier {
     List<int>? side_product,
     List<int>? added_ingredients,
     List<int>? deleted_ingredients,
-  }){
+  }) {
     print("Item Pos");
     print(itemPos);
     print("Table Items");
     print(_tableItems);
-    if(_tableItems[itemPos].isFromServer()){
+    if (_tableItems[itemPos].isFromServer()) {
       print("You are not allowed to Addid this item");
       return;
     }
-    if(quantity != null){_tableItems[itemPos].quantity = quantity;}
-    if(saved_table!= null){_tableItems[itemPos].saved_table = saved_table;}
-    if(user!= null){_tableItems[itemPos].user = user;}
-    if(product!= null){_tableItems[itemPos].product = product;}
-    if(selected_price!= null){_tableItems[itemPos].selected_price = selected_price;}
-    if(date!= null){_tableItems[itemPos].date = date;}
-    if(side_product!= null){_tableItems[itemPos].side_product = side_product;}
-    if(added_ingredients!= null){_tableItems[itemPos].added_ingredients = added_ingredients;}
-    if(deleted_ingredients!= null){_tableItems[itemPos].deleted_ingredients = deleted_ingredients;}
+    if (quantity != null) {
+      _tableItems[itemPos].quantity = quantity;
+    }
+    if (saved_table != null) {
+      _tableItems[itemPos].saved_table = saved_table;
+    }
+    if (user != null) {
+      _tableItems[itemPos].user = user;
+    }
+    if (product != null) {
+      _tableItems[itemPos].product = product;
+    }
+    if (selected_price != null) {
+      _tableItems[itemPos].selected_price = selected_price;
+    }
+    if (date != null) {
+      _tableItems[itemPos].date = date;
+    }
+    if (side_product != null) {
+      _tableItems[itemPos].side_product = side_product;
+    }
+    if (added_ingredients != null) {
+      _tableItems[itemPos].added_ingredients = added_ingredients;
+    }
+    if (deleted_ingredients != null) {
+      _tableItems[itemPos].deleted_ingredients = deleted_ingredients;
+    }
     _tableItems[itemPos].fromWaiter = true;
     notify();
   }
-
-
-
 }

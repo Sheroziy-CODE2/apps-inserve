@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:inspery_waiter/Models/ProductPrice.dart';
+import '/Models/ProductPrice.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -25,14 +25,14 @@ class TableItemProvidor with ChangeNotifier {
   List<int> dips;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
-  List<List<bool>>? selectetProductsInLine; // that is for SideProducts when they are not added to Server
+  List<List<bool>>?
+      selectetProductsInLine; // that is for SideProducts when they are not added to Server
 
   bool fromWaiter = false;
   int _inCart = 0;
   bool paymode = false;
 
-
-  String getDateTime({String format = 'yyyy-MM-dd'}){
+  String getDateTime({String format = 'yyyy-MM-dd'}) {
     final DateFormat formatter = DateFormat(format);
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date * 1000));
   }
@@ -49,9 +49,9 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void showSnackbar({required context, required String msg}){
+  void showSnackbar({required context, required String msg}) {
     final snackBar = SnackBar(
-      content:Text(msg),
+      content: Text(msg),
       // action: SnackBarAction(
       //   label: 'OK',
       //   onPressed: () {
@@ -60,11 +60,10 @@ class TableItemProvidor with ChangeNotifier {
       // ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
   }
 
-  void setSelectedPrice({required context, required int new_selected_price}){
-    if(isFromServer()) {
+  void setSelectedPrice({required context, required int new_selected_price}) {
+    if (isFromServer()) {
       showSnackbar(context: context, msg: "Produkt gesprerrt!");
       return;
     }
@@ -72,8 +71,8 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void setSideProducts({required context, required int new_side_product}){
-    if(isFromServer()) {
+  void setSideProducts({required context, required int new_side_product}) {
+    if (isFromServer()) {
       showSnackbar(context: context, msg: "Produkt gesprerrt!");
       return;
     }
@@ -81,8 +80,8 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void setDips({required context, required int new_dip}){
-    if(isFromServer()) {
+  void setDips({required context, required int new_dip}) {
+    if (isFromServer()) {
       showSnackbar(context: context, msg: "Produkt gesprerrt!");
       return;
     }
@@ -90,8 +89,8 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void removeSideProducts({required context, required int side_pro}){
-    if(isFromServer()) {
+  void removeSideProducts({required context, required int side_pro}) {
+    if (isFromServer()) {
       showSnackbar(context: context, msg: "Produkt gesprerrt!");
       return;
     }
@@ -99,15 +98,14 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void removeDips({required context, required dip}){
-    if(isFromServer()) {
+  void removeDips({required context, required dip}) {
+    if (isFromServer()) {
       showSnackbar(context: context, msg: "Produkt gesprerrt!");
       return;
     }
     dips.remove(dip);
     notify(context);
   }
-
 
   int getInCard() {
     return _inCart;
@@ -163,10 +161,13 @@ class TableItemProvidor with ChangeNotifier {
 
   double getTotalPrice({required context, checkout}) {
     var productProvidor = Provider.of<Products>(context, listen: false);
-    List<ProductPrice> productPriceList =  productProvidor.findById(product).product_price;
+    List<ProductPrice> productPriceList =
+        productProvidor.findById(product).product_price;
     double value = 0;
-    if(productPriceList.isNotEmpty){
-      value +=  productPriceList.firstWhere((element) => element.id == selected_price).price;
+    if (productPriceList.isNotEmpty) {
+      value += productPriceList
+          .firstWhere((element) => element.id == selected_price)
+          .price;
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
@@ -177,14 +178,16 @@ class TableItemProvidor with ChangeNotifier {
       value += ingredientsProvidor.findById(inc).price;
     }
     for (var sp in side_product) {
-      try {//this try case while in backend not all products contain a "SD"-Price
+      try {
+        //this try case while in backend not all products contain a "SD"-Price
         value += productProvidor
             .findById(sp)
             .product_price
             .firstWhere((element) => element.isSD)
             .price;
-      } catch(e){
-        print("Missing SD-Preise for Product: " + productProvidor.findById(sp).name);
+      } catch (e) {
+        print("Missing SD-Preise for Product: " +
+            productProvidor.findById(sp).name);
       }
     }
     for (var di in dips) {
@@ -205,9 +208,10 @@ class TableItemProvidor with ChangeNotifier {
     var productPro = productProvidor.findById(product);
     try {
       ret += productPro.product_price
-          .firstWhere((element) => element.id == selected_price)
-          .description + ", ";
-    }catch(e){
+              .firstWhere((element) => element.id == selected_price)
+              .description +
+          ", ";
+    } catch (e) {
       ret += "keine Größe,";
     }
 
@@ -222,31 +226,31 @@ class TableItemProvidor with ChangeNotifier {
     added_ingredients.forEach((element) {
       ret += /* "+" + */ ingredientsProvidor.findById(element).name + ", ";
     });
-    if(ret == ", ") ret = "";
+    if (ret == ", ") ret = "";
     return ret;
   }
 
   TableItemProvidor({
-     this.id = 0,
-     this.quantity = 0,
-     this.table = 0,
+    this.id = 0,
+    this.quantity = 0,
+    this.table = 0,
     //this.total_price = 0.0,
-     this.saved_table = 0,
-     this.user = 0,
-     this.product = 0,
-     this.selected_price = 0,
-     this.side_product = const [],
-     this.added_ingredients = const [],
-     this.deleted_ingredients = const [],
-     this.dips = const [],
-     this.date = 0,
+    this.saved_table = 0,
+    this.user = 0,
+    this.product = 0,
+    this.selected_price = 0,
+    this.side_product = const [],
+    this.added_ingredients = const [],
+    this.deleted_ingredients = const [],
+    this.dips = const [],
+    this.date = 0,
   });
 
   factory TableItemProvidor.fromResponse(response) {
     var jsonResponse = response as Map<String, dynamic>;
     return TableItemProvidor(
       id: jsonResponse["id"] as int,
-      dips: [],//List<int>.from(jsonResponse["dips"] as List<dynamic>),
+      dips: [], //List<int>.from(jsonResponse["dips"] as List<dynamic>),
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,
       table: jsonResponse["table"] as int,
@@ -254,12 +258,13 @@ class TableItemProvidor with ChangeNotifier {
       user: jsonResponse["user"] as int,
       product: jsonResponse["product"] as int,
       selected_price: jsonResponse["selected_price"] as int,
-      side_product: List<int>.from(jsonResponse["side_products"] as List<dynamic>),
+      side_product:
+          List<int>.from(jsonResponse["side_products"] as List<dynamic>),
       added_ingredients:
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:
           List<int>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
-      date: (int.parse((jsonResponse["date"]??0)) /1000).round(),
+      date: (int.parse((jsonResponse["date"] ?? 0)) / 1000).round(),
     );
   }
 
