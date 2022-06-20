@@ -58,7 +58,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-    namespace 'com.example.inspery_pos'
+    namespace 'com.example.inspery_waiter'
 }
 
 flutter {
