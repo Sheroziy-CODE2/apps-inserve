@@ -15,7 +15,7 @@ class InvoicetaxInfo extends StatelessWidget {
                 flex: 2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       'Steuer',
                       style: TextStyle(
@@ -54,7 +54,7 @@ class InvoicetaxInfo extends StatelessWidget {
                 flex: 1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       '%',
                       style: TextStyle(
@@ -93,7 +93,7 @@ class InvoicetaxInfo extends StatelessWidget {
                 flex: 2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       'Netto',
                       style: TextStyle(
@@ -132,7 +132,7 @@ class InvoicetaxInfo extends StatelessWidget {
                 flex: 2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       'Brutto',
                       style: TextStyle(
@@ -171,7 +171,7 @@ class InvoicetaxInfo extends StatelessWidget {
                 flex: 2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       'Steuer',
                       style: TextStyle(

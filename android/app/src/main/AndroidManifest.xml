@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.inspery_pos">
+    package="com.example.inspery_waiter">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="inspery_pos"
+        android:label="inspery_waiter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

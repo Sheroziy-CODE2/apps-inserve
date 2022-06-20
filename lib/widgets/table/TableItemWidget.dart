@@ -3,7 +3,6 @@ import '../../Models/TableModel.dart';
 import '../../Providers/Tables.dart';
 import '../../screens/TableViewScreen.dart';
 import 'package:provider/provider.dart';
-import '../../Providers/Authy.dart';
 import 'package:intl/intl.dart';
 
 class TableItem extends StatefulWidget {
@@ -121,7 +120,7 @@ class _TableItemState extends State<TableItem> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(right: 10, top: dropDownHistoryTime ? 10 : 0),
+                        padding: EdgeInsets.only(right: 3, top: dropDownHistoryTime ? 10 : 0),
                         child: Column(
                           children: [
                             dropDownHistoryTime ? Container() : Text(

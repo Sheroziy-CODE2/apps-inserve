@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/Models/ProductPrice.dart';
+import 'package:inspery_waiter/Models/ProductPrice.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 

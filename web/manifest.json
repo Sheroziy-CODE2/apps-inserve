@@ -1,6 +1,6 @@
 {
-    "name": "inspery_pos",
-    "short_name": "inspery_pos",
+    "name": "inspery_waiter",
+    "short_name": "inspery_waiter",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

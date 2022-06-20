@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/widgets/table/TableOverviewProductList.dart';
+import 'package:inspery_waiter/widgets/table/TableOverviewProductList.dart';
 
 import 'package:provider/provider.dart';
 import '../../Models/TableModel.dart';

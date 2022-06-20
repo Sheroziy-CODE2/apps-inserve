@@ -51,11 +51,11 @@ class _ProductsColumnState extends State<ProductsColumn> {
     });
     if (query != '') {
       List<Product> dummyListData = [];
-      products.forEach((item) {
+      for (var item in products) {
         if (item.name.toLowerCase().contains(query)) {
           dummyListData.add(item);
         }
-      });
+      }
       setState(() {
         products = [];
         products.addAll(dummyListData);
@@ -100,7 +100,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
         });
       });
     }
-    List<Product> productsList = this.products;
+    List<Product> productsList = products;
 
     return GridTile(
       child: Container(

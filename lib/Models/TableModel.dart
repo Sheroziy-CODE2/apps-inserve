@@ -1,27 +1,18 @@
-import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
-import 'dart:convert' as convert;
-import 'package:flutter/foundation.dart';
 
-import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
-import 'package:inspery_pos/Providers/TableItemProvidor.dart';
-import 'package:inspery_pos/Providers/TableItemsProvidor.dart';
-import 'package:inspery_pos/Providers/Tables.dart';
+import 'package:inspery_waiter/Providers/TableItemsProvidor.dart';
 
 class TableModel {
   late final int id;
   final String name;
   double total_price;
-  final int owner;
+  int owner;
   final String type;
   Map<String, int> timeHistory = {};
 
-  bool _isInit = true;
+  final bool _isInit = true;
   IOWebSocketChannel? _channel;
   late final _tIP = TableItemsProvidor(); //tIP = tableItemProvider
   TableItemsProvidor get tIP {
@@ -29,15 +20,15 @@ class TableModel {
   }
 
   get channel {
-    return _channel != null ? _channel : null;
+    return _channel;
   }
 
-  void set channel(tableChannel) {
-    this._channel = tableChannel;
+  set channel(tableChannel) {
+    _channel = tableChannel;
   }
 
-  void set tIP(items) {
-    this._tIP.setItems(items);
+  set tIP(items) {
+    _tIP.setItems(items);
   }
 
   Future<void> sendItems(tB) async {

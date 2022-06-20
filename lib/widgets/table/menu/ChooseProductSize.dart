@@ -62,16 +62,16 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
             shrinkWrap: true,
             crossAxisCount: 5,
             children:
-            productPro.product_price.where((element) => !element.isSD).map((price_item) {
+            productPro.product_price.where((element) => !element.isSD).map((priceItem) {
               return GestureDetector(
                   onTap: (){
-                    widget.goToNextPos(indicator: price_item.description);
-                    tableItemProvidor.setSelectedPrice(context: context, new_selected_price: price_item.id);
+                    widget.goToNextPos(indicator: priceItem.description);
+                    tableItemProvidor.setSelectedPrice(context: context, new_selected_price: priceItem.id);
                   },
                   child: Container(
                     height: 10,
                     decoration: BoxDecoration(
-                      color: price_item.id == tableItemProvidor.selected_price ? const Color(0xFFD3E03A) : Colors.transparent,
+                      color: priceItem.id == tableItemProvidor.selected_price ? const Color(0xFFD3E03A) : Colors.transparent,
                       border: Border.all(
                           color: Colors.grey,
                           width: 0.5),
@@ -84,8 +84,8 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
                     child: Column(
                         children: [
                           const Spacer(),
-                          Text(price_item.description, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
-                          Text(price_item.price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
+                          Text(priceItem.description, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
+                          Text(priceItem.price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
                           const Spacer(),
                         ]
                     ),

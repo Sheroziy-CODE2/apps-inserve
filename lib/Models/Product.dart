@@ -1,8 +1,6 @@
 
-import 'package:inspery_pos/Models/Ingredient.dart';
-import 'package:inspery_pos/Models/ProductPrice.dart';
-
 import 'Ingredient.dart';
+import 'ProductPrice.dart';
 
 class Product {
   late final int id;
@@ -12,7 +10,7 @@ class Product {
   final int side_product_number;
   final List<Ingredient> ingredients;
   final int dips_number;
-  final List<int> side_products;
+  final List side_products;
 
   Product({
     required this.product_price,
@@ -37,7 +35,7 @@ class Product {
       //product_pic: jsonResponse["product_pic"] as String?,
       side_product_number: (jsonResponse["side_products_number"]??0) as int,
       dips_number: jsonResponse["dips_number"] as int,
-      side_products: List<int>.from(jsonResponse["side_products"] as List<dynamic>),
+      side_products: List.from(jsonResponse["side_products"] as List<dynamic>),
       //category: jsonResponse["category"] as int,
       ingredients: List.generate((jsonResponse["ingredients"] as List<dynamic>).length, (index) => Ingredient.fromJson((jsonResponse["ingredients"] as List<dynamic>)[index], context: context)),
     );

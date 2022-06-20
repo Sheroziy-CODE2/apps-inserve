@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/Providers/DipsProvider.dart';
-import 'package:inspery_pos/Providers/Products.dart';
-import 'package:inspery_pos/Providers/TableItemChangeProvidor.dart';
+import 'package:inspery_waiter/Providers/DipsProvider.dart';
+import 'package:inspery_waiter/Providers/Products.dart';
+import 'package:inspery_waiter/Providers/TableItemChangeProvidor.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import 'Ingredients.dart';
@@ -31,6 +31,15 @@ class TableItemsProvidor with ChangeNotifier {
       if(retunrTime < element.date) retunrTime = element.date;
     }
     return retunrTime;
+  }
+
+  void add_items(items) {
+    _tableItems = [...items, ..._tableItems];
+    notifyListeners();
+  }
+  void delete_items() {
+    _tableItems = [];
+    notifyListeners();
   }
 
   void delete(item) {
