@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:inspery_pos/widgets/invoice/InvoiceTaxinfo.dart';
+import 'package:inspery_waiter/widgets/invoice/InvoiceTaxinfo.dart';
 import '../widgets/invoice/InvoiceOrderWidget.dart';
 import 'SplashScreen.dart';
 import 'package:http/http.dart' as http;

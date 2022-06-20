@@ -91,7 +91,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                       onSwipe = false;
                     });
                   },
-                  child: Container(
+                  child: SizedBox(
                     width: widget.width * 0.23,
                     height: widget._height-4,
                     // //color: Colors.blue,

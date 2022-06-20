@@ -3,7 +3,6 @@ import '../Models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'TablesViewScreen.dart';
 import '../Providers/Authy.dart';
 import 'ProvidersApiCallsScreen.dart';
 
@@ -43,11 +42,11 @@ class _SignInState extends State<SignIn> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-          title: Text('es gibt ein Fehler'),
+          title: const Text('es gibt ein Fehler'),
           content: Text(message),
           actions: <Widget>[
             FlatButton(
-                child: Text('Okay'), onPressed: () => {Navigator.of(ctx).pop()})
+                child: const Text('Okay'), onPressed: () => {Navigator.of(ctx).pop()})
           ]),
     );
   }
@@ -126,15 +125,15 @@ class _SignInState extends State<SignIn> {
               height: 43,
               child: TextField(
                 controller: userController,
-                key: Key("username_data"),
+                key: const Key("username_data"),
                 textAlign: TextAlign.center,
                 textAlignVertical: TextAlignVertical.center,
                 keyboardType:
                     TextInputType.emailAddress, //TODO: Check if Name or Email
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: const TextStyle(fontSize: 20, color: Colors.white),
                 decoration: InputDecoration(
                   hintText: "Username",
-                  hintStyle: TextStyle(color: Colors.white),
+                  hintStyle: const TextStyle(color: Colors.white),
                   filled: true,
                   alignLabelWithHint: false,
                   border: OutlineInputBorder(
@@ -165,16 +164,16 @@ class _SignInState extends State<SignIn> {
               height: 43,
               child: TextField(
                 controller: pwController,
-                key: Key("password_data"),
+                key: const Key("password_data"),
                 textAlign: TextAlign.center,
                 obscureText: true,
                 textAlignVertical: TextAlignVertical.center,
                 keyboardType:
                     TextInputType.emailAddress, //TODO: Check if Name or Email
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: const TextStyle(fontSize: 20, color: Colors.white),
                 decoration: InputDecoration(
                   hintText: "Password",
-                  hintStyle: TextStyle(color: Colors.white),
+                  hintStyle: const TextStyle(color: Colors.white),
                   filled: true,
                   alignLabelWithHint: false,
                   border: OutlineInputBorder(

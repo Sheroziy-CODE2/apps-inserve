@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(inspery_pos LANGUAGES CXX)
+project(inspery_waiter LANGUAGES CXX)
 
-set(BINARY_NAME "inspery_pos")
+set(BINARY_NAME "inspery_waiter")
 
 cmake_policy(SET CMP0063 NEW)
 

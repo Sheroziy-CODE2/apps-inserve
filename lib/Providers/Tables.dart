@@ -3,9 +3,8 @@ import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:inspery_pos/Providers/TableItemProvidor.dart';
-import 'package:inspery_pos/printer/ConfigPrinter.dart';
+import 'package:inspery_waiter/Providers/TableItemProvidor.dart';
+import 'package:inspery_waiter/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 import '../Models/CheckoutModel.dart';
@@ -24,7 +23,9 @@ import 'Products.dart';
 import 'package:intl/intl.dart';
 
 class Tables with ChangeNotifier {
-  List<TableModel> _items = [];
+  final List<TableModel> _items = [];
+
+  IOWebSocketChannel? _allTableschannel;
   String? token;
 
   final ConfigPrinter _configPrinter = ConfigPrinter();
@@ -100,10 +101,26 @@ class Tables with ChangeNotifier {
       findById(tableID).tIP.notify();
       return;
     }
-    //final WebSocketSink socket = table.channel?.sink;
     table.channel.sink.add(
         jsonEncode({"command": "new_table_items", "table_items": jsonElemnts}));
-    findById(tableID).tIP.notify();
+  }
+
+  Future<void> transferTableToAnotherUserSocket(
+      {required String newUserID, required List tableIDs}) async {
+    _allTableschannel?.sink.add(jsonEncode({
+      "command": "transfer_tables",
+      "new_user": newUserID,
+      "tables": tableIDs
+    }));
+  }
+
+  Future<void> transferAllItemsToSocket(
+      {required context, required int tableID, required int newTableID}) async {
+    //Looking for the old tableID to transfer its items to the new one
+    var table = findById(tableID);
+
+    table.channel.sink.add(jsonEncode(
+        {"command": "transfer_all_table_items", "new_table": newTableID}));
   }
 
   Future<void> checkout({required context, required int tableID}) async {
@@ -933,6 +950,54 @@ class Tables with ChangeNotifier {
     }
   }
 
+  //Connect to the new Tables socket
+  Future<void> connectALlTablesSocket(
+      {required context, required token}) async {
+    // if there is no connection yet connect the channel
+    print('ws://inspery.com/ws/restaurant_tables/?=$token');
+    sleep(const Duration(milliseconds: 300));
+    _allTableschannel == null
+        ? _allTableschannel = IOWebSocketChannel.connect(
+            Uri.parse('ws://inspery.com/ws/restaurant_tables/?=$token'),
+          )
+        : null;
+  }
+
+  Future<void> listenToAllTabelsSocket(
+      {required context, required token}) async {
+    _allTableschannel?.stream.listen(
+      // listen to the updates from the channel
+      (message) {
+        var data = jsonDecode(message);
+        //print(data);
+        switch (data['type']) {
+          case 'fetch_tables':
+            //print(data);
+            break;
+          case 'transfered_tables':
+            for (var i = 0;
+                i < data['transfered_tables']["transfered_tables"].length;
+                i++) {
+              var table =
+                  findById(data['transfered_tables']["transfered_tables"][i]);
+              table.owner = data['transfered_tables']["owner"];
+            }
+            notifyListeners();
+            break;
+        }
+      },
+      onError: (error) => {
+        connectALlTablesSocket(context: context, token: token).then((_) {
+          listenToAllTabelsSocket(context: context, token: token);
+          print(error);
+        }),
+      },
+    );
+    //fetch the table items
+    _allTableschannel?.sink.add(jsonEncode({"command": "fetch_tables"}));
+
+  }
+
   Future<void> connectSocket(
       {required id, required context, required token}) async {
     // if there is no connection yet connect the channel
@@ -1015,6 +1080,23 @@ class Tables with ChangeNotifier {
                     newTable: newTable, products: products, context: context);
                 _items[i].timeHistory["Tischumbuchung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
+                notifyListeners();
+                break;
+
+              //Response from command that read transfer of all items from one table to another.
+              case 'transfer_all':
+                var table = findById(data['transfer_all']['old_table']['id']);
+                table.total_price =
+                    data['transfer_all']['old_table']['total_price'];
+                List allItemsTable = table.tIP.tableItems;
+                table.tIP.delete_items();
+                var newTable =
+                    findById(data['transfer_all']['new_table']['id']);
+                newTable.tIP.add_items(allItemsTable);
+                newTable.total_price =
+                    data['transfer_all']['new_table']['total_price'];
+                //_items[i].timeHistory["Tischumbuchung"] = (DateTime.now().millisecondsSinceEpoch/1000).round();
+                notifyListeners();
                 break;
 
               default:

@@ -1,10 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
 
-import 'package:flutter/material.dart';
-import 'Ingredient.dart';
-import 'Product.dart';
-import './Ingredient.dart';
 
 class InvoiceItem {
 //this class is the InvoiceItem class
@@ -37,6 +33,8 @@ class InvoiceItem {
 
   factory InvoiceItem.fromJson(response) {
     var jsonResponse = response as Map<String, dynamic>;
+    //var jROrderItem = jsonResponse['order_item']; - can be deleted if everything works 
+    //final data = Map<String, dynamic>.from(jsonDecode(jROrderItem)); - can be deleted if everything works 
     var data = jsonResponse['order'];
     return InvoiceItem(
       // date: jsonResponse["date"] as String,

@@ -56,11 +56,11 @@ class _ProductsColumnState extends State<ProductsColumn> {
     });
     if (query != '') {
       List<Product> dummyListData = [];
-      products.forEach((item) {
+      for (var item in products) {
         if (item.name.toLowerCase().contains(query)) {
           dummyListData.add(item);
         }
-      });
+      }
       setState(() {
         products = [];
         products.addAll(dummyListData);
@@ -119,7 +119,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
         });
       });
     }
-    List<Product> productsList = this.products;
+    List<Product> productsList = products;
 
     while(productsList.length % widget.elementsShown != 0){
       productsList.add(Product(product_price: [], id: 0, name: "Platzhalter", allergien: [], ingredients: [], dips_number: 0, productSelection: []));

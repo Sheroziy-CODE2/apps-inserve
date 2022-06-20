@@ -27,7 +27,7 @@ class _NavBarState extends State<NavBar> {
               Text (widget.selectedIcon == 1 ? "Eingabe" : " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 1 ? Colors.red : Colors.black)),
               IconButton(
                 icon: Icon(InsperyIcons.icons8_ten_keys_48, size: 30, color: widget.selectedIcon == 1 ? Colors.red : Colors.black),
-                key: Key("mainPage"),
+                key: const Key("mainPage"),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed(HomePage.routeName);
                 },
@@ -39,7 +39,7 @@ class _NavBarState extends State<NavBar> {
               Text (widget.selectedIcon == 2 ? "Tische" : " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 2 ? Colors.red : Colors.black)),
               IconButton(
                 icon: Icon(InsperyIcons.icons8_chair_32, size: 30, color: widget.selectedIcon == 2 ? Colors.red : Colors.black),
-                key: Key("tablePage"),
+                key: const Key("tablePage"),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed(TablesView.routeName);
                 },
@@ -51,7 +51,7 @@ class _NavBarState extends State<NavBar> {
               Text (widget.selectedIcon == 3 ? "Rechnungen": " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 3 ? Colors.red : Colors.black)),
               IconButton(
                 icon: Icon(InsperyIcons.icons8_insert_money_euro_50, size: 30, color: widget.selectedIcon == 3 ? Colors.red : Colors.black),
-                key: Key("invoicePage"),
+                key: const Key("invoicePage"),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed(InvoicesView.routeName);
                 },
@@ -63,7 +63,7 @@ class _NavBarState extends State<NavBar> {
               Text (widget.selectedIcon == 4 ? "Profil" : " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 4 ? Colors.red : Colors.black)),
               IconButton(
                 icon: Icon(Icons.person_sharp, size: 30, color: widget.selectedIcon == 4 ? Colors.red : Colors.black),
-                key: Key("profilePage"),
+                key: const Key("profilePage"),
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed(Profile.routeName);
                 },

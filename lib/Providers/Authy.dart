@@ -8,7 +8,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert' as convert;
 import 'package:flutter/foundation.dart';
-import '../Models/Product.dart';
 
 class Authy extends ChangeNotifier {
   String? _token;
