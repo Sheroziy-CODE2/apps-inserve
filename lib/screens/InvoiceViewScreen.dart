@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:inspery_waiter/widgets/invoice/InvoiceTaxinfo.dart';
+import '/widgets/invoice/InvoiceTaxinfo.dart';
 import '../widgets/invoice/InvoiceOrderWidget.dart';
 import 'SplashScreen.dart';
 import 'package:http/http.dart' as http;
@@ -245,7 +245,8 @@ class _InvoiceViewState extends State<InvoiceView> {
     List<InvoiceItem> items = [];
 
     if (response.statusCode == 200) {
-      final data = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      final data = List<Map<String, dynamic>>.from(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       for (int i = 0; i < data.length; i++) {
         var o = InvoiceItem.fromJson(data[i]);
         items.add(o);

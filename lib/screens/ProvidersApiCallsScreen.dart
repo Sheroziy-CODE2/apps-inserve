@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inspery_waiter/Providers/DipsProvider.dart';
+import '/Providers/DipsProvider.dart';
 import '../Providers/Authy.dart';
 
 import 'package:provider/provider.dart';
@@ -53,29 +53,37 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
     final token = Provider.of<Authy>(context, listen: false).token;
     {
       tablesData.addTabl(token: token).then((_) async {
-        await Provider.of<Categorys>(context, listen: false).addCategory(context: context);
+        await Provider.of<Categorys>(context, listen: false)
+            .addCategory(context: context);
         final tokenProvider = Provider.of<Authy>(context, listen: false);
         _isInit = false;
         final token = tokenProvider.token;
-        await Provider.of<Ingredients>(context, listen: false).addIngredients(token: token, context: context);
-        await Provider.of<Products>(context, listen: false).addProducts(token: token, context: context);
-        await Provider.of<DipsProvider>(context, listen: false).addDips(token: token, context: context);
-        await Provider.of<WorkersProvider>(context, listen: false).addWorkers(token: token, context: context);
+        await Provider.of<Ingredients>(context, listen: false)
+            .addIngredients(token: token, context: context);
+        await Provider.of<Products>(context, listen: false)
+            .addProducts(token: token, context: context);
+        await Provider.of<DipsProvider>(context, listen: false)
+            .addDips(token: token, context: context);
+        await Provider.of<WorkersProvider>(context, listen: false)
+            .addWorkers(token: token, context: context);
 
-        await tablesData.connectALlTablesSocket( context: context, token: token);
-        await tablesData.listenToAllTabelsSocket(context: context, token: token);
+        await tablesData.connectALlTablesSocket(context: context, token: token);
+        await tablesData.listenToAllTabelsSocket(
+            context: context, token: token);
         //optimise time to load, test Andi 31.Mai
         //var futures1 = <Future>[]; //only now because i had some serios websocket problems, will it maybe implement later again. 4.Juni Andi
         //var futures2 = <Future>[];
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
-          await tablesData.connectSocket(id: table.id, context: context, token: token);
-          await tablesData.listenSocket(id: table.id, context: context, token: token);
-         // futures1.add(tablesData.connectSocket(id: table.id, context: context, token: token));
+          await tablesData.connectSocket(
+              id: table.id, context: context, token: token);
+          await tablesData.listenSocket(
+              id: table.id, context: context, token: token);
+          // futures1.add(tablesData.connectSocket(id: table.id, context: context, token: token));
         }
         //for (var i = 0; i < tablesData.items.length; i++) {
-          //var table = tablesData.items[i];
-         // futures2.add(tablesData.listenSocket(id: table.id, context: context, token: token));
+        //var table = tablesData.items[i];
+        // futures2.add(tablesData.listenSocket(id: table.id, context: context, token: token));
         //}
         //await Future.wait(futures1);
         //await Future.wait(futures2);

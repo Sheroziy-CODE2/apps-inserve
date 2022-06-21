@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
-import 'package:inspery_waiter/printer/Testprint.dart';
+import '/printer/Testprint.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TestPrintWidget extends StatefulWidget {
@@ -111,7 +111,7 @@ class _TestPrintWidgetState extends State<TestPrintWidget> {
       _devices = devices;
     });
 
-    if (isConnected??true) {
+    if (isConnected ?? true) {
       setState(() {
         _connected = true;
       });
@@ -148,7 +148,8 @@ class _TestPrintWidgetState extends State<TestPrintWidget> {
                   Expanded(
                     child: DropdownButton(
                       items: _getDeviceItems(),
-                      onChanged: (value) => setState(() => _device = value as BluetoothDevice),
+                      onChanged: (value) =>
+                          setState(() => _device = value as BluetoothDevice),
                       value: _device,
                     ),
                   ),
@@ -187,7 +188,7 @@ class _TestPrintWidgetState extends State<TestPrintWidget> {
               ),
               Padding(
                 padding:
-                const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
+                    const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Colors.brown),
                   onPressed: () {
@@ -226,7 +227,7 @@ class _TestPrintWidgetState extends State<TestPrintWidget> {
       show('No device selected.');
     } else {
       bluetooth.isConnected.then((isConnected) {
-        if (!(isConnected?? false)) {
+        if (!(isConnected ?? false)) {
           bluetooth.connect(_device!).catchError((error) {
             setState(() => _connected = false);
           });
@@ -249,9 +250,9 @@ class _TestPrintWidgetState extends State<TestPrintWidget> {
   }
 
   Future show(
-      String message, {
-        Duration duration: const Duration(seconds: 3),
-      }) async {
+    String message, {
+    Duration duration: const Duration(seconds: 3),
+  }) async {
     await new Future.delayed(new Duration(milliseconds: 100));
     ScaffoldMessenger.of(context).showSnackBar(
       new SnackBar(
