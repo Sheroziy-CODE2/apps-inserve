@@ -234,6 +234,7 @@ class Tables with ChangeNotifier {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Image.asset(paymentImages[paymentMethod]!),
                   Center(
                     child: Container(
                       child: Center(
@@ -242,18 +243,7 @@ class Tables with ChangeNotifier {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Text("Tisch"),
-                            Text(
-                              table.name,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Text("Die Rechnung"),
+                            const Text("Rechnung"),
                             Text(
                               totalPrice.toStringAsFixed(2) + "€",
                               style: const TextStyle(
@@ -261,23 +251,9 @@ class Tables with ChangeNotifier {
                                 decoration: TextDecoration.underline,
                               ),
                             ),
-                            tip > 0
-                                ? SizedBox(
-                                    height: 30,
-                                    child: Text(
-                                      "Total: " +
-                                          (totalPrice + tip)
-                                              .toStringAsFixed(2) +
-                                          "€",
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        decoration: TextDecoration.overline,
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox(
-                                    height: 30,
-                                  ),
+                            const SizedBox(
+                              height: 20,
+                            ),
                             const Text("Trinkgeld"),
                             Text(
                               tip.toStringAsFixed(2) + "€",
@@ -287,7 +263,18 @@ class Tables with ChangeNotifier {
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
+                            ),
+                            const Text("Gesamt"),
+                            Text(
+                                (totalPrice+tip).toStringAsFixed(2) + "€",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             Padding(
                               padding:
@@ -454,29 +441,6 @@ class Tables with ChangeNotifier {
                         color: const Color(0xFFFFFFFF),
                         borderRadius: BorderRadius.circular(28),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Image.asset(paymentImages[paymentMethod]!),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      checkout_print(
-                        tableID: tableID,
-                        jsonList: jsonList,
-                        payment: paymentOptions[paymentMethod]!,
-                        tip: tip,
-                      );
-                    },
-                    child: Container(
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      child: const Center(child: Text("Ja")),
                     ),
                   ),
                   const SizedBox(
@@ -647,7 +611,30 @@ class Tables with ChangeNotifier {
                               ],
                             ),
                           )
-                          .toList())
+                          .toList()),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      checkout_print(
+
+                        tableID: tableID,
+                        jsonList: jsonList,
+                        payment: paymentOptions[paymentMethod]!,
+                        tip: tip,
+                      );
+                    },
+                    child: Container(
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      child: const Center(child: Text("Rechnung drucken")),
+                    ),
+                  ),
                 ],
               ),
             );
