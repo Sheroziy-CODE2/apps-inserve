@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
+import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
 import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
@@ -126,19 +127,17 @@ class Tables with ChangeNotifier {
     final totalPrice = table.tIP.getTotalCartTablePrice(context: context)!;
     double cash = 0.0;
     double card = 0.0;
+    String tipType = "card";
 
     var element = table.tIP.tableItems;
-    List jsonList = [];
+    List<InvoiceItemsDictModelItems> itemsList = [];
     for (int x = 0; x < element.length; x++) {
       if (element[x].getInCard() < 1) continue;
       // add items to the payment list
-      jsonList.add({
-        "quantity": element[x].getInCard(),
-        "order": element[x].id,
-      });
+      itemsList.add(InvoiceItemsDictModelItems(quantity: element[x].getInCard(), order: element[x].id));
     }
 
-    if (jsonList.isEmpty) {
+    if (itemsList.isEmpty) {
       try {
         final _context = MyApp.navKey.currentContext;
         if (_context != null) {
@@ -219,14 +218,14 @@ class Tables with ChangeNotifier {
                 sliderValue -= 0.1;
               }
               onEnd = false;
-              print("SliderValue: " +
-                  sliderValue.toStringAsFixed(1) +
-                  " Min: " +
-                  sliderMin.toStringAsFixed(1) +
-                  " Max: " +
-                  sliderMax.toStringAsFixed(1) +
-                  " Delta: " +
-                  (stepsize * 2).toStringAsFixed(1));
+              // print("SliderValue: " +
+              //     sliderValue.toStringAsFixed(1) +
+              //     " Min: " +
+              //     sliderMin.toStringAsFixed(1) +
+              //     " Max: " +
+              //     sliderMax.toStringAsFixed(1) +
+              //     " Delta: " +
+              //     (stepsize * 2).toStringAsFixed(1));
             }
             return AlertDialog(
               backgroundColor: const Color(0xFFF5F2E7),
@@ -461,19 +460,33 @@ class Tables with ChangeNotifier {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          SizedBox(
-                              width: 62,
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    "Bar",
-                                    style: TextStyle(fontSize: 11),
-                                  ),
-                                  cash >= 1000
-                                      ? Text(cash.toStringAsFixed(0))
-                                      : Text(cash.toStringAsFixed(2)),
-                                ],
-                              )),
+                          GestureDetector(
+                            onTap: (){
+                              state(() {
+                                tipType = "cash";
+                              });
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(10),
+                                    border: tipType == "cash"
+                                        ? Border.all(
+                                        color: Colors.green,
+                                        width: 1) : null ),
+                                width: 62,
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      "Bar",
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                    cash >= 1000
+                                        ? Text(cash.toStringAsFixed(0))
+                                        : Text(cash.toStringAsFixed(2)),
+                                  ],
+                                )),
+                          ),
                           Expanded(
                             child: Slider(
                               value: sliderValue,
@@ -531,9 +544,22 @@ class Tables with ChangeNotifier {
                               },
                             ),
                           ),
-                          SizedBox(
-                              width: 62,
-                              child: Column(
+                    GestureDetector(
+                      onTap: (){
+                        state(() {
+                          tipType = "card";
+                        });
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.circular(10),
+                              border: tipType == "card"
+                                  ?  Border.all(
+                                  color: Colors.green,
+                                  width: 1) : null),
+                          width: 62,
+                          child: Column(
                                 children: [
                                   const Text(
                                     "Karte",
@@ -541,7 +567,9 @@ class Tables with ChangeNotifier {
                                   ),
                                   Text(card.toStringAsFixed(2)),
                                 ],
-                              )),
+                              ),
+                      ),
+                    ),
                         ],
                       ),
                     ),
@@ -617,13 +645,31 @@ class Tables with ChangeNotifier {
                   ),
                   GestureDetector(
                     onTap: () {
+                      List<InvoiceItemsDictModelPayments> payments = [];
+                      switch(paymentMethod){
+                        case 0:
+                          tipType = "cash";
+                          payments.add(InvoiceItemsDictModelPayments(type: "cash", price: card));
+                          break;
+                        case 2:
+                          tipType = "card";
+                          payments.add(InvoiceItemsDictModelPayments(type: "card", price: cash));
+                          break;
+                        default:
+                          payments.add(InvoiceItemsDictModelPayments(type: "card", price: card));
+                          payments.add(InvoiceItemsDictModelPayments(type: "cash", price: cash));
+                          break;
+                      }
                       Navigator.of(context).pop();
                       checkout_print(
-
-                        tableID: tableID,
-                        jsonList: jsonList,
-                        payment: paymentOptions[paymentMethod]!,
-                        tip: tip,
+                          invoiceItemDictModel:
+                          InvoiceItemDictModel(
+                              tip: tip,
+                              tableID: tableID,
+                              items: itemsList,
+                              payments: payments,
+                              tipType: tipType
+                          )
                       );
                     },
                     child: Container(
@@ -823,56 +869,23 @@ class Tables with ChangeNotifier {
     );
   }
 
-  Future<void> checkout_print(
-      {required int tableID,
-      required jsonList,
-      required String payment,
-      required double tip}) async {
+  Future<void> checkout_print({required InvoiceItemDictModel invoiceItemDictModel}) async {
     final _context = MyApp.navKey.currentContext;
     if (_context == null) {
       print("Global context in checkState Tables checkout_printer is null");
       return;
     }
 
-    // String token = Provider.of<Authy>(_context, listen: false).token;
-    // final url = Uri.parse(
-    //   'https://www.inspery.com/invoice/invoices_items/',
-    // );
-    // final headers = {
-    //   "Content-type": "application/json",
-    //   "Authorization": "Token ${token}"
-    // };
-    // var data = jsonEncode({
-    //   "table": tableID,
-    //   "payment_type": payment,
-    //   "items": jsonList,
-    //   "tip": tip,
-    // });
-    // final response = await http.post(url, headers: headers, body: data);
-    // if (response.statusCode == 201) {
-    //   print("Tables Bill Response: " + jsonDecode(response.body).toString());
-    //   CheckoutModel checkoutModel = CheckoutModel.fromJson(jsonDecode(response.body), _context);
-
     String token = Provider.of<Authy>(_context, listen: false).token;
     final url = Uri.parse(
-      'https://www.inspery.com/invoice/daily_invoice/',
+      'https://www.inspery.com/invoice/invoices_items/',
     );
     final headers = {
       "Content-type": "application/json",
       "Authorization": "Token ${token}"
     };
-    var data = jsonEncode({
-      "daiyl_invoice": {
-        "id": 97,
-        "date": "2022-06-19T13:58:43.089716+02:00",
-        "user": 8,
-        "restaurant": 4
-      },
-      "sum": 6.95,
-      "cash": 0,
-      "card": 6.95,
-      "tip": 0
-    });
+    var data = invoiceItemDictModel.getJson();
+    print("Json Data to send: " + data);
     final response = await http.post(url, headers: headers, body: data);
     if (response.statusCode == 201) {
       print("Tables Bill Response: " + jsonDecode(response.body).toString());
@@ -970,7 +983,13 @@ class Tables with ChangeNotifier {
         bluetooth.printCustom("--------------------------------", 1, 0);
         bluetooth.printLeftRight("SUMME", "NA " + "EUR", 3);
         bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printCustom("Zahlungsmethode: " + payment, 0, 2);
+        bluetooth.printCustom("Zahlungsmethode:", 0, 2);
+        for (var element in invoiceItemDictModel.payments) {
+          String method = element.type;
+          if(method == "cash") method = "Bar";
+          if(method == "card") method = "Karte";
+          bluetooth.printCustom(method + ": " + element.price.toStringAsFixed(2), 0, 2);
+        };
         bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
         bluetooth.printNewLine();
         bluetooth.printNewLine();
@@ -978,11 +997,11 @@ class Tables with ChangeNotifier {
         bluetooth.paperCut();
       });
 
-      if (payment == "Bar") {
+      if (invoiceItemDictModel.payments.where((element) => element.type == "cash").isNotEmpty) {
         showCalculator(
           context: _context,
           amount:
-              findById(tableID).tIP.getTotalCartTablePrice(context: _context)!,
+              findById(invoiceItemDictModel.tableID).tIP.getTotalCartTablePrice(context: _context)!,
         );
       }
     } else {
