@@ -50,6 +50,10 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
     print("Go to next pos: " + indicator.toString());
     setState(() {
       if (!dontStoreIndicator) {
+        //This it not working for now.. so it is unused.. maybe i will implement it later - Andi 22.06
+        while((buttonNames.length - 1) < actPos){
+          buttonNames.add("");
+        }
         if ((buttonNames.length - 1) < actPos) {
           buttonNames.add(indicator);
         } else {
@@ -98,6 +102,8 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
   List<String> buttonNames = [];
   int lastSelectedItem = 0;
 
+  //final GlobalKey<ChooseProductFormState> chooseProductForm_key = const GlobalObjectKey<ChooseProductFormState>(123456789);
+
   Widget getElements(
       {required String key, required tableId, required context}) {
     final Map<String, Widget> chooseProductWidget = {
@@ -109,6 +115,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
           goToNextPos: goToNextPos,
           categorieTypeLeft: "food",
           categorieTypeRight: "drinks",
+          //key: chooseProductForm_key,
         ),
       ),
       "Größe": SizedBox(
@@ -151,7 +158,6 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     print("start build page");
     final id = int.parse(ModalRoute.of(context)?.settings.arguments as String); //the id we got from the Link
-
     final int tableId = id;
 
     //generating the set of Widgets for the selected Product
@@ -218,6 +224,10 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       productReadyToEnter(skipAnimation: true);
       chooseProductWidget.putIfAbsent("Produkt", () => getElements(key: "Produkt", tableId: tableId, context: context));
     }
+    //try {
+    //  chooseProductForm_key.currentState!.changeCategory(287);
+    //}catch(e){}
+
     return Scaffold(
       body: Container(
         color: Theme.of(context).primaryColorDark,
@@ -302,9 +312,11 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
                                               ),
                                               child: Center(
                                                   child: Text(
-                                                (buttonNames.length > index
-                                                    ? buttonNames[index]
-                                                    : /*(index+1).toString() + "." + */ chooseProductWidget
+                                                (
+                                                    //buttonNames.length > index
+                                                    //? buttonNames[index]
+                                                    //: /*(index+1).toString() + "." + */
+                                                chooseProductWidget
                                                         .keys
                                                         .toList()[index]),
                                                 style: const TextStyle(

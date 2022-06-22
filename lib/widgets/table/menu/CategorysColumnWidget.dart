@@ -27,16 +27,12 @@ class CategorysColumn extends StatefulWidget {
 
 class CategorysColumnState extends State<CategorysColumn> {
 
+  int id = 0;
   bool rotate = true;
   int selectedIndex = -1;
 
-  Category? pressedCategpry;
-  changeCategory(category) {
-    setState(() {
-      pressedCategpry = category;
-    });
-    pressedCategpry = category;
-    widget.categoryHandler(category);
+  changeCategory(int id) {
+    widget.categoryHandler(id);
   }
   double elementHight = 99;
 
@@ -44,6 +40,7 @@ class CategorysColumnState extends State<CategorysColumn> {
 
   @override
   Widget build(BuildContext context) {
+    id = widget.id;
     final categorysData = Provider.of<Categorys>(
       context,
     ); //category provider
@@ -85,7 +82,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                     child: Container(),
                     backgroundColor:
                     selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                    categorieitems[selectedIndex].id == widget.id
+                    categorieitems[selectedIndex].id == id
                         ? const Color(0xFFD3E03A)
                         : const Color(0xFFD1D1D1),
                   ),
@@ -140,7 +137,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                           onTap: () {
                             selectedIndex = index;
                             changeCategory(
-                                categorieitems[index]);
+                                categorieitems[index].id);
                           },
                           child: Container(
                             padding: const EdgeInsets.only(
@@ -149,7 +146,7 @@ class CategorysColumnState extends State<CategorysColumn> {
                               // border:
                               //     Border.all(color: Colors.blueAccent),
                               color:
-                              categorieitems[index].id == widget.id
+                              categorieitems[index].id == id
                                   ? const Color(0xFFD3E03A)
                                   : const Color(0xFFD1D1D1),
 

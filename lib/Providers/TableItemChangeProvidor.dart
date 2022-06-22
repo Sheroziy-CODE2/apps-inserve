@@ -10,6 +10,7 @@ class TableItemChangeProvidor extends ChangeNotifier {
   int? _productPosInItem;
   bool paymode = false;
   bool selectedProcuctManual = false;
+  int categoryId = 0;
 
   //Because we use only the Tabels Provider
   void notify({context}) {

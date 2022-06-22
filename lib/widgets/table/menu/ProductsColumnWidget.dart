@@ -12,16 +12,16 @@ class ProductsColumn extends StatefulWidget {
   final int tableID;
   final Function goToNextPos;
 
-  ProductsColumn({required this.id, required this.tableID, required this.goToNextPos});
+  ProductsColumn({required this.id, required this.tableID, required this.goToNextPos, Key? key}) : super(key: key);
   final elementsShown = 7;
 
 
 
   @override
-  State<ProductsColumn> createState() => _ProductsColumnState();
+  State<ProductsColumn> createState() => ProductsColumnState();
 }
 
-class _ProductsColumnState extends State<ProductsColumn> {
+class ProductsColumnState extends State<ProductsColumn> {
   ScrollController scrollController = ScrollController();
   TextEditingController editingController = TextEditingController();
   List<Product> products = [];
