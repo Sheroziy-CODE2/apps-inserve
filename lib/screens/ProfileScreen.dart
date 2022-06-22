@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:inspery_waiter/Models/DailyInvoiceModel.dart';
 import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
@@ -24,10 +25,7 @@ class _ProfileState extends State<Profile> {
   bool _isLoading = false;
   bool _isInit = true;
 
-  num gesammt = 0;
-  double tip = 46.128;
-  double bar = 302.45;
-  double karte = 244.87;
+  late final DailyIncoiveModel dailyIncoiveModel;
 
   @override
   void initState() {
@@ -43,12 +41,12 @@ class _ProfileState extends State<Profile> {
       );
       final headers = {
         "Content-type": "application/json",
-        "Authorization": "Token ${token}"
+        "Authorization": "Token ${token}",
       };
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 201) {
         setState(() {
-          gesammt = jsonDecode(response.body)['sum'];
+          dailyIncoiveModel = DailyIncoiveModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
         });
         setState(() {
           _isLoading = false;
@@ -196,13 +194,15 @@ class _ProfileState extends State<Profile> {
                                             authy.userName, 1, 0);
                                         bluetooth.printNewLine();
                                         bluetooth.printLeftRight(
-                                            "Gesammt", gesammt.toString(), 1);
+                                            "Gesammt", dailyIncoiveModel.sum.toString(), 1);
                                         bluetooth.printLeftRight("Karte",
-                                            karte.toStringAsFixed(2), 1);
+                                            dailyIncoiveModel.card.toStringAsFixed(2), 1);
                                         bluetooth.printLeftRight(
-                                            "Bar", bar.toStringAsFixed(2), 1);
+                                            "Bar", dailyIncoiveModel.cash.toStringAsFixed(2), 1);
                                         bluetooth.printLeftRight(
-                                            "Tip", tip.toStringAsFixed(2), 1);
+                                            "Tip Karte:", dailyIncoiveModel.card_tip.toStringAsFixed(2), 1);
+                                        bluetooth.printLeftRight(
+                                            "Tip Bar", dailyIncoiveModel.cash_tip.toStringAsFixed(2), 1);
                                         bluetooth.printNewLine();
                                         bluetooth.printQRcode(
                                             "https://www.inspery.com/",
@@ -251,7 +251,7 @@ class _ProfileState extends State<Profile> {
                                     margin: const EdgeInsets.only(
                                         top: 7, bottom: 7),
                                     child: Text(
-                                      gesammt.toString(),
+                                      dailyIncoiveModel.sum.toStringAsFixed(2),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 25,
@@ -290,7 +290,7 @@ class _ProfileState extends State<Profile> {
                                     margin: const EdgeInsets.only(
                                         top: 7, bottom: 7),
                                     child: Text(
-                                      tip.toStringAsFixed(2),
+                                      (dailyIncoiveModel.card_tip+dailyIncoiveModel.cash_tip).toStringAsFixed(2),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 25,
@@ -333,7 +333,7 @@ class _ProfileState extends State<Profile> {
                                     margin: const EdgeInsets.only(
                                         top: 7, bottom: 7),
                                     child: Text(
-                                      karte.toStringAsFixed(2),
+                                      dailyIncoiveModel.card.toStringAsFixed(2),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 25,
@@ -372,7 +372,7 @@ class _ProfileState extends State<Profile> {
                                     margin: const EdgeInsets.only(
                                         top: 7, bottom: 7),
                                     child: Text(
-                                      bar.toStringAsFixed(2),
+                                      dailyIncoiveModel.cash.toStringAsFixed(2),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 25,

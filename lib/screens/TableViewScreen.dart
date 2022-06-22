@@ -26,6 +26,9 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
   Map<String, Widget> chooseProductWidget = {};
   late TableItemChangeProvidor tableItemChangeProvidor;
 
+  int? actItem;
+  bool comeFromProduct = false;
+
   // Animation
   @override
   void initState() {
@@ -47,6 +50,10 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
     print("Go to next pos: " + indicator.toString());
     setState(() {
       if (!dontStoreIndicator) {
+        //This it not working for now.. so it is unused.. maybe i will implement it later - Andi 22.06
+        while((buttonNames.length - 1) < actPos){
+          buttonNames.add("");
+        }
         if ((buttonNames.length - 1) < actPos) {
           buttonNames.add(indicator);
         } else {
@@ -55,24 +62,9 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       }
       if (stay) return;
       actPos++;
-      // print("Length " + chooseProductWidget.length.toString() + " vs " + actPos.toString());
-      // if(actPos > chooseProductWidget.length-1){
-      //   productReadyToEnter();
-      //   return;
-      // }
-      /*
-      if(actPos == chooseProductWidget.length && chooseProductWidget.keys.first != "Produkt"){
-        productReadyToEnter();
-        return;
-      }
-       */
-
-      //skip Extras, because they normaly don't have to be entered
-      if (chooseProductWidget.length > actPos) {
-        if (chooseProductWidget.keys.toList()[actPos] == "Extras") {
+      if (chooseProductWidget.length <= actPos) {
           productReadyToEnter();
           return;
-        }
       }
       horizontalScrollController.animateTo(
           MediaQuery.of(context).size.width * actPos,
@@ -86,17 +78,20 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
     });
   }
 
-  productReadyToEnter() {
+  productReadyToEnter({bool skipAnimation = false}) {
     tableItemChangeProvidor.showProduct(index: null, context: context);
+    actItem = null;
     setState(() {
       actPos = 0;
       buttonNames = [];
-      horizontalScrollController.animateTo(0,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOutQuart);
-      horizontalScrollControllerSteps.animateTo(0,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOutQuart);
+      if(!skipAnimation){
+        horizontalScrollController.animateTo(0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOutQuart);
+        horizontalScrollControllerSteps.animateTo(0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOutQuart);
+      }
     });
   }
 
@@ -106,6 +101,8 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
   ScrollController horizontalScrollControllerSteps = ScrollController();
   List<String> buttonNames = [];
   int lastSelectedItem = 0;
+
+  //final GlobalKey<ChooseProductFormState> chooseProductForm_key = const GlobalObjectKey<ChooseProductFormState>(123456789);
 
   Widget getElements(
       {required String key, required tableId, required context}) {
@@ -118,6 +115,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
           goToNextPos: goToNextPos,
           categorieTypeLeft: "food",
           categorieTypeRight: "drinks",
+          //key: chooseProductForm_key,
         ),
       ),
       "Größe": SizedBox(
@@ -158,9 +156,8 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final id = int.parse(ModalRoute.of(context)?.settings.arguments
-        as String); //the id we got from the Link
-
+    print("start build page");
+    final id = int.parse(ModalRoute.of(context)?.settings.arguments as String); //the id we got from the Link
     final int tableId = id;
 
     //generating the set of Widgets for the selected Product
@@ -169,9 +166,9 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
     chooseProductWidget = {};
     try {
       tIP = Provider.of<Tables>(context, listen: true).findById(tableId).tIP;
-      final int x = tableItemChangeProvidor.getActProduct()!;
+      actItem = tableItemChangeProvidor.getActProduct()!;
 
-      tableItemProvidor = tIP.tableItems[x];
+      tableItemProvidor = tIP.tableItems[actItem!];
       var product = Provider.of<Products>(context, listen: true)
           .findById(tableItemProvidor.product);
       if (product.product_price.where((element) => !element.isSD).length > 1) {
@@ -190,9 +187,10 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
         chooseProductWidget.putIfAbsent("Dips",
             () => getElements(key: "Dips", tableId: tableId, context: context));
       }
-      chooseProductWidget.putIfAbsent("Extras",
-          () => getElements(key: "Extras", tableId: tableId, context: context));
-      if (lastSelectedItem != x) {
+      if(tableItemChangeProvidor.selectedProcuctManual) {
+        chooseProductWidget.putIfAbsent("Extras", () => getElements(key: "Extras", tableId: tableId, context: context));
+      }
+      if (lastSelectedItem != actItem) {
         //when select other item in List
         buttonNames = [];
         try {
@@ -211,12 +209,9 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
               curve: Curves.easeInOutQuart);
         }
       }
-      lastSelectedItem = x;
+      lastSelectedItem = actItem!;
     } catch (e) {
-      chooseProductWidget.putIfAbsent(
-          "Produkt",
-          () =>
-              getElements(key: "Produkt", tableId: tableId, context: context));
+      chooseProductWidget.putIfAbsent("Produkt", () => getElements(key: "Produkt", tableId: tableId, context: context));
     }
     if (actPos != -1) {
       try {
@@ -225,6 +220,14 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
         actPos = 0;
       }
     }
+    if(chooseProductWidget.keys.isEmpty){
+      productReadyToEnter(skipAnimation: true);
+      chooseProductWidget.putIfAbsent("Produkt", () => getElements(key: "Produkt", tableId: tableId, context: context));
+    }
+    //try {
+    //  chooseProductForm_key.currentState!.changeCategory(287);
+    //}catch(e){}
+
     return Scaffold(
       body: Container(
         color: Theme.of(context).primaryColorDark,
@@ -309,9 +312,11 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
                                               ),
                                               child: Center(
                                                   child: Text(
-                                                (buttonNames.length > index
-                                                    ? buttonNames[index]
-                                                    : /*(index+1).toString() + "." + */ chooseProductWidget
+                                                (
+                                                    //buttonNames.length > index
+                                                    //? buttonNames[index]
+                                                    //: /*(index+1).toString() + "." + */
+                                                chooseProductWidget
                                                         .keys
                                                         .toList()[index]),
                                                 style: const TextStyle(

@@ -25,7 +25,7 @@ class CheckoutModel{
     var jsonResponse = response as Map<String, dynamic>;
     return CheckoutModel(
       dateTime:
-          DateTime.fromMillisecondsSinceEpoch(int.parse(jsonResponse["date"]) * 1000),
+          DateTime.fromMillisecondsSinceEpoch(jsonResponse["date"]),
       id: jsonResponse["id"] as int,
       user: jsonResponse["user"] as int,
       dailyInvoice: jsonResponse["dailyInvoice"] as int,
@@ -67,27 +67,29 @@ class InvoiceItemsModel{
 class InvoiceOrderItemModel{
   final int id;
   final int table;
-  final int saved_tabke;
+  final int saved_table;
   final int user;
   final String product;
-  final List<int> dips;
-  //final List<int> selected_price;
-  final List<int> side_products;
+  final num selected_price;
+  final String price_description;
   final int quantity;
   final num total_price;
-  final List<int> added_ingredients;
-  final List<int> deleted_ingredients;
+  final List<String> added_ingredients;
+  final List<String> deleted_ingredients;
+  final List<String> side_products;
+  final List<String> dips;
   final String date;
   //final status;
 
   InvoiceOrderItemModel({
     required this.id,
     required this.table,
-    required this.saved_tabke,
+    required this.saved_table,
+    required this.price_description,
     required this.user,
     required this.product,
     required this.dips,
-    //required this.selected_price,
+    required this.selected_price,
     required this.side_products,
     required this.quantity,
     required this.total_price,
@@ -101,16 +103,17 @@ class InvoiceOrderItemModel{
     return InvoiceOrderItemModel(
       id:  jsonResponse["id"] as int,
       table:  jsonResponse["table"]??0 as int,
-      saved_tabke:  jsonResponse["saved_table"] as int,
+      saved_table:  jsonResponse["saved_table"] as int,
       user:  jsonResponse["user"] as int,
       product:  jsonResponse["product"] as String,
-      dips:  List<int>.from(jsonResponse["dips"] as List<dynamic>),
-      //selected_price:  List<int>.from(jsonResponse["selected_price"] as List<dynamic>),
-      side_products:  List<int>.from(jsonResponse["side_products"] as List<dynamic>),
+      selected_price:  jsonResponse["selected_price"] as num,
+      price_description: jsonResponse["price_description"] as String,
       quantity:  jsonResponse["quantity"] as int,
       total_price:  jsonResponse["total_price"] as num,
-      added_ingredients:  List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
-      deleted_ingredients:  List<int>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
+      added_ingredients:  List<String>.from(jsonResponse["added_ingredients"] as List<dynamic>),
+      deleted_ingredients:  List<String>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
+      side_products:  List<String>.from(jsonResponse["side_products"] as List<dynamic>),
+      dips:  List<String>.from(jsonResponse["dips"] as List<dynamic>),
       date:  jsonResponse["date"] as String,
     );
   }

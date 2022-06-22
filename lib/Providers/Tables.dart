@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
+import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
 import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +19,6 @@ import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';
 import 'Authy.dart';
-import 'Ingredients.dart';
-import 'Products.dart';
 import 'package:intl/intl.dart';
 
 class Tables with ChangeNotifier {
@@ -101,6 +100,7 @@ class Tables with ChangeNotifier {
     }
     table.channel.sink.add(
         jsonEncode({"command": "new_table_items", "table_items": jsonElemnts}));
+  notify();
   }
 
   Future<void> transferTableToAnotherUserSocket(
@@ -126,19 +126,17 @@ class Tables with ChangeNotifier {
     final totalPrice = table.tIP.getTotalCartTablePrice(context: context)!;
     double cash = 0.0;
     double card = 0.0;
+    String tipType = "cash";
 
     var element = table.tIP.tableItems;
-    List jsonList = [];
+    List<InvoiceItemsDictModelItems> itemsList = [];
     for (int x = 0; x < element.length; x++) {
       if (element[x].getInCard() < 1) continue;
       // add items to the payment list
-      jsonList.add({
-        "quantity": element[x].getInCard(),
-        "order": element[x].id,
-      });
+      itemsList.add(InvoiceItemsDictModelItems(quantity: element[x].getInCard(), order: element[x].id));
     }
 
-    if (jsonList.isEmpty) {
+    if (itemsList.isEmpty) {
       try {
         final _context = MyApp.navKey.currentContext;
         if (_context != null) {
@@ -182,6 +180,22 @@ class Tables with ChangeNotifier {
     }
     cash = tip;
     card = totalPrice;
+    double stepsize = 1.25;
+    if ((totalPrice) < 10) {
+      // runden auf 0.5€
+    } else if ((totalPrice) < 50) {
+      // runden auf 1€
+      stepsize = 2.5;
+    } else if ((totalPrice) < 100) {
+      // runden auf 5€
+      stepsize = 12.5;
+    } else if ((totalPrice) < 500) {
+      // runden auf 10€
+      stepsize = 25;
+    } else {
+      // runden auf 25€
+      stepsize = 62.5;
+    }
 
     showDialog(
       context: context,
@@ -190,22 +204,13 @@ class Tables with ChangeNotifier {
         return StatefulBuilder(
           builder: (context2, state) {
             if (onEnd) {
-              double stepsize = 1.25;
-              if ((totalPrice) < 10) {
-                // runden auf 0.5€
-              } else if ((totalPrice) < 50) {
-                // runden auf 1€
-                stepsize = 2.5;
-              } else if ((totalPrice) < 100) {
-                // runden auf 5€
-                stepsize = 12.5;
-              } else if ((totalPrice) < 500) {
-                // runden auf 10€
-                stepsize = 25;
-              } else {
-                // runden auf 25€
-                stepsize = 62.5;
+              if(tipType == "cash" && sliderMin < tip){
+                sliderMin = tip;
               }
+              if(tipType == "card" && sliderMax > (totalPrice-tip)){
+                sliderMax = (totalPrice-tip);
+              }
+
               sliderMin = sliderValue - stepsize;
               if (sliderMin < 0) sliderMin = 0;
               sliderMax = sliderValue + stepsize;
@@ -214,19 +219,18 @@ class Tables with ChangeNotifier {
                 sliderMax = (totalPrice + tip);
                 sliderMin = sliderMax - (2 * stepsize);
               }
-              while (sliderValue >= sliderMax) {
-                // workarround
-                sliderValue -= 0.1;
-              }
               onEnd = false;
-              print("SliderValue: " +
-                  sliderValue.toStringAsFixed(1) +
-                  " Min: " +
-                  sliderMin.toStringAsFixed(1) +
-                  " Max: " +
-                  sliderMax.toStringAsFixed(1) +
-                  " Delta: " +
-                  (stepsize * 2).toStringAsFixed(1));
+              if(sliderValue > sliderMax){
+                sliderValue = sliderMax;
+              }
+              // print("SliderValue: " +
+              //     sliderValue.toStringAsFixed(1) +
+              //     " Min: " +
+              //     sliderMin.toStringAsFixed(1) +
+              //     " Max: " +
+              //     sliderMax.toStringAsFixed(1) +
+              //     " Delta: " +
+              //     (stepsize * 2).toStringAsFixed(1));
             }
             return AlertDialog(
               backgroundColor: const Color(0xFFF5F2E7),
@@ -234,6 +238,7 @@ class Tables with ChangeNotifier {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Image.asset(paymentImages[paymentMethod]!),
                   Center(
                     child: Container(
                       child: Center(
@@ -242,18 +247,7 @@ class Tables with ChangeNotifier {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Text("Tisch"),
-                            Text(
-                              table.name,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Text("Die Rechnung"),
+                            const Text("Rechnung"),
                             Text(
                               totalPrice.toStringAsFixed(2) + "€",
                               style: const TextStyle(
@@ -261,23 +255,9 @@ class Tables with ChangeNotifier {
                                 decoration: TextDecoration.underline,
                               ),
                             ),
-                            tip > 0
-                                ? SizedBox(
-                                    height: 30,
-                                    child: Text(
-                                      "Total: " +
-                                          (totalPrice + tip)
-                                              .toStringAsFixed(2) +
-                                          "€",
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        decoration: TextDecoration.overline,
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox(
-                                    height: 30,
-                                  ),
+                            const SizedBox(
+                              height: 20,
+                            ),
                             const Text("Trinkgeld"),
                             Text(
                               tip.toStringAsFixed(2) + "€",
@@ -287,7 +267,18 @@ class Tables with ChangeNotifier {
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
+                            ),
+                            const Text("Gesamt"),
+                            Text(
+                                (totalPrice+tip).toStringAsFixed(2) + "€",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             Padding(
                               padding:
@@ -385,13 +376,7 @@ class Tables with ChangeNotifier {
                                               left: 0,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  tip = ((totalPrice +
-                                                                      tip -
-                                                                      tipSize) *
-                                                                  (1 / tipSize))
-                                                              .roundToDouble() *
-                                                          tipSize -
-                                                      totalPrice;
+                                                  tip = ((totalPrice + tip - tipSize) * (1 / tipSize)).roundToDouble() * tipSize - totalPrice;
                                                   if (tip < 0) tip = 0;
                                                   cash = tip;
                                                   card = totalPrice;
@@ -457,29 +442,6 @@ class Tables with ChangeNotifier {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
-                  ),
-                  Image.asset(paymentImages[paymentMethod]!),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      checkout_print(
-                        tableID: tableID,
-                        jsonList: jsonList,
-                        payment: paymentOptions[paymentMethod]!,
-                        tip: tip,
-                      );
-                    },
-                    child: Container(
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      child: const Center(child: Text("Ja")),
-                    ),
-                  ),
-                  const SizedBox(
                     height: 20,
                   ),
                   SliderTheme(
@@ -497,19 +459,38 @@ class Tables with ChangeNotifier {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          SizedBox(
-                              width: 62,
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    "Bar",
-                                    style: TextStyle(fontSize: 11),
-                                  ),
-                                  cash >= 1000
-                                      ? Text(cash.toStringAsFixed(0))
-                                      : Text(cash.toStringAsFixed(2)),
-                                ],
-                              )),
+                          GestureDetector(
+                            onTap: (){
+                              state(() {
+                                if(cash < tip){
+                                  cash = tip;
+                                  card = totalPrice;
+                                  sliderMax = card;
+                                }
+                                tipType = "cash";
+                              });
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(10),
+                                    border: tipType == "cash"
+                                        ? Border.all(
+                                        color: Colors.green,
+                                        width: 1) : null ),
+                                width: 62,
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      "Bar",
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                    cash >= 1000
+                                        ? Text(cash.toStringAsFixed(0))
+                                        : Text(cash.toStringAsFixed(2)),
+                                  ],
+                                )),
+                          ),
                           Expanded(
                             child: Slider(
                               value: sliderValue,
@@ -528,48 +509,98 @@ class Tables with ChangeNotifier {
                                 state(() {
                                   sliderValue = value;
                                   if (sliderValue > sliderMax) {
-                                    sliderValue =
-                                        (sliderMax - 0.5).roundToDouble();
+                                    sliderValue = (sliderMax - 0.5).roundToDouble();
                                   }
                                   if (sliderValue < sliderMin) {
-                                    sliderValue =
-                                        (sliderMin + 0.5).roundToDouble();
+                                    sliderValue = (sliderMin + 0.5).roundToDouble();
                                   }
-
                                   if ((totalPrice) < 10) {
                                     // runden auf 0.5€
                                     cash = ((sliderValue - 0.26) * 2)
-                                            .roundToDouble() /
-                                        2;
+                                            .roundToDouble() / 2;
                                   } else if ((totalPrice) < 50) {
                                     // runden auf 1€
                                     cash = (sliderValue - 0.51).roundToDouble();
                                   } else if ((totalPrice) < 100) {
                                     // runden auf 5€
-                                    cash = ((sliderValue - 2.6) * 0.2)
-                                            .roundToDouble() /
-                                        0.2;
+                                    cash = ((sliderValue - 2.6) * 0.2).roundToDouble() / 0.2;
                                   } else if ((totalPrice) < 500) {
                                     // runden auf 10€
-                                    cash = ((sliderValue - 5.1) * 0.1)
-                                            .roundToDouble() /
-                                        0.1;
+                                    cash = ((sliderValue - 5.1) * 0.1).roundToDouble() / 0.1;
                                   } else {
                                     // runden auf 25€
-                                    cash =
-                                        (sliderValue * 0.04).roundToDouble() /
-                                                0.04 -
-                                            25;
+                                    cash = (sliderValue * 0.04).roundToDouble() / 0.04 - 25;
+                                  }
+                                  if(tipType == "card" && sliderValue > cash){
+                                    cash = sliderValue;
                                   }
                                   if (cash < 0) cash = 0;
+
+
+                                  if(card < tip && tipType == "card"){
+                                    card = tip;
+                                    cash = totalPrice;
+                                    sliderMax = cash;
+                                    sliderMin = sliderMax - (stepsize*2);
+                                    if(sliderMin < 0) sliderMin = cash;
+                                  }
+                                  if(cash < tip && tipType == "cash"){
+                                    cash = tip;
+                                    card = totalPrice;
+                                    sliderMin = cash;
+                                    sliderMax = sliderMin + (stepsize*2);
+                                    if(sliderMax > card) sliderMax = card;
+                                  }
+                                  if(sliderValue > sliderMax){
+                                    sliderValue = sliderMax;
+                                  }
+                                  if(sliderValue < sliderMin){
+                                    sliderValue = sliderMin;
+                                  }
                                   card = (totalPrice + tip) - cash;
                                 });
                               },
                             ),
                           ),
-                          SizedBox(
-                              width: 62,
-                              child: Column(
+                    GestureDetector(
+                      onTap: (){
+                        state(() {
+                          if(card < tip){
+                            card = tip;
+                            if(card < tip && tipType == "card"){
+                              card = tip;
+                              cash = totalPrice;
+                              sliderMax = cash;
+                              sliderMin = sliderMax - (stepsize*2);
+                              if(sliderMin < 0) sliderMin = cash;
+                            }
+                            if(cash < tip && tipType == "cash"){
+                              cash = tip;
+                              card = totalPrice;
+                              sliderMin = cash;
+                              sliderMax = sliderMin + (stepsize*2);
+                              if(sliderMax > card) sliderMax = card;
+                            }
+                            if(sliderValue > sliderMax){
+                              sliderValue = sliderMax;
+                            }
+                            if(sliderValue < sliderMin){
+                              sliderValue = sliderMin;
+                            }
+                          }
+                          tipType = "card";
+                        });
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.circular(10),
+                              border: tipType == "card"
+                                  ?  Border.all(
+                                  color: Colors.green,
+                                  width: 1) : null),
+                          width: 62,
+                          child: Column(
                                 children: [
                                   const Text(
                                     "Karte",
@@ -577,7 +608,9 @@ class Tables with ChangeNotifier {
                                   ),
                                   Text(card.toStringAsFixed(2)),
                                 ],
-                              )),
+                              ),
+                      ),
+                    ),
                         ],
                       ),
                     ),
@@ -647,7 +680,54 @@ class Tables with ChangeNotifier {
                               ],
                             ),
                           )
-                          .toList())
+                          .toList()),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      List<InvoiceItemsDictModelPayments> payments = [];
+                      switch(paymentMethod){
+                        case 0:
+                          tipType = "cash";
+                          payments.add(InvoiceItemsDictModelPayments(type: "cash", price: (totalPrice*100).round()/100));
+                          break;
+                        case 2:
+                          tipType = "card";
+                          payments.add(InvoiceItemsDictModelPayments(type: "card", price: (totalPrice*100).round()/100));
+                          break;
+                        default:
+                          if(tipType == "cash") {
+                            payments.add(InvoiceItemsDictModelPayments(type: "card", price: (card*100).round()/100));
+                            payments.add(InvoiceItemsDictModelPayments(type: "cash", price: ((cash-tip)*100).round()/100));
+                          }
+                          if(tipType == "card") {
+                            payments.add(InvoiceItemsDictModelPayments(type: "card", price: ((card-tip)*100).round()/100));
+                            payments.add(InvoiceItemsDictModelPayments(type: "cash", price: (cash*100).round()/100));
+                          }
+                          break;
+                      }
+                      Navigator.of(context).pop();
+                      checkout_print(
+                          invoiceItemDictModel:
+                          InvoiceItemDictModel(
+                              tip: (tip*100).round()/100,
+                              tableID: tableID,
+                              items: itemsList,
+                              payments: payments,
+                              tipType: tipType
+                          )
+                      );
+                    },
+                    child: Container(
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      child: const Center(child: Text("Rechnung drucken")),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -836,67 +916,28 @@ class Tables with ChangeNotifier {
     );
   }
 
-  Future<void> checkout_print(
-      {required int tableID,
-      required jsonList,
-      required String payment,
-      required double tip}) async {
+  Future<void> checkout_print({required InvoiceItemDictModel invoiceItemDictModel}) async {
     final _context = MyApp.navKey.currentContext;
     if (_context == null) {
       print("Global context in checkState Tables checkout_printer is null");
       return;
     }
 
-    // String token = Provider.of<Authy>(_context, listen: false).token;
-    // final url = Uri.parse(
-    //   'https://www.inspery.com/invoice/invoices_items/',
-    // );
-    // final headers = {
-    //   "Content-type": "application/json",
-    //   "Authorization": "Token ${token}"
-    // };
-    // var data = jsonEncode({
-    //   "table": tableID,
-    //   "payment_type": payment,
-    //   "items": jsonList,
-    //   "tip": tip,
-    // });
-    // final response = await http.post(url, headers: headers, body: data);
-    // if (response.statusCode == 201) {
-    //   print("Tables Bill Response: " + jsonDecode(response.body).toString());
-    //   CheckoutModel checkoutModel = CheckoutModel.fromJson(jsonDecode(response.body), _context);
-
     String token = Provider.of<Authy>(_context, listen: false).token;
     final url = Uri.parse(
-      'https://www.inspery.com/invoice/daily_invoice/',
+      'https://www.inspery.com/invoice/invoices_items/',
     );
     final headers = {
       "Content-type": "application/json",
       "Authorization": "Token ${token}"
     };
-    var data = jsonEncode({
-      "daiyl_invoice": {
-        "id": 97,
-        "date": "2022-06-19T13:58:43.089716+02:00",
-        "user": 8,
-        "restaurant": 4
-      },
-      "sum": 6.95,
-      "cash": 0,
-      "card": 6.95,
-      "tip": 0
-    });
+    var data = invoiceItemDictModel.getJson();
+    print("Json Data to send: " + data);
     final response = await http.post(url, headers: headers, body: data);
     if (response.statusCode == 201) {
       print("Tables Bill Response: " + jsonDecode(response.body).toString());
       CheckoutModel checkoutModel =
           CheckoutModel.fromJson(jsonDecode(response.body), _context);
-
-      Ingredients ingredientsProvider =
-          Provider.of<Ingredients>(_context, listen: false);
-      //SideProducts sideDishProvider = Provider.of<SideProducts>(_context, listen: false);
-      Products productsProvider =
-          Provider.of<Products>(_context, listen: false);
 
       print("connection " + (await _configPrinter.checkState()).toString());
 
@@ -919,11 +960,8 @@ class Tables with ChangeNotifier {
           bluetooth.printImage(pathImage);
           bluetooth.printNewLine();
           bluetooth.printCustom(
-              "Rechnung/Bon-Nr: " + checkoutModel.dailyInvoice.toString(),
-              0,
-              2);
-          bluetooth.printCustom(
-              DateFormat('hh:mm dd-MM-yyy').format(checkoutModel.dateTime),
+              "Rechnung/Bon-Nr: " + checkoutModel.id.toString(), 0, 2);
+          bluetooth.printCustom(DateFormat('hh:mm dd-MM-yyy').format(checkoutModel.dateTime),
               0,
               2);
           bluetooth.printCustom(
@@ -932,58 +970,35 @@ class Tables with ChangeNotifier {
 
           //List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
           for (var item in checkoutModel.invoiceItemList) {
-            bluetooth.print4Column(item.quantity.toString(), item.order.product,
-                "", item.order.total_price.toStringAsFixed(2), 1,
-                format: "%2s %15s %5s %5s %n");
-
-            List<int> sideDishes = item.order.side_products;
-            Map<int, int> sd_map = {};
-            for (var sd in sideDishes) {
-              if (!sd_map.containsKey(sd)) {
-                sd_map[sd] = 1;
-              } else {
-                sd_map[sd] = sd_map[sd] ?? 0 + 1;
-              }
+            bluetooth.print4Column(item.quantity.toString(), item.order.product, "",item.amount.toStringAsFixed(2), 1, format: "%2s %15s %5s %5s %n");
+            if(item.order.price_description.isNotEmpty) {
+              bluetooth.print4Column("", "","", item.order.price_description, 0);
             }
-            for (var id in sd_map.keys) {
-              bluetooth.print4Column(
-                  sd_map[id].toString(),
-                  productsProvider.findById(id).name,
-                  productsProvider
-                      .findById(id)
-                      .product_price
-                      .firstWhere((element) => element.isSD)
-                      .price
-                      .toStringAsFixed(2),
-                  "",
-                  0,
-                  format: "%1s %20s %5s %5s %n");
+            for (var element in item.order.side_products) {
+              bluetooth.print4Column("", "","", element, 0);
             }
-            List<int> added_ingredients = item.order.added_ingredients;
-            Map<int, int> ai_map = {};
-            for (var sd in added_ingredients) {
-              if (!ai_map.containsKey(sd)) {
-                ai_map[sd] = 1;
-              } else {
-                ai_map[sd] = ai_map[sd] ?? 0 + 1;
-              }
+            for (var element in item.order.dips) {
+              bluetooth.print4Column("", "","", element, 0);
             }
-            for (var id in ai_map.keys) {
-              bluetooth.print4Column(
-                  ai_map[id].toString(),
-                  ingredientsProvider.findById(id).name,
-                  ingredientsProvider.findById(id).price.toStringAsFixed(2),
-                  "",
-                  0,
-                  format: "%1s %20s %5s %5s %n");
+            for (var element in item.order.added_ingredients) {
+              bluetooth.print4Column("", "","", element, 0);
+            }
+            for (var element in item.order.deleted_ingredients) {
+              bluetooth.print4Column("", "","", element, 0);
             }
           }
         }
 
         bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printLeftRight("SUMME", "NA " + "EUR", 3);
+        bluetooth.printLeftRight("SUMME", checkoutModel.amount.toStringAsFixed(2) + "EUR", 3);
         bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printCustom("Zahlungsmethode: " + payment, 0, 2);
+        bluetooth.printCustom("Zahlungsmethode", 0, 2);
+        for (var element in invoiceItemDictModel.payments) {
+          String method = element.type;
+          if(method == "cash") method = "Bar";
+          if(method == "card") method = "Karte";
+          bluetooth.printCustom(method + ": " + element.price.toStringAsFixed(2), 0, 2);
+        };
         bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
         bluetooth.printNewLine();
         bluetooth.printNewLine();
@@ -991,11 +1006,15 @@ class Tables with ChangeNotifier {
         bluetooth.paperCut();
       });
 
-      if (payment == "Bar") {
+      double cash = 0;
+      invoiceItemDictModel.payments.where((element) => element.type == "cash").forEach((element) {
+        cash += element.price;
+      });
+
+      if (cash > 0) {
         showCalculator(
           context: _context,
-          amount:
-              findById(tableID).tIP.getTotalCartTablePrice(context: _context)!,
+          amount: cash,
         );
       }
     } else {
@@ -1126,7 +1145,8 @@ class Tables with ChangeNotifier {
                 }
                 _items[i].timeHistory["Loeschung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
-                notify();
+                //notify();
+                notifyListeners();
                 break;
 
               case 'transfer_table_items':
@@ -1161,6 +1181,7 @@ class Tables with ChangeNotifier {
             }
           },
           onError: (error) => {
+
             connectSocket(id: id, context: context, token: token).then((_) {
               listenSocket(id: id, context: context, token: token);
               print(error);

@@ -250,7 +250,7 @@ class TableItemProvidor with ChangeNotifier {
     var jsonResponse = response as Map<String, dynamic>;
     return TableItemProvidor(
       id: jsonResponse["id"] as int,
-      dips: [], //List<int>.from(jsonResponse["dips"] as List<dynamic>),
+      dips: List<int>.from(jsonResponse["dips"] as List<dynamic>),
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,
       table: jsonResponse["table"] as int,
@@ -264,7 +264,7 @@ class TableItemProvidor with ChangeNotifier {
           List<int>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:
           List<int>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
-      date: (int.parse((jsonResponse["date"] ?? 0)) / 1000).round(),
+      date: jsonResponse["date"],
     );
   }
 

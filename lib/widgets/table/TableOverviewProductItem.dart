@@ -47,7 +47,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
 
     return GestureDetector(
       onTap: () async {
-        tableItemChangeProvidor.showProduct(index: widget.index, context: context, toggle: true);
+        tableItemChangeProvidor.showProduct(index: widget.index, context: context, toggle: true, selectedProcuctManual: true);
       },
       child: AnimatedContainer(
           decoration: BoxDecoration(
