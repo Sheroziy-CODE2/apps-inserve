@@ -1087,6 +1087,8 @@ class Tables with ChangeNotifier {
           // listen to the updates from the channel
           (message) {
             var data = jsonDecode(message);
+            print(data['type']);
+            print("sdgsdfgsdfgsdfgsdfgsdfgs");
             switch (data['type']) {
               case 'fetch_table_items':
                 //if the type is fetch the app has to make a new list of table_items and delete the old one
