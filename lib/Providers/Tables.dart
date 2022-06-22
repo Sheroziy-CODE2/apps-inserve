@@ -102,6 +102,7 @@ class Tables with ChangeNotifier {
     }
     table.channel.sink.add(
         jsonEncode({"command": "new_table_items", "table_items": jsonElemnts}));
+  notify();
   }
 
   Future<void> transferTableToAnotherUserSocket(
@@ -127,7 +128,7 @@ class Tables with ChangeNotifier {
     final totalPrice = table.tIP.getTotalCartTablePrice(context: context)!;
     double cash = 0.0;
     double card = 0.0;
-    String tipType = "card";
+    String tipType = "cash";
 
     var element = table.tIP.tableItems;
     List<InvoiceItemsDictModelItems> itemsList = [];
@@ -919,11 +920,8 @@ class Tables with ChangeNotifier {
           bluetooth.printImage(pathImage);
           bluetooth.printNewLine();
           bluetooth.printCustom(
-              "Rechnung/Bon-Nr: " + checkoutModel.dailyInvoice.toString(),
-              0,
-              2);
-          bluetooth.printCustom(
-              DateFormat('hh:mm dd-MM-yyy').format(checkoutModel.dateTime),
+              "Rechnung/Bon-Nr: " + checkoutModel.id.toString(), 0, 2);
+          bluetooth.printCustom(DateFormat('hh:mm dd-MM-yyy').format(checkoutModel.dateTime),
               0,
               2);
           bluetooth.printCustom(
@@ -933,7 +931,7 @@ class Tables with ChangeNotifier {
           //List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
           for (var item in checkoutModel.invoiceItemList) {
             bluetooth.print4Column(item.quantity.toString(), item.order.product,
-                "", item.order.total_price.toStringAsFixed(2), 1,
+                "", item.amount.toStringAsFixed(2), 1,
                 format: "%2s %15s %5s %5s %n");
 
             List<int> sideDishes = item.order.side_products;
@@ -981,9 +979,9 @@ class Tables with ChangeNotifier {
         }
 
         bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printLeftRight("SUMME", "NA " + "EUR", 3);
+        bluetooth.printLeftRight("SUMME", checkoutModel.amount.toStringAsFixed(2) + "EUR", 3);
         bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printCustom("Zahlungsmethode:", 0, 2);
+        bluetooth.printCustom("Zahlungsmethode", 0, 2);
         for (var element in invoiceItemDictModel.payments) {
           String method = element.type;
           if(method == "cash") method = "Bar";
@@ -997,11 +995,15 @@ class Tables with ChangeNotifier {
         bluetooth.paperCut();
       });
 
-      if (invoiceItemDictModel.payments.where((element) => element.type == "cash").isNotEmpty) {
+      double cash = 0;
+      invoiceItemDictModel.payments.where((element) => element.type == "cash").forEach((element) {
+        cash += element.price;
+      });
+
+      if (cash > 0) {
         showCalculator(
           context: _context,
-          amount:
-              findById(invoiceItemDictModel.tableID).tIP.getTotalCartTablePrice(context: _context)!,
+          amount: cash,
         );
       }
     } else {
