@@ -71,22 +71,18 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
         await tablesData.listenToAllTabelsSocket(
             context: context, token: token);
         //optimise time to load, test Andi 31.Mai
-        //var futures1 = <Future>[]; //only now because i had some serios websocket problems, will it maybe implement later again. 4.Juni Andi
-        //var futures2 = <Future>[];
+        var futures1 = <Future>[];
+        var futures2 = <Future>[];
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
-          await tablesData.connectSocket(
-              id: table.id, context: context, token: token);
-          await tablesData.listenSocket(
-              id: table.id, context: context, token: token);
-          // futures1.add(tablesData.connectSocket(id: table.id, context: context, token: token));
+           futures1.add(tablesData.connectSocket(id: table.id, context: context, token: token));
         }
-        //for (var i = 0; i < tablesData.items.length; i++) {
-        //var table = tablesData.items[i];
-        // futures2.add(tablesData.listenSocket(id: table.id, context: context, token: token));
-        //}
-        //await Future.wait(futures1);
-        //await Future.wait(futures2);
+        for (var i = 0; i < tablesData.items.length; i++) {
+        var table = tablesData.items[i];
+         futures2.add(tablesData.listenSocket(id: table.id, context: context, token: token));
+        }
+        await Future.wait(futures1);
+        await Future.wait(futures2);
         setState(() {
           _isLoading = false;
         });
