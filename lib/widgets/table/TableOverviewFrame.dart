@@ -173,6 +173,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                                 width: 110,
                                 child: GestureDetector(
                                   onTap: () {
+                                    Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
                                     tableItemProvidor.setItemsPaymode(
                                         paymode: !paymode);
                                     setState(() {
@@ -183,7 +184,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                                     });
                                     Provider.of<Tables>(context, listen: false)
                                         .notify();
-                                  },
+                                     },
                                   child: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,

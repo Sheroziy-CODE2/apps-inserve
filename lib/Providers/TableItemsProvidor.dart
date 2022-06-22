@@ -128,8 +128,7 @@ class TableItemsProvidor with ChangeNotifier {
   ///Set amount in card of all Items to total value
   void setItemsAmountToPayToTotal({required context}) {
     for (int x = 0; x < _tableItems.length; x++) {
-      _tableItems[x]
-          .addAmountInCard(amount: _tableItems[x].quantity, context: context);
+      _tableItems[x].maxAmountInCard(context: context);
     }
     notifyListeners();
   }
