@@ -19,8 +19,6 @@ import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';
 import 'Authy.dart';
-import 'Ingredients.dart';
-import 'Products.dart';
 import 'package:intl/intl.dart';
 
 class Tables with ChangeNotifier {
@@ -182,6 +180,22 @@ class Tables with ChangeNotifier {
     }
     cash = tip;
     card = totalPrice;
+    double stepsize = 1.25;
+    if ((totalPrice) < 10) {
+      // runden auf 0.5€
+    } else if ((totalPrice) < 50) {
+      // runden auf 1€
+      stepsize = 2.5;
+    } else if ((totalPrice) < 100) {
+      // runden auf 5€
+      stepsize = 12.5;
+    } else if ((totalPrice) < 500) {
+      // runden auf 10€
+      stepsize = 25;
+    } else {
+      // runden auf 25€
+      stepsize = 62.5;
+    }
 
     showDialog(
       context: context,
@@ -190,22 +204,13 @@ class Tables with ChangeNotifier {
         return StatefulBuilder(
           builder: (context2, state) {
             if (onEnd) {
-              double stepsize = 1.25;
-              if ((totalPrice) < 10) {
-                // runden auf 0.5€
-              } else if ((totalPrice) < 50) {
-                // runden auf 1€
-                stepsize = 2.5;
-              } else if ((totalPrice) < 100) {
-                // runden auf 5€
-                stepsize = 12.5;
-              } else if ((totalPrice) < 500) {
-                // runden auf 10€
-                stepsize = 25;
-              } else {
-                // runden auf 25€
-                stepsize = 62.5;
+              if(tipType == "cash" && sliderMin < tip){
+                sliderMin = tip;
               }
+              if(tipType == "card" && sliderMax > (totalPrice-tip)){
+                sliderMax = (totalPrice-tip);
+              }
+
               sliderMin = sliderValue - stepsize;
               if (sliderMin < 0) sliderMin = 0;
               sliderMax = sliderValue + stepsize;
@@ -214,11 +219,10 @@ class Tables with ChangeNotifier {
                 sliderMax = (totalPrice + tip);
                 sliderMin = sliderMax - (2 * stepsize);
               }
-              while (sliderValue >= sliderMax) {
-                // workarround
-                sliderValue -= 0.1;
-              }
               onEnd = false;
+              if(sliderValue > sliderMax){
+                sliderValue = sliderMax;
+              }
               // print("SliderValue: " +
               //     sliderValue.toStringAsFixed(1) +
               //     " Min: " +
@@ -372,13 +376,7 @@ class Tables with ChangeNotifier {
                                               left: 0,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  tip = ((totalPrice +
-                                                                      tip -
-                                                                      tipSize) *
-                                                                  (1 / tipSize))
-                                                              .roundToDouble() *
-                                                          tipSize -
-                                                      totalPrice;
+                                                  tip = ((totalPrice + tip - tipSize) * (1 / tipSize)).roundToDouble() * tipSize - totalPrice;
                                                   if (tip < 0) tip = 0;
                                                   cash = tip;
                                                   card = totalPrice;
@@ -464,6 +462,11 @@ class Tables with ChangeNotifier {
                           GestureDetector(
                             onTap: (){
                               state(() {
+                                if(cash < tip){
+                                  cash = tip;
+                                  card = totalPrice;
+                                  sliderMax = card;
+                                }
                                 tipType = "cash";
                               });
                             },
@@ -506,40 +509,54 @@ class Tables with ChangeNotifier {
                                 state(() {
                                   sliderValue = value;
                                   if (sliderValue > sliderMax) {
-                                    sliderValue =
-                                        (sliderMax - 0.5).roundToDouble();
+                                    sliderValue = (sliderMax - 0.5).roundToDouble();
                                   }
                                   if (sliderValue < sliderMin) {
-                                    sliderValue =
-                                        (sliderMin + 0.5).roundToDouble();
+                                    sliderValue = (sliderMin + 0.5).roundToDouble();
                                   }
-
                                   if ((totalPrice) < 10) {
                                     // runden auf 0.5€
                                     cash = ((sliderValue - 0.26) * 2)
-                                            .roundToDouble() /
-                                        2;
+                                            .roundToDouble() / 2;
                                   } else if ((totalPrice) < 50) {
                                     // runden auf 1€
                                     cash = (sliderValue - 0.51).roundToDouble();
                                   } else if ((totalPrice) < 100) {
                                     // runden auf 5€
-                                    cash = ((sliderValue - 2.6) * 0.2)
-                                            .roundToDouble() /
-                                        0.2;
+                                    cash = ((sliderValue - 2.6) * 0.2).roundToDouble() / 0.2;
                                   } else if ((totalPrice) < 500) {
                                     // runden auf 10€
-                                    cash = ((sliderValue - 5.1) * 0.1)
-                                            .roundToDouble() /
-                                        0.1;
+                                    cash = ((sliderValue - 5.1) * 0.1).roundToDouble() / 0.1;
                                   } else {
                                     // runden auf 25€
-                                    cash =
-                                        (sliderValue * 0.04).roundToDouble() /
-                                                0.04 -
-                                            25;
+                                    cash = (sliderValue * 0.04).roundToDouble() / 0.04 - 25;
+                                  }
+                                  if(tipType == "card" && sliderValue > cash){
+                                    cash = sliderValue;
                                   }
                                   if (cash < 0) cash = 0;
+
+
+                                  if(card < tip && tipType == "card"){
+                                    card = tip;
+                                    cash = totalPrice;
+                                    sliderMax = cash;
+                                    sliderMin = sliderMax - (stepsize*2);
+                                    if(sliderMin < 0) sliderMin = cash;
+                                  }
+                                  if(cash < tip && tipType == "cash"){
+                                    cash = tip;
+                                    card = totalPrice;
+                                    sliderMin = cash;
+                                    sliderMax = sliderMin + (stepsize*2);
+                                    if(sliderMax > card) sliderMax = card;
+                                  }
+                                  if(sliderValue > sliderMax){
+                                    sliderValue = sliderMax;
+                                  }
+                                  if(sliderValue < sliderMin){
+                                    sliderValue = sliderMin;
+                                  }
                                   card = (totalPrice + tip) - cash;
                                 });
                               },
@@ -548,6 +565,29 @@ class Tables with ChangeNotifier {
                     GestureDetector(
                       onTap: (){
                         state(() {
+                          if(card < tip){
+                            card = tip;
+                            if(card < tip && tipType == "card"){
+                              card = tip;
+                              cash = totalPrice;
+                              sliderMax = cash;
+                              sliderMin = sliderMax - (stepsize*2);
+                              if(sliderMin < 0) sliderMin = cash;
+                            }
+                            if(cash < tip && tipType == "cash"){
+                              cash = tip;
+                              card = totalPrice;
+                              sliderMin = cash;
+                              sliderMax = sliderMin + (stepsize*2);
+                              if(sliderMax > card) sliderMax = card;
+                            }
+                            if(sliderValue > sliderMax){
+                              sliderValue = sliderMax;
+                            }
+                            if(sliderValue < sliderMin){
+                              sliderValue = sliderMin;
+                            }
+                          }
                           tipType = "card";
                         });
                       },
@@ -650,22 +690,28 @@ class Tables with ChangeNotifier {
                       switch(paymentMethod){
                         case 0:
                           tipType = "cash";
-                          payments.add(InvoiceItemsDictModelPayments(type: "cash", price: card));
+                          payments.add(InvoiceItemsDictModelPayments(type: "cash", price: (totalPrice*100).round()/100));
                           break;
                         case 2:
                           tipType = "card";
-                          payments.add(InvoiceItemsDictModelPayments(type: "card", price: cash));
+                          payments.add(InvoiceItemsDictModelPayments(type: "card", price: (totalPrice*100).round()/100));
                           break;
                         default:
-                          payments.add(InvoiceItemsDictModelPayments(type: "card", price: card));
-                          payments.add(InvoiceItemsDictModelPayments(type: "cash", price: cash));
+                          if(tipType == "cash") {
+                            payments.add(InvoiceItemsDictModelPayments(type: "card", price: (card*100).round()/100));
+                            payments.add(InvoiceItemsDictModelPayments(type: "cash", price: ((cash-tip)*100).round()/100));
+                          }
+                          if(tipType == "card") {
+                            payments.add(InvoiceItemsDictModelPayments(type: "card", price: ((card-tip)*100).round()/100));
+                            payments.add(InvoiceItemsDictModelPayments(type: "cash", price: (cash*100).round()/100));
+                          }
                           break;
                       }
                       Navigator.of(context).pop();
                       checkout_print(
                           invoiceItemDictModel:
                           InvoiceItemDictModel(
-                              tip: tip,
+                              tip: (tip*100).round()/100,
                               tableID: tableID,
                               items: itemsList,
                               payments: payments,
@@ -893,12 +939,6 @@ class Tables with ChangeNotifier {
       CheckoutModel checkoutModel =
           CheckoutModel.fromJson(jsonDecode(response.body), _context);
 
-      Ingredients ingredientsProvider =
-          Provider.of<Ingredients>(_context, listen: false);
-      //SideProducts sideDishProvider = Provider.of<SideProducts>(_context, listen: false);
-      Products productsProvider =
-          Provider.of<Products>(_context, listen: false);
-
       print("connection " + (await _configPrinter.checkState()).toString());
 
       BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
@@ -930,50 +970,21 @@ class Tables with ChangeNotifier {
 
           //List<Map> items = (jsonDecode(jsonReturn["invoice_items"]) as List<dynamic>).cast<Map>();
           for (var item in checkoutModel.invoiceItemList) {
-            bluetooth.print4Column(item.quantity.toString(), item.order.product,
-                "", item.amount.toStringAsFixed(2), 1,
-                format: "%2s %15s %5s %5s %n");
-
-            List<int> sideDishes = item.order.side_products;
-            Map<int, int> sd_map = {};
-            for (var sd in sideDishes) {
-              if (!sd_map.containsKey(sd)) {
-                sd_map[sd] = 1;
-              } else {
-                sd_map[sd] = sd_map[sd] ?? 0 + 1;
-              }
+            bluetooth.print4Column(item.quantity.toString(), item.order.product, "",item.amount.toStringAsFixed(2), 1, format: "%2s %15s %5s %5s %n");
+            if(item.order.price_description.isNotEmpty) {
+              bluetooth.print4Column("", "","", item.order.price_description, 0);
             }
-            for (var id in sd_map.keys) {
-              bluetooth.print4Column(
-                  sd_map[id].toString(),
-                  productsProvider.findById(id).name,
-                  productsProvider
-                      .findById(id)
-                      .product_price
-                      .firstWhere((element) => element.isSD)
-                      .price
-                      .toStringAsFixed(2),
-                  "",
-                  0,
-                  format: "%1s %20s %5s %5s %n");
+            for (var element in item.order.side_products) {
+              bluetooth.print4Column("", "","", element, 0);
             }
-            List<int> added_ingredients = item.order.added_ingredients;
-            Map<int, int> ai_map = {};
-            for (var sd in added_ingredients) {
-              if (!ai_map.containsKey(sd)) {
-                ai_map[sd] = 1;
-              } else {
-                ai_map[sd] = ai_map[sd] ?? 0 + 1;
-              }
+            for (var element in item.order.dips) {
+              bluetooth.print4Column("", "","", element, 0);
             }
-            for (var id in ai_map.keys) {
-              bluetooth.print4Column(
-                  ai_map[id].toString(),
-                  ingredientsProvider.findById(id).name,
-                  ingredientsProvider.findById(id).price.toStringAsFixed(2),
-                  "",
-                  0,
-                  format: "%1s %20s %5s %5s %n");
+            for (var element in item.order.added_ingredients) {
+              bluetooth.print4Column("", "","", element, 0);
+            }
+            for (var element in item.order.deleted_ingredients) {
+              bluetooth.print4Column("", "","", element, 0);
             }
           }
         }
@@ -1087,8 +1098,6 @@ class Tables with ChangeNotifier {
           // listen to the updates from the channel
           (message) {
             var data = jsonDecode(message);
-            print(data['type']);
-            print("sdgsdfgsdfgsdfgsdfgsdfgs");
             switch (data['type']) {
               case 'fetch_table_items':
                 //if the type is fetch the app has to make a new list of table_items and delete the old one
@@ -1136,7 +1145,8 @@ class Tables with ChangeNotifier {
                 }
                 _items[i].timeHistory["Loeschung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
-                notify();
+                //notify();
+                notifyListeners();
                 break;
 
               case 'transfer_table_items':
@@ -1171,6 +1181,7 @@ class Tables with ChangeNotifier {
             }
           },
           onError: (error) => {
+
             connectSocket(id: id, context: context, token: token).then((_) {
               listenSocket(id: id, context: context, token: token);
               print(error);
