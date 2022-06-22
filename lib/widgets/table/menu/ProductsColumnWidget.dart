@@ -206,7 +206,7 @@ class _ProductsColumnState extends State<ProductsColumn> {
                         itemPos = itemList.getLength()-1;
                       }
                       itemList.editItemFromWaiter(context: context, itemPos: itemPos, product: productsList[index].id);
-                      widget.goToNextPos(indicator: productsList[index].name, dontStoreIndicator: true);
+                      widget.goToNextPos(indicator: productsList[index].name, dontStoreIndicator: true, stay: true);
                     },
                     child: Container(
                       height: elementHight,

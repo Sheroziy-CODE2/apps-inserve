@@ -9,6 +9,7 @@ import 'Tables.dart';
 class TableItemChangeProvidor extends ChangeNotifier {
   int? _productPosInItem;
   bool paymode = false;
+  bool selectedProcuctManual = false;
 
   //Because we use only the Tabels Provider
   void notify({context}) {
@@ -78,7 +79,8 @@ class TableItemChangeProvidor extends ChangeNotifier {
 
   ///Call this Function to change the shown Product in the TableItemWidget
   ///It will not effect the data of any product
-  showProduct({required int? index, required context, bool toggle = false}) {
+  showProduct({required int? index, required context, bool toggle = false, bool selectedProcuctManual = false}) {
+    this.selectedProcuctManual = selectedProcuctManual;
     if (index == null) {
       _productPosInItem = null;
       return;
