@@ -21,6 +21,7 @@ class MySelectedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var check = chosenButton.any((item) => item == buttonText);
     return GestureDetector(
       onTap: buttonTapped,
       child: Padding(
@@ -29,11 +30,11 @@ class MySelectedButton extends StatelessWidget {
           borderRadius: borderRadius,
           child: Container(
             color:
-                (chosenButton.contains(buttonText)) ? selectedColor : unselectedColor,
+                (check == true) ? selectedColor : unselectedColor,
             child: Center(
                 child: Text(buttonText,
                     style: TextStyle(
-                        color: (chosenButton.contains(buttonText))
+                        color: (check == true)
                             ? Theme.of(context).cardColor
                             : Theme.of(context).primaryColorDark,
                         fontSize: 20,

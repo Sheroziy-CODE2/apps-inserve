@@ -80,7 +80,7 @@ class _TablesViewState extends State<TablesView> {
                 IconButton(
                   padding: const EdgeInsets.only(right: 15),
                   icon: const Icon(Icons.settings, size: 28,color: Color(0xFF7B7B7B)),
-                  onPressed: () { },
+                  onPressed: () {},
                 ),
               ],
             ),

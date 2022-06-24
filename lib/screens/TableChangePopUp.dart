@@ -89,35 +89,44 @@ class TableChange {
         return AlertDialog(
           title: const Text("Tische zum weitergeben",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxHeight: (_buttonText.length <= 8) ? MediaQuery.of(context).size.height / 6 : MediaQuery.of(context).size.height / 4),
-                    child: GridView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: _buttonText.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          //childAspectRatio: 0.95,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return MySelectedButton(
-                              buttonTapped: () {
-                                setState(() {
-                                  _chosenTable[0] = _buttonText[index];
-                                  debugPrint("Sie wählen " + _chosenTable[0]);
-                                });
-                              },
-                              buttonText: _buttonText[index],
-                              selectedColor: Theme.of(context).primaryColorDark,
-                              unselectedColor: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(30),
-                              chosenButton: _chosenTable[0]);
-                        })),
-              ],
+          content: Container
+            (
+            width: MediaQuery.of(context).size.width,
+            height: (_buttonText.length <= 8) ? MediaQuery.of(context).size.height / 5 : MediaQuery.of(context).size.height / 4,
+            alignment: Alignment.center,
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxHeight: (_buttonText.length <= 8) ? MediaQuery.of(context).size.height / 5 : MediaQuery.of(context).size.height / 4),
+                      child: GridView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: _buttonText.length,
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return MySelectedButton(
+                                buttonTapped: () {
+                                  setState(() {
+                                    if (!_chosenTable.contains(_buttonText[index])){
+                                      _chosenTable[0] = _buttonText[index];
+                                    }
+                                    else {
+                                      _chosenTable[0] = "";
+                                    }
+                                  });
+                                },
+                                buttonText: _buttonText[index],
+                                selectedColor: Theme.of(context).primaryColorDark,
+                                unselectedColor: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.circular(30),
+                                chosenButton: _chosenTable);
+                          })),
+                ],
+              ),
             ),
           ),
           actions: [transfer],
@@ -197,62 +206,67 @@ class TableChange {
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext context, setState) {
         return AlertDialog(
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 120),
-                  child: Container(
-                    child: Column(children: <Widget>[
-                      const SizedBox(height: 5),
-                      Container(
-                        alignment: Alignment.topRight,
-                        child: const Text('Tisch existiert: ',
-                            maxLines: 1, style: TextStyle(fontSize: 20)),
-                      ),
-                      Container(
-                        alignment: Alignment.topRight,
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Text(userText,
-                            maxLines: 1, style: TextStyle(fontSize: 50)),
-                      ),
-                    ]),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 450,
+            alignment: Alignment.center,
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 120),
+                    child: Container(
+                      child: Column(children: <Widget>[
+                        const SizedBox(height: 5),
+                        Container(
+                          alignment: Alignment.topRight,
+                          child: const Text('Tisch existiert: ',
+                              maxLines: 1, style: TextStyle(fontSize: 20)),
+                        ),
+                        Container(
+                          alignment: Alignment.topRight,
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: Text(userText,
+                              maxLines: 1, style: const TextStyle(fontSize: 50)),
+                        ),
+                      ]),
+                    ),
                   ),
-                ),
-                ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 320),
-                    child: GridView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: buttons.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3),
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == 11) {
-                            return MyButton(
-                                buttonTapped: () {
-                                  setState(() {
-                                    userText = "";
-                                  });
-                                },
-                                buttonText: buttons[index],
-                                color: Theme.of(context).primaryColorDark,
-                                textColor: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(10));
-                          } else {
-                            return MyButton(
-                                buttonTapped: () {
-                                  setState(() {
-                                    userText += buttons[index];
-                                  });
-                                },
-                                buttonText: buttons[index],
-                                color: Theme.of(context).primaryColorDark,
-                                textColor: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(10));
-                          }
-                        })),
-              ],
+                  ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 400),
+                      child: GridView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: buttons.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == 11) {
+                              return MyButton(
+                                  buttonTapped: () {
+                                    setState(() {
+                                      userText = "";
+                                    });
+                                  },
+                                  buttonText: buttons[index],
+                                  color: Theme.of(context).primaryColorDark,
+                                  textColor: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(10));
+                            } else {
+                              return MyButton(
+                                  buttonTapped: () {
+                                    setState(() {
+                                      userText += buttons[index];
+                                    });
+                                  },
+                                  buttonText: buttons[index],
+                                  color: Theme.of(context).primaryColorDark,
+                                  textColor: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(10));
+                            }
+                          })),
+                ],
+              ),
             ),
           ),
           actions: [transfer],

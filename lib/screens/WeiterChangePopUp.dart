@@ -123,92 +123,96 @@ class WeiterChange {
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext context, setState) {
         return AlertDialog(
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  child: const Text('Tische zum weitergeben',
-                      maxLines: 1, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
-                ),
-                const SizedBox(height: 10),
-                ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxHeight:
-                        (_buttonText.length <= 8) ? MediaQuery.of(context).size.height / 6 : MediaQuery.of(context).size.height / 4),
-                    child: GridView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: _buttonText.length,
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                        ),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            alignment: Alignment.center,
+            child: SingleChildScrollView(
+              child : ListBody(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.center,
+                    child: const Text('Tische zum weitergeben',
+                        maxLines: 1, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
+                  ),
+                  const SizedBox(height: 10),
+                  ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxHeight: (_buttonText.length <= 8) ? MediaQuery.of(context).size.height / 5 : MediaQuery.of(context).size.height / 4),
+                      child: GridView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: _buttonText.length,
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                          ),
 
-                        itemBuilder: (BuildContext context, int index) {
-                          return MySelectedButton(
+                          itemBuilder: (BuildContext context, int index) {
+                            return MySelectedButton(
+                                buttonTapped: () {
+                                  setState(() {
+                                    if (!_chosenTable.contains(_buttonText[index])){
+                                      _chosenTable.add(_buttonText[index]);
+                                    }
+                                    else {
+                                      _chosenTable.remove(_buttonText[index]);
+                                    }
+                                  });
+                                },
+                                buttonText: _buttonText[index],
+                                selectedColor: Theme.of(context).primaryColorDark,
+                                unselectedColor: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.circular(30),
+                                chosenButton: _chosenTable);
+                          })
+
+                  ),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    color: Colors.black,
+                    height: 5,
+                    indent: 0,
+                    endIndent: 0,
+                    thickness: 2,
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    alignment: Alignment.center,
+                    child: const Text('Kollegen wählen',
+                        maxLines: 1, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
+                  ),
+                  const SizedBox(height: 10),
+                  ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxHeight:  MediaQuery.of(context).size.height / 3),
+                      child: GridView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: workers.length,
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.95,
+                          ),
+
+                          itemBuilder: (BuildContext context, int index) {
+                            return MyImageButton(
                               buttonTapped: () {
                                 setState(() {
-                                  if (!_chosenTable.contains(_buttonText[index])){
-                                    _chosenTable.add(_buttonText[index]);
-                                  }
-                                  else {
-                                    _chosenTable.remove(_buttonText[index]);
-                                  }
+                                  _chosenWorker[0] = workers[index];
+                                  debugPrint("YOU CHOSE "+ _chosenWorker[0]);
                                 });
                               },
-                              buttonText: _buttonText[index],
-                              selectedColor: Theme.of(context).primaryColorDark,
-                              unselectedColor: Theme.of(context).cardColor,
+                              unselectedIconColor: Colors.transparent,
+                              selectedIconColor: Theme.of(context).primaryColorDark,
+                              image: workersImage[index],
                               borderRadius: BorderRadius.circular(30),
-                              chosenButton: _chosenTable);
-                        })
-
-                ),
-                const SizedBox(height: 10),
-                const Divider(
-                  color: Colors.black,
-                  height: 5,
-                  indent: 0,
-                  endIndent: 0,
-                  thickness: 2,
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  alignment: Alignment.center,
-                  child: const Text('Kollegen wählen',
-                      maxLines: 1, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
-                ),
-                const SizedBox(height: 10),
-                ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxHeight:  (workers.length <= 4) ? MediaQuery.of(context).size.height / 3 : MediaQuery.of(context).size.height / 2),
-                    child: GridView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: workers.length,
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.95,
-                        ),
-
-                        itemBuilder: (BuildContext context, int index) {
-                          return MyImageButton(
-                            buttonTapped: () {
-                              setState(() {
-                                _chosenWorker[0] = workers[index];
-                                debugPrint("YOU CHOSE "+ _chosenWorker[0]);
-                              });
-                            },
-                            unselectedIconColor: Colors.transparent,
-                            selectedIconColor: Theme.of(context).primaryColorDark,
-                            image: workersImage[index],
-                            borderRadius: BorderRadius.circular(30),
-                            username: workers[index],
-                            chosenButton: _chosenWorker[0],
-                          );
-                        })
-                ),
-              ],
+                              username: workers[index],
+                              chosenButton: _chosenWorker[0],
+                            );
+                          })
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [transfer],
