@@ -208,7 +208,7 @@ class TableChange {
         return AlertDialog(
           content: Container(
             width: MediaQuery.of(context).size.width,
-            height: 450,
+            height: 500,
             alignment: Alignment.center,
             child: SingleChildScrollView(
               child: ListBody(

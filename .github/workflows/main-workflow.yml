@@ -25,11 +25,11 @@ jobs:
       - name: Get APK Path
         id: apk-path
         run: |
-          path=$(find . -name 'app-release-*.apk' -type f | head -1)
+          path=$(find . -name 'waiter-app-release-*.apk' -type f | head -1)
           echo "::set-output name=path::$path"
       - name: Upload APK To Slack
         uses: adrey/slack-file-upload-action@master
         with:
             token: ${{ secrets.SLACK_BOT_TOKEN }}
             path: "${{steps.apk-path.outputs.path}}"
-            channel: inspery_waiter_app
+            channel: inspery_apps
