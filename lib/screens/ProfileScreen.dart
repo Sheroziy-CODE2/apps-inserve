@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:inspery_waiter/Models/DailyInvoiceModel.dart';
-import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../Providers/Authy.dart';
 import '../printer/ConfigPrinter.dart';
 import '../widgets/NavBar.dart';
+import 'SignInScreen.dart';
 import 'SplashScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -73,14 +74,9 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final authy = Provider.of<Authy>(context);
     final img = authy.photoLink;
-    logout() {
-      authy.logout();
-      Navigator.of(context).pushNamed(
-        SignIn.routeName,
-        // arguments: widget.id.toString()
-        // // , "table": table
-        // // },
-      );
+    logout() async {
+      await authy.logout();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignIn()));
     }
 
     return _isLoading == true
@@ -128,6 +124,7 @@ class _ProfileState extends State<Profile> {
                           child: const Icon(Icons.logout),
                           onTap: () {
                             logout();
+                            Phoenix.rebirth(context);
                           },
                         ),
                       ),

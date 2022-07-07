@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,11 @@ import 'screens/ProvidersApiCallsScreen.dart';
 import 'screens/ProfileScreen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      Phoenix(
+        child: MyApp(),
+      )
+  );
 }
 
 class MyApp extends StatelessWidget {
