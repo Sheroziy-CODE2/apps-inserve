@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert' as convert;
 import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/io.dart';
 
 class Authy extends ChangeNotifier {
   String? _token;
@@ -16,7 +18,7 @@ class Authy extends ChangeNotifier {
   static final _storage = FlutterSecureStorage();
   static const _keyUserName = 'username';
   static const _keyPassword = 'password';
-  late String photoLink;
+  late String photoLink = "";
   String RestaurantPhotoLink = "";
 
   Future<void> getRestaurantPhoto() async {
@@ -85,18 +87,7 @@ class Authy extends ChangeNotifier {
 
   logout() async {
     final prefs = await SharedPreferences.getInstance();
-    final m = prefs.getString('userData') ?? '';
-    if (m != '') {
-      final userData = json.decode(m) as Map<String, dynamic>;
-      // if there is not token return false
-      userData['password'] = null;
-      userData['userName'] = null;
-      _token = '';
-      _id = 0;
-      _userName = '';
-      photoLink = '';
-      notifyListeners();
-    }
+    prefs.clear();
   }
 
   Future<bool> tryAutoLogIn() async {

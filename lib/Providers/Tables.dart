@@ -25,6 +25,7 @@ class Tables with ChangeNotifier {
   final List<TableModel> _items = [];
 
   IOWebSocketChannel? _allTableschannel;
+  final streamController = StreamController.broadcast();
   String? token;
 
   final ConfigPrinter _configPrinter = ConfigPrinter();
