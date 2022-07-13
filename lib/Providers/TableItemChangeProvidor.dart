@@ -50,7 +50,7 @@ class TableItemChangeProvidor extends ChangeNotifier {
         quantity: 1,
         table: tableID,
         selected_price: selectedPriceOfProductID,
-        saved_table: 0,
+        //saved_table: 0,
         deleted_ingredients: [],
         added_ingredients: [],
         dips: [],

@@ -71,9 +71,9 @@ class TableItemsProvidor with ChangeNotifier {
     for (var product in products) {
       var or = _tableItems.firstWhere((t) => t.id == product);
       //erste Table rein speichern
-      if (or.saved_table == 0) {
-        _tableItems.firstWhere((t) => t.id == product).saved_table = or.table;
-      }
+      // if (or.saved_table == 0) {
+      //   _tableItems.firstWhere((t) => t.id == product).saved_table = or.table;
+      // }
       //ausschneiden
       destinyTable.tIP.addSingleProduct(
         //context: context,
@@ -329,9 +329,9 @@ class TableItemsProvidor with ChangeNotifier {
     if (quantity != null) {
       _tableItems[itemPos].quantity = quantity;
     }
-    if (saved_table != null) {
-      _tableItems[itemPos].saved_table = saved_table;
-    }
+    // if (saved_table != null) {
+    //   _tableItems[itemPos].saved_table = saved_table;
+    // }
     if (user != null) {
       _tableItems[itemPos].user = user;
     }
