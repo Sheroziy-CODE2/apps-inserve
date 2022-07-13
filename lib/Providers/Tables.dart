@@ -101,7 +101,9 @@ class Tables with ChangeNotifier {
     }
     table.channel.sink.add(
         jsonEncode({"command": "new_table_items", "table_items": jsonElemnts}));
-  notify();
+    try{
+      notify();
+    }catch(e){};
   }
 
   Future<void> transferTableToAnotherUserSocket(
