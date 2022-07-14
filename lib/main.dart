@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:inspery_waiter/Providers/FlorLayoutProvider.dart';
+import 'package:inspery_waiter/screens/FlorPlanScreen.dart';
 import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
@@ -81,6 +83,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => WorkersProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => FlorLayoutProvider(),
+        ),
       ],
       child: Consumer<Authy>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -112,6 +117,7 @@ class MyApp extends StatelessWidget {
               ProvidersApiCalls.routeName: (ctx) => ProvidersApiCalls(),
               Profile.routeName: (ctx) => Profile(),
               SignIn.routeName: (ctx) => SignIn(),
+              FlorPlanScreen.routeName: (ctx) => FlorPlanScreen(),
             }),
       ),
     );

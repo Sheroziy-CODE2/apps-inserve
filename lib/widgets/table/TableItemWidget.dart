@@ -52,6 +52,7 @@ class _TableItemState extends State<TableItem> {
     return GridTile(
       child: GestureDetector(
         onTap: () {
+          print(widget.id.toString() + "######################################" );
           Navigator.of(context)
               .pushNamed(TableView.routeName, arguments: widget.id.toString()
             // , "table": table
