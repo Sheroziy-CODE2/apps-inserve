@@ -1079,7 +1079,7 @@ class Tables with ChangeNotifier {
       {required id, required context, required token}) async {
     // if there is no connection yet connect the channel
     print('ws://inspery.com/ws/restaurant_tables/${id}/?=${token}');
-    sleep(const Duration(milliseconds: 300));
+    //sleep(const Duration(milliseconds: 300));
     for (int i = 0; i < _items.length; i++) {
       if (_items[i].id == id) {
         await _items[i].channel == null
