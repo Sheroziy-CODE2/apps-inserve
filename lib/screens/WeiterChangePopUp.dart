@@ -8,6 +8,7 @@ import '../Providers/Tables.dart';
 import '../Providers/WorkersProvider.dart';
 import '../widgets/ImageButtons.dart';
 import '../widgets/SelectButtons.dart';
+import '../widgets/dartPackages/another_flushbar/flushbar.dart';
 import 'TablesViewScreen.dart';
 
 
@@ -27,41 +28,14 @@ class WeiterChange {
 
   late Tables tablesprov;
 
-  void snackBar({required String msg, required context}){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.transparent,
-              duration: const Duration(seconds: 4),
-              content:
-              Container(
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                      Radius.circular(5)),
-                  color: Theme.of(context).primaryColorDark,
-                ),
-                height: 60,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.info_outline, size: 28.0, color: Colors.blue[300],),
-                    const SizedBox(width: 6,),
-                    SizedBox(
-                        height: 120,
-                        width: MediaQuery.of(context).size.width-220,
-                        child: Text(msg,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 12),
-                          maxLines: 6,)
-                    ),
-                  ],
-                ),
-              ),
-
-            )
-        );
+  void snackBar({required String msg,required context}){
+    Flushbar(
+      message: msg,
+      icon: Icon(Icons.info_outline, size: 28.0, color: Colors.blue[300],),
+      margin: const EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      duration:  const Duration(seconds: 2),
+    ).show(context);
   }
 
   showWeiterChangeDialog(BuildContext context) {
