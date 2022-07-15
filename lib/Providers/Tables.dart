@@ -42,11 +42,8 @@ class Tables with ChangeNotifier {
   }
 
   notify() {
-    try {
-      notifyListeners();
-    } catch (e) {
-      print("Error on Tables.notify: " + e.toString());
-    }
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => notifyListeners());
   }
 
   //write to app path, this belongs to the printer
