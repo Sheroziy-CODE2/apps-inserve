@@ -156,7 +156,6 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("start build page");
     final id = int.parse(ModalRoute.of(context)?.settings.arguments as String); //the id we got from the Link
     final int tableId = id;
 
