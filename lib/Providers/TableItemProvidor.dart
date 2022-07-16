@@ -16,7 +16,7 @@ class TableItemProvidor with ChangeNotifier {
   late int quantity;
   //double total_price;
   late int table;
-  int saved_table;
+  //int saved_table;
   int user;
   int product;
   int selected_price;
@@ -235,7 +235,7 @@ class TableItemProvidor with ChangeNotifier {
     this.quantity = 0,
     this.table = 0,
     //this.total_price = 0.0,
-    this.saved_table = 0,
+   // this.saved_table = 0,
     this.user = 0,
     this.product = 0,
     this.selected_price = 0,
@@ -254,7 +254,7 @@ class TableItemProvidor with ChangeNotifier {
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,
       table: jsonResponse["table"] as int,
-      saved_table: jsonResponse["saved_table"] as int,
+      //saved_table: jsonResponse["saved_table"] as int,
       user: jsonResponse["user"] as int,
       product: jsonResponse["product"] as int,
       selected_price: jsonResponse["selected_price"] as int,

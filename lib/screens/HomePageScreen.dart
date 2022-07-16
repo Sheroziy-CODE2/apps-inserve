@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspery_waiter/screens/FlorPlanScreen.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
 import '../widgets/Buttons.dart';
@@ -37,15 +38,30 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           ConstrainedBox(
             constraints: const BoxConstraints(),
-            child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 70),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    alignment: Alignment.centerRight,
-                    child: Text('Tisch: ' + userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
-                  ),
-                ]),
+            child: Container(
+              child: Column(
+                  children: <Widget>[
+                    const SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        IconButton(
+                          padding: const EdgeInsets.only(right: 15),
+                          icon: const Icon(Icons.layers, size: 28,color: Color(0xFF7B7B7B),),
+                          onPressed: () {
+                            Navigator.of(context).pushReplacementNamed(FlorPlanScreen.routeName);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      alignment: Alignment.centerRight,
+                      child: Text('Tisch: ' + userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
+                    ),
+                  ]),
+            ),
           ),
           const Spacer(),
           ConstrainedBox(
