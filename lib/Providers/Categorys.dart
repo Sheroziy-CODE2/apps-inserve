@@ -14,6 +14,10 @@ class Categorys with ChangeNotifier {
     return [..._items];
   }
 
+  String productTypeByProductID({required int productID}){
+    return _items.firstWhere((cat) => cat.products.where((pro) => pro.id == productID).isNotEmpty).product_type;
+  }
+
   Future<void> addProducts(cat, {required context}) async {
     //this function will get all the products for the category sent to it
     final url = Uri.parse(
