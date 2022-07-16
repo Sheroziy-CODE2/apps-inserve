@@ -29,7 +29,7 @@ class _horizontalAlphabetGridviewControllerWidgetState extends State<HorizontalA
           final width = box.size.width;
           widgetWith = width / widget.alphabet.length;
         } catch(e){
-          print("Coud not get RenderBox to calculate the width of the widget, error: " + e.toString());
+          //print("Coud not get RenderBox to calculate the width of the widget, error: " + e.toString());
           widgetWith = 10.0;
         }
         try {

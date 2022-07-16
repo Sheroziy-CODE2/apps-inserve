@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../Providers/Categorys.dart';
 import '../../../Providers/Category.dart';
+import 'ProductsColumnWidget.dart';
 
 class CategorysColumn extends StatefulWidget {
   // this is the column of categorys in ChooseProductForm
@@ -11,9 +12,11 @@ class CategorysColumn extends StatefulWidget {
   int id;
   ScrollController scrollController = ScrollController();
   final elementsShown = 6;
+  GlobalKey<ProductsColumnState> controlledWidget;
   //final String categorieID;
 
   CategorysColumn({
+    required this.controlledWidget,
     Key? key,
     required this.id,
     required this.type,
@@ -27,20 +30,16 @@ class CategorysColumn extends StatefulWidget {
 
 class CategorysColumnState extends State<CategorysColumn> {
 
-  int id = 0;
   bool rotate = true;
   int selectedIndex = -1;
+  double elementHight = 99;
+  double hight = 400;
 
   changeCategory(int id) {
     widget.categoryHandler(id);
   }
-  double elementHight = 99;
 
-
-
-  @override
   Widget build(BuildContext context) {
-    id = widget.id;
     final categorysData = Provider.of<Categorys>(
       context,
     ); //category provider
@@ -48,14 +47,23 @@ class CategorysColumnState extends State<CategorysColumn> {
     i.product_type == widget.type
     ).toList();
 
-
+      Future.delayed(const Duration(milliseconds: 30)).then((value) {
+      try {
+        final box = context.findRenderObject() as RenderBox;
+        hight = box.size.height;
+        elementHight = ((hight) / (widget.elementsShown+1));
+      } catch(e){
+        //print("Coud not get RenderBox to calculate the hight of the widget, error: " + e.toString());
+      }
+      setState((){});
+    });
 
     try {
       final box = context.findRenderObject() as RenderBox;
-      final hight = box.size.height;
-      elementHight = ((hight-25) / widget.elementsShown)-10;
+      hight = box.size.height;
+      elementHight = ((hight-25) / widget.elementsShown);
     } catch(e){
-      print("Coud not get RenderBox to calculate the hight of the widget, error: " + e.toString());
+      //print("Coud not get RenderBox to calculate the hight of the widget, error: " + e.toString());
       //Kann fehler verursachen!!! -> Loop
 
     }
@@ -82,8 +90,8 @@ class CategorysColumnState extends State<CategorysColumn> {
                     child: Container(),
                     backgroundColor:
                     selectedIndex == -1 ? const Color(0xFFD1D1D1) :
-                    categorieitems[selectedIndex].id == id
-                        ? const Color(0xFFD3E03A)
+                    categorieitems[selectedIndex].id == widget.id
+                        ? widget.type == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0)
                         : const Color(0xFFD1D1D1),
                   ),
                   const SizedBox(width: 3,),
@@ -111,13 +119,13 @@ class CategorysColumnState extends State<CategorysColumn> {
                   if (details.delta.dy > sensitivity) {
                     // Down Swipe
                     widget.scrollController.animateTo(
-                        widget.scrollController.position.pixels - (elementHight*widget.elementsShown),
+                        widget.scrollController.position.pixels - hight,
                         duration: const Duration(milliseconds: 150),
                         curve: Curves.linear);
                   } else if(details.delta.dy < -sensitivity){
                     // Up Swipe
                     widget.scrollController.animateTo(
-                        widget.scrollController.position.pixels + (elementHight*widget.elementsShown),
+                        widget.scrollController.position.pixels + hight,
                         duration: const Duration(milliseconds: 150),
                         curve: Curves.linear);
                   }
@@ -131,13 +139,13 @@ class CategorysColumnState extends State<CategorysColumn> {
                     itemCount:categorieitems.length,
                     itemBuilder: (context, index) {
                       return SizedBox(
-                        height: elementHight,
+                        height: elementHight-10,
                         child: categorieitems[index].id == -1 ? Container() :
                         GestureDetector(
                           onTap: () {
+                            widget.controlledWidget.currentState!.changeID(newID: categorieitems[index].id, color: widget.type == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0));
                             selectedIndex = index;
-                            changeCategory(
-                                categorieitems[index].id);
+                            changeCategory(categorieitems[index].id);
                           },
                           child: Container(
                             padding: const EdgeInsets.only(
@@ -146,15 +154,14 @@ class CategorysColumnState extends State<CategorysColumn> {
                               // border:
                               //     Border.all(color: Colors.blueAccent),
                               color:
-                              categorieitems[index].id == id
-                                  ? const Color(0xFFD3E03A)
+                              categorieitems[index].id == widget.id
+                                  ? widget.type == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0)
                                   : const Color(0xFFD1D1D1),
 
                               boxShadow: const [],
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            margin: const EdgeInsets.only(
-                                top: 5.0, left: 7.5, right: 7.5, bottom: 5.0),
+                            margin: const EdgeInsets.only(top: 5.0, left: 7.5, right: 7.5, bottom: 5.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [

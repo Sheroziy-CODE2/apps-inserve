@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspery_waiter/Providers/Categorys.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/Products.dart';
 import '../../Providers/TableItemChangeProvidor.dart';
@@ -44,6 +45,8 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
   Widget build(BuildContext context) {
      var tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
      var productProvidor = Provider.of<Products>(context, listen: true);
+     var productTyp = Provider.of<Categorys>(context, listen: true).productTypeByProductID(productID: widget.tableItemProvidor.product);
+     print("Product Type: " + productTyp);
 
     return GestureDetector(
       onTap: () async {
@@ -58,7 +61,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                     : Colors.transparent,
                 width: 3),
             borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-            color: widget.tableItemProvidor.fromWaiter ? const Color(0xFFD3E03A).withOpacity(0.8) : Colors.transparent,
+            color: widget.tableItemProvidor.fromWaiter ? const Color(0xFFE08A3A).withOpacity(0.8) : Colors.transparent,
           ),
           height: (widget.tableItemProvidor.paymode && widget.tableItemProvidor.fromWaiter)  ? 0 : widget._height + 2,
           duration: const Duration(milliseconds: 300),
@@ -210,7 +213,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                           decoration: BoxDecoration(
                                             color:
                                             widget.tableItemProvidor.getPaymode()
-                                                    ? Colors.black38
+                                                    ? productTyp == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0)
                                                     : Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -247,7 +250,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                             color:
                                             widget.tableItemProvidor.getPaymode()
                                                     ? Colors.white
-                                                    : Colors.black38,
+                                                    : productTyp == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0),
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             // boxShadow: [

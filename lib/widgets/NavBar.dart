@@ -16,60 +16,38 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
+
+    Widget singelItem({required int selected, required String name, required IconData icon, required String routingName, required key}) {
+      return Center(
+        child:
+        widget.selectedIcon == selected ? Text(name,
+            style: TextStyle(
+                fontSize: 14,
+                height: 1.7,
+                letterSpacing: 1,
+                fontWeight: FontWeight.bold,
+                color: widget.selectedIcon == selected ? const Color(0xFFE08A3A) : Colors.black)) :
+        IconButton(
+          icon: Icon(icon, size: 30,
+              color: widget.selectedIcon == selected ? const Color(0xFFE08A3A) : Colors.black),
+          key: Key(key),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed(routingName);
+          },
+        ),
+      );
+    }
+
     return Container(
-      height: 72,
+      height: 55,
       color: Theme.of(context).cardColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Column(
-            children: [
-              Text (widget.selectedIcon == 1 ? "Eingabe" : " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 1 ? Colors.red : Colors.black)),
-              IconButton(
-                icon: Icon(InsperyIcons.icons8_ten_keys_48, size: 30, color: widget.selectedIcon == 1 ? Colors.red : Colors.black),
-                key: const Key("mainPage"),
-                onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(HomePage.routeName);
-                },
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              Text (widget.selectedIcon == 2 ? "Tische" : " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 2 ? Colors.red : Colors.black)),
-              IconButton(
-                icon: Icon(InsperyIcons.icons8_chair_32, size: 30, color: widget.selectedIcon == 2 ? Colors.red : Colors.black),
-                key: const Key("tablePage"),
-                onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(TablesView.routeName);
-                },
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              Text (widget.selectedIcon == 3 ? "Rechnungen": " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 3 ? Colors.red : Colors.black)),
-              IconButton(
-                icon: Icon(InsperyIcons.icons8_insert_money_euro_50, size: 30, color: widget.selectedIcon == 3 ? Colors.red : Colors.black),
-                key: const Key("invoicePage"),
-                onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(InvoicesView.routeName);
-                },
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              Text (widget.selectedIcon == 4 ? "Profil" : " ", style: TextStyle(fontSize: 13, height: 1.7, letterSpacing: 1, fontWeight: FontWeight.bold, color: widget.selectedIcon == 4 ? Colors.red : Colors.black)),
-              IconButton(
-                icon: Icon(Icons.person_sharp, size: 30, color: widget.selectedIcon == 4 ? Colors.red : Colors.black),
-                key: const Key("profilePage"),
-                onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(Profile.routeName);
-                },
-              ),
-            ],
-          ),
+          singelItem(name: "Eingabe", selected: 1, icon: InsperyIcons.icons8_ten_keys_48, routingName: HomePage.routeName, key: "mainPage"),
+          singelItem(name: "Tische", selected: 2, icon: InsperyIcons.icons8_chair_32, routingName: TablesView.routeName, key: "tablePage"),
+          singelItem(name: "Rechnungen", selected: 3, icon: InsperyIcons.icons8_insert_money_euro_50, routingName: InvoicesView.routeName, key: "invoicePage"),
+          singelItem(name: "Profil", selected: 4, icon: Icons.person_sharp, routingName: Profile.routeName, key: "profilePage"),
         ],
       ),
     );

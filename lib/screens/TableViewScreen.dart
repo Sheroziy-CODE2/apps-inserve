@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '/Providers/Products.dart';
 import '/widgets/table/menu/ChooseDips.dart';
 import '/widgets/table/menu/ChooseExtraOptionsWidget.dart';
@@ -29,19 +28,19 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
   int? actItem;
   bool comeFromProduct = false;
 
-  // Animation
-  @override
-  void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
-    super.dispose();
-  }
+  // // Animation - Applied it to whole app
+  // @override
+  // void initState() {
+  //   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  //   super.initState();
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+  //       overlays: SystemUiOverlay.values);
+  //   super.dispose();
+  // }
 
   goToNextPos(
       {required String indicator,
@@ -156,7 +155,6 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("start build page");
     final id = int.parse(ModalRoute.of(context)?.settings.arguments as String); //the id we got from the Link
     final int tableId = id;
 

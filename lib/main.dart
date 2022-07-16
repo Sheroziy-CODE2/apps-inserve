@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:inspery_waiter/Providers/FlorLayoutProvider.dart';
 import 'package:inspery_waiter/screens/FlorPlanScreen.dart';
@@ -41,9 +42,11 @@ class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> navKey = GlobalKey();
   const MyApp({Key? key}) : super(key: key);
 
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     return MultiProvider(
       providers: [
         // create all of teh provider will be used in the app

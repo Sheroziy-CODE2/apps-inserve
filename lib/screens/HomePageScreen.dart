@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Theme.of(context).cardColor,
       bottomNavigationBar: const NavBar(selectedIcon: 1),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           ConstrainedBox(
             constraints: const BoxConstraints(),
@@ -64,6 +63,7 @@ class _HomePageState extends State<HomePage> {
                   ]),
             ),
           ),
+          const Spacer(),
           ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 405),
             child: Container(
@@ -134,7 +134,8 @@ class _HomePageState extends State<HomePage> {
                     }),
               ),
             ),
-          )
+          ),
+          const SizedBox(height: 20,),
         ],
       ),
       //to use navigation bar in the page, it needs to be called with NavBar class

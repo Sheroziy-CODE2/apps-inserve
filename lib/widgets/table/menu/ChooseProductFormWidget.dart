@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../Models/Product.dart';
 import '../../../Providers/TableItemChangeProvidor.dart';
+import '../../../screens/TablesViewScreen.dart';
 import 'CategorysColumnWidget.dart';
 import 'ProductsColumnWidget.dart';
 import 'dart:math';
@@ -38,26 +39,9 @@ class ChooseProductFormState extends State<ChooseProductForm> {
 
   @override
   Widget build(BuildContext context) {
-    if(id == 0) {
-      id = Provider.of<TableItemChangeProvidor>(context, listen: false).categoryId;
-      try {
-        list_key[0].currentState!.id = id;
-        list_key[1].currentState!.id = id;
-      }catch(e){};
-    }
 
-    Future.delayed(const Duration(milliseconds: 50)).then((value) {
-      try {
-        list_key[0].currentState!.setState(() {});
-        list_key[1].currentState!.setState(() {});
-        singel_key.currentState!.setState(() {});
-      }catch(e) {};
-    }
-    );
-    final hight = MediaQuery
-        .of(context)
-        .size
-        .height / 2 +20;
+
+    final hight = MediaQuery.of(context).size.height / 2 +20;
     return GestureDetector(
       onPanUpdate: (details) {
         updateListWidgets();
@@ -81,6 +65,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
             Stack(
               children: [
                 CategorysColumn(
+                  controlledWidget: singel_key,
                     key: list_key[0],
                     id: id,
                     type: widget.categorieTypeLeft,
@@ -109,8 +94,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
             ),
           ),
           Positioned(
-            //flex: 4,
-            height: hight,
+            height: hight-20,
             width: MediaQuery
                 .of(context)
                 .size
@@ -119,11 +103,38 @@ class ChooseProductFormState extends State<ChooseProductForm> {
                 .of(context)
                 .size
                 .width * 0.33,
-            child: ProductsColumn(
-              key: singel_key,
-              id: id,
-              tableID: widget.tableName,
-              goToNextPos: widget.goToNextPos,
+            child: Column(
+              children: [
+                Expanded(
+                  child: ProductsColumn(
+                    key: singel_key,
+                    id: id,
+                    tableID: widget.tableName,
+                    goToNextPos: widget.goToNextPos,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pushReplacementNamed(TablesView.routeName);
+                  },
+                  child: Container(
+                      height: 35,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF818181),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.arrow_back_ios, color:  Colors.white, size: 20,),
+                          SizedBox(width: 5,),
+                          Text("zurück", style: TextStyle(fontSize: 16 , color: Colors.white),),
+                        ],
+                      )
+                  ),
+                ),
+              ],
             ),
           ),
           AnimatedPositioned(
@@ -142,6 +153,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
             child: Stack(
               children: [
                 CategorysColumn(
+                  controlledWidget: singel_key,
                     id: id,
                     key: list_key[1],
                     type: widget.categorieTypeRight,
