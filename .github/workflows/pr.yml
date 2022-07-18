@@ -3,7 +3,7 @@ name: Check build process
 on:
   push:
     branches:
-      - '*'
+       - feature/IN-*
 
 jobs:
   build:
