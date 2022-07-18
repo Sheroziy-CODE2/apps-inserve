@@ -1,0 +1,22 @@
+name: Check build process
+
+on:
+  push:
+    branches:
+       - feature/IN-*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "2.10.5"
+      - run: flutter clean
+      - run: flutter pub get
+      - run: flutter build apk
