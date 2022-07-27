@@ -29,7 +29,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                 const Expanded(
                   flex: 1,
                   child: Text(
-                    ' X ',
+                    ' x ',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
@@ -42,10 +42,11 @@ class InvoiceOrderWidget extends StatelessWidget {
                   child: ProductNameComponent(name: name),
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 4,
                   child: //PriceComponent(id: invoiceItem.price),
                       Text(
-                    invoiceItem.price.toString(),
+                    invoiceItem.price.toString()+ ' Euro',
+                        textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
@@ -53,21 +54,11 @@ class InvoiceOrderWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Euro',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF2C3333),
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Text(
                     '  ${invoiceItem.amount}',
+                    textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
@@ -79,9 +70,8 @@ class InvoiceOrderWidget extends StatelessWidget {
               invoiceItem.side_products.isNotEmpty
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.side_products.length * 28,
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.side_products.length,
                           itemBuilder: (context, index) =>
@@ -94,14 +84,13 @@ class InvoiceOrderWidget extends StatelessWidget {
               invoiceItem.added_ingredients.isNotEmpty
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.added_ingredients.length * 28,
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.added_ingredients.length,
                           itemBuilder: (context, index) =>
                               InvoiceItemIngredientsWidget(
-                                  id: invoiceItem.added_ingredients[index],
+                                  name: invoiceItem.added_ingredients[index],
                                   operator: '+'),
                         ),
                       ),
@@ -110,14 +99,13 @@ class InvoiceOrderWidget extends StatelessWidget {
               invoiceItem.deleted_ingredients.isNotEmpty
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.deleted_ingredients.length * 28,
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.deleted_ingredients.length,
                           itemBuilder: (context, index) =>
                               InvoiceItemIngredientsWidget(
-                                  id: invoiceItem.side_products[index],
+                                  name: invoiceItem.side_products[index],
                                   operator: '-'),
                         ),
                       ),

@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../reusable/CenterText.dart';
-import '../../Providers/Ingredients.dart';
 
 class InvoiceItemIngredientsWidget extends StatelessWidget {
   // this widget is used to show a line of information about an added ot deleted ingredient from an invoice
-  final int id;
+  final String name;
   final String operator;
   const InvoiceItemIngredientsWidget(
-      {required this.id, required this.operator});
+      {required this.name, required this.operator});
 
   @override
   Widget build(BuildContext context) {
-    final ingredientsProvider =
-        Provider.of<Ingredients>(context, listen: false);
-    final ingredient = ingredientsProvider.findById(id);
-    var name = ingredient.name.length > 10
-        ? ingredient.name.substring(0, 10)
-        : ingredient.name;
 
     return Material(
       type: MaterialType.transparency,
@@ -43,23 +35,19 @@ class InvoiceItemIngredientsWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 4,
-                  child: CenterText(text: name),
+                  child: Text(
+                    name,
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF2C3333),
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
-                operator == '+'
-                    ? Expanded(
-                        flex: 4,
-                        child: Text(
-                          '  ${ingredient.price} Euro',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF2C3333),
-                            fontSize: 20,
-                          ),
-                        ),
-                      )
-                    : Container(),
+
                 const Expanded(
-                  flex: 2,
+                  flex: 7,
                   child: Text(
                     ' ',
                   ),

@@ -1,7 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
-
-import '../Providers/Products.dart';
 
 class ProductNameComponent extends StatelessWidget {
   final String name;
@@ -9,14 +6,14 @@ class ProductNameComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<Products>(context, listen: false);
-
     return Text(
       '${name}',
+      textAlign: TextAlign.left,
       style: const TextStyle(
         fontWeight: FontWeight.w500,
         color: Color(0xFF2C3333),
         fontSize: 20,
+
       ),
     );
   }
