@@ -8,7 +8,6 @@ class InvoiceItem {
   final double price;
   final List<int> added_ingredients;
   final List<int> deleted_ingredients;
-  final List<int> dips;
 
   InvoiceItem({
     required this.id,
@@ -19,7 +18,6 @@ class InvoiceItem {
     required this.price,
     required this.added_ingredients,
     required this.deleted_ingredients,
-    required this.dips,
   });
 
   factory InvoiceItem.fromJson(response) {
@@ -34,7 +32,6 @@ class InvoiceItem {
       price: data["selected_price"]["price"] as double,
       added_ingredients: data["added_ingredients"].cast<int>(),
       deleted_ingredients: data["deleted_ingredients"].cast<int>(),
-      dips: data["dips"].cast<int>(),
     );
   }
 }

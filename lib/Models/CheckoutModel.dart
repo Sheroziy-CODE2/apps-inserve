@@ -24,8 +24,7 @@ class CheckoutModel{
   factory CheckoutModel.fromJson(response, context) {
     var jsonResponse = response as Map<String, dynamic>;
     return CheckoutModel(
-      dateTime:
-          DateTime.fromMillisecondsSinceEpoch(jsonResponse["date"]),
+      dateTime: DateTime.fromMillisecondsSinceEpoch(jsonResponse["date"]),
       id: jsonResponse["id"] as int,
       user: jsonResponse["user"] as int,
       dailyInvoice: jsonResponse["dailyInvoice"] as int,
@@ -77,7 +76,6 @@ class InvoiceOrderItemModel{
   final List<String> added_ingredients;
   final List<String> deleted_ingredients;
   final List<String> side_products;
-  final List<String> dips;
   final String date;
   //final status;
 
@@ -88,7 +86,6 @@ class InvoiceOrderItemModel{
     required this.price_description,
     required this.user,
     required this.product,
-    required this.dips,
     required this.selected_price,
     required this.side_products,
     required this.quantity,
@@ -102,7 +99,7 @@ class InvoiceOrderItemModel{
     var jsonResponse = response as Map<String, dynamic>;
     return InvoiceOrderItemModel(
       id:  jsonResponse["id"] as int,
-      table:  jsonResponse["table"]??0 as int,
+      table:  jsonResponse["table"]??0,
       saved_table:  jsonResponse["saved_table"] as int,
       user:  jsonResponse["user"] as int,
       product:  jsonResponse["product"] as String,
@@ -113,7 +110,6 @@ class InvoiceOrderItemModel{
       added_ingredients:  List<String>.from(jsonResponse["added_ingredients"] as List<dynamic>),
       deleted_ingredients:  List<String>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
       side_products:  List<String>.from(jsonResponse["side_products"] as List<dynamic>),
-      dips:  List<String>.from(jsonResponse["dips"] as List<dynamic>),
       date:  jsonResponse["date"] as String,
     );
   }

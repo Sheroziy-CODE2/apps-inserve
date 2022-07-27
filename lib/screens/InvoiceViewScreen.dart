@@ -78,7 +78,6 @@ class _InvoiceViewState extends State<InvoiceView> {
       IIWidgetSize += invoiceItems[i].side_products.length;
       IIWidgetSize += invoiceItems[i].deleted_ingredients.length;
       IIWidgetSize += invoiceItems[i].added_ingredients.length;
-      IIWidgetSize += invoiceItems[i].dips.length;
     }
     IIWidgetSize *= 34;
     return _isLoading == true

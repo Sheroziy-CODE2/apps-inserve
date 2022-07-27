@@ -78,13 +78,6 @@ class TableItemProvidor with ChangeNotifier {
     notify(context);
   }
 
-  void setDips({required context, required int new_dip}) {
-    if (isFromServer()) {
-      showSnackbar(context: context, msg: "Produkt gesprerrt!");
-      return;
-    }
-    notify(context);
-  }
 
   void removeSideProducts({required context, required int side_pro}) {
     if (isFromServer()) {
@@ -92,14 +85,6 @@ class TableItemProvidor with ChangeNotifier {
       return;
     }
     side_product.remove(side_pro);
-    notify(context);
-  }
-
-  void removeDips({required context, required dip}) {
-    if (isFromServer()) {
-      showSnackbar(context: context, msg: "Produkt gesprerrt!");
-      return;
-    }
     notify(context);
   }
 

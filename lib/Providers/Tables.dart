@@ -633,7 +633,7 @@ class Tables with ChangeNotifier {
                                   },
                                   child: SizedBox(
                                       height: 40,
-                                      width: 90,
+                                      width: 75,
                                       child: Stack(
                                         children: [
                                           Positioned(
@@ -974,9 +974,6 @@ class Tables with ChangeNotifier {
               bluetooth.print4Column("", "","", item.order.price_description, 0);
             }
             for (var element in item.order.side_products) {
-              bluetooth.print4Column("", "","", element, 0);
-            }
-            for (var element in item.order.dips) {
               bluetooth.print4Column("", "","", element, 0);
             }
             for (var element in item.order.added_ingredients) {
