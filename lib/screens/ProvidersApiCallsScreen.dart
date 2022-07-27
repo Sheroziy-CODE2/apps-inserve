@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/Providers/DipsProvider.dart';
 import '../Providers/Authy.dart';
-
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
 import '../Providers/Categorys.dart';
@@ -27,8 +26,6 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
 
   @override
   void didChangeDependencies() {
-    // get all the tables
-    // later it should be only opened tables
     if (_isInit) {
       setState(() {
         _isLoading = true;
@@ -42,8 +39,8 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
   Widget build(BuildContext context) {
     return _isLoading == true
         ? const Center(
-            child: CircularProgressIndicator(),
-          )
+      child: CircularProgressIndicator(),
+    )
         : const HomePage();
   }
 
@@ -70,23 +67,13 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
         await tablesData.connectALlTablesSocket(context: context, token: token);
         await tablesData.listenToAllTabelsSocket(
             context: context, token: token);
-        //optimise time to load, test Andi 31.Mai
-        //var futures1 = <Future>[]; //only now because i had some serios websocket problems, will it maybe implement later again. 4.Juni Andi
-        //var futures2 = <Future>[];
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
           await tablesData.connectSocket(
               id: table.id, context: context, token: token);
           await tablesData.listenSocket(
               id: table.id, context: context, token: token);
-          // futures1.add(tablesData.connectSocket(id: table.id, context: context, token: token));
         }
-        //for (var i = 0; i < tablesData.items.length; i++) {
-        //var table = tablesData.items[i];
-        // futures2.add(tablesData.listenSocket(id: table.id, context: context, token: token));
-        //}
-        //await Future.wait(futures1);
-        //await Future.wait(futures2);
         setState(() {
           _isLoading = false;
         });

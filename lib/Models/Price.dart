@@ -1,5 +1,4 @@
 class Price {
-//this class is the Price class
   late final int id;
   final double price;
 

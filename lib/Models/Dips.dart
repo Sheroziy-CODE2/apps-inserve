@@ -2,8 +2,6 @@ class Dips {
   late final int id;
   final double price;
   final String name;
-  //final int restaurant;
-  //final int category;
 
   Dips({
     required this.id,

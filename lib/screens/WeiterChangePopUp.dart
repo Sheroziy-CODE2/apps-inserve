@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../Models/TableModel.dart';
 import '../Providers/Authy.dart';
 import '../Providers/Tables.dart';
@@ -14,18 +13,14 @@ import 'TablesViewScreen.dart';
 
 //ShowDialog to change the tables owner.
 class WeiterChange {
-
   static WeiterChange ? utility;
-
   static WeiterChange? getInstance() {
     utility ??= WeiterChange();
     return utility;
   }
 
   final List <String> _chosenTable = [];
-
   final List <String> _chosenWorker= [""];
-
   late Tables tablesprov;
 
   void snackBar({required String msg,required context}){
@@ -39,21 +34,14 @@ class WeiterChange {
   }
 
   showWeiterChangeDialog(BuildContext context) {
-
     final authy = Provider.of<Authy>(context, listen: false);
-
     final tablesData = Provider.of<Tables>(context, listen: false);
     final tables = tablesData.items;
     List<TableModel> ownedTables = [];
-
     final workersData = Provider.of<WorkersProvider>(context, listen: false);
     final worker = workersData.items;
-
-
     var loggedInUser = workersData.findByName(authy.userName).id;
-
     ownedTables = tables.where((i) => i.owner == loggedInUser).toList();
-
     List workers = [];
 
     for (int i = 0; i < worker.length; i++) {
@@ -63,7 +51,6 @@ class WeiterChange {
     }
 
     List workersImage = [];
-
     for (int i = 0; i < worker.length; i++) {
       if (worker[i].id != loggedInUser){
         workersImage.add(worker[i].profile);
@@ -72,15 +59,11 @@ class WeiterChange {
 
 
     List _buttonText = [];
-
     for (int i = 0; i < ownedTables.length; i++) {
       _buttonText.add(ownedTables[i].name.replaceAll(RegExp(r'[^0-9]'), ''));
     }
     _buttonText.sort();
-
     tablesprov = Provider.of<Tables>(context, listen: false);
-
-
     ScrollController scrollController = ScrollController();
 
     StatefulBuilder builder = StatefulBuilder(
@@ -130,7 +113,6 @@ class WeiterChange {
                                   borderRadius: BorderRadius.circular(30),
                                   chosenButton: _chosenTable);
                             })
-
                     ),
                     const SizedBox(height: 10),
                     const Divider(

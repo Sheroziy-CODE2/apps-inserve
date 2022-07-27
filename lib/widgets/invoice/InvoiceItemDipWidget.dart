@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/Providers/DipsProvider.dart';
 import 'package:provider/provider.dart';
-
 import '../reusable/CenterText.dart';
 
 class InvoiceItemDipWidget extends StatelessWidget {

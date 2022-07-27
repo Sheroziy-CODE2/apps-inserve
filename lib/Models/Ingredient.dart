@@ -1,10 +1,8 @@
 
 import 'package:provider/provider.dart';
-
 import '../Providers/Ingredients.dart';
 
 class Ingredient {
-//this class is the Ingredient class
   late final int id;
   final String name;
   final double price;
@@ -18,7 +16,6 @@ class Ingredient {
   });
 
   factory Ingredient.fromJson(response, {required context}) {
-    //Because in some options you only get int
     try{
       var jsonResponse = response as int;
       return Provider.of<Ingredients>(context, listen: false).findById(jsonResponse);

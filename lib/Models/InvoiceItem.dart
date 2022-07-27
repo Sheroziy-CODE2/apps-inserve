@@ -1,11 +1,6 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 
 class InvoiceItem {
-//this class is the InvoiceItem class
   late final int id;
-  // final String date;
   final double amount;
   final int quantity;
   final String product;
@@ -15,12 +10,8 @@ class InvoiceItem {
   final List<int> deleted_ingredients;
   final List<int> dips;
 
-  // todo
-  //side dish // products
-
   InvoiceItem({
     required this.id,
-    // required this.date,
     required this.amount,
     required this.quantity,
     required this.product,
@@ -33,11 +24,8 @@ class InvoiceItem {
 
   factory InvoiceItem.fromJson(response) {
     var jsonResponse = response as Map<String, dynamic>;
-    //var jROrderItem = jsonResponse['order_item']; - can be deleted if everything works 
-    //final data = Map<String, dynamic>.from(jsonDecode(jROrderItem)); - can be deleted if everything works 
     var data = jsonResponse['order'];
     return InvoiceItem(
-      // date: jsonResponse["date"] as String,
       id: jsonResponse["id"] as int,
       amount: jsonResponse["amount"] as double,
       quantity: jsonResponse["quantity"] as int,

@@ -30,7 +30,6 @@ class InvoiceItemDictModel {
 class InvoiceItemsDictModelItems{
   final int quantity;
   final int order;
-  //final int tableID;
   InvoiceItemsDictModelItems({
       required this.quantity,
     required this.order,

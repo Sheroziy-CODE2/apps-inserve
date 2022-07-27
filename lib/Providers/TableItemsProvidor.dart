@@ -1,10 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-
 import 'package:flutter/material.dart';
 import '/Providers/DipsProvider.dart';
 import '/Providers/Products.dart';
@@ -13,7 +10,6 @@ import 'package:provider/provider.dart';
 import '../main.dart';
 import 'Ingredients.dart';
 import 'TableItemProvidor.dart';
-
 import 'Tables.dart';
 
 class TableItemsProvidor with ChangeNotifier {
@@ -70,13 +66,7 @@ class TableItemsProvidor with ChangeNotifier {
         Provider.of<Tables>(context, listen: false).findById(newTable);
     for (var product in products) {
       var or = _tableItems.firstWhere((t) => t.id == product);
-      //erste Table rein speichern
-      // if (or.saved_table == 0) {
-      //   _tableItems.firstWhere((t) => t.id == product).saved_table = or.table;
-      // }
-      //ausschneiden
       destinyTable.tIP.addSingleProduct(
-        //context: context,
         product: or,
       );
       //remove from old Table

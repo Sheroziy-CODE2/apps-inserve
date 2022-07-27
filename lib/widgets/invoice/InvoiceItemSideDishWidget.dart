@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/Providers/Products.dart';
 import 'package:provider/provider.dart';
-
 import '../reusable/CenterText.dart';
 
 class InvoiceItemSideDishWidget extends StatelessWidget {

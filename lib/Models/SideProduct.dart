@@ -1,7 +1,6 @@
 
 
 class SideProduct {
-//this class is the Side_dish class
   final int id;
   final num price;
   final int product;

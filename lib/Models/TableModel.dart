@@ -1,5 +1,4 @@
 import 'package:web_socket_channel/io.dart';
-
 import '/Providers/TableItemsProvidor.dart';
 
 class TableModel {
@@ -10,7 +9,6 @@ class TableModel {
   final String type;
   Map<String, int> timeHistory = {};
 
-  final bool _isInit = true;
   IOWebSocketChannel? _channel;
   late final _tIP = TableItemsProvidor(); //tIP = tableItemProvider
   TableItemsProvidor get tIP {
@@ -31,7 +29,7 @@ class TableModel {
 
   Future<void> sendItems(tB) async {
     _channel!.sink.add(
-        '{"command": "new_table_items","table_items": $tB}'); //send new table items to the socket
+        '{"command": "new_table_items","table_items": $tB}');
   }
 
   Future<void> closeSocket(tB) async {
@@ -45,7 +43,6 @@ class TableModel {
       required this.owner,
       required this.type});
 
-  // static fromJson(Map<String, dynamic> data) {}
   factory TableModel.fromJson(response) {
     var jsonResponse = response as Map<String, dynamic>;
     jsonResponse["type"] == null ? jsonResponse["type"] = 'null' : null;
