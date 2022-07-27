@@ -81,13 +81,16 @@ class _InvoiceViewState extends State<InvoiceView> {
     }
     IIWidgetSize *= 34;
     return _isLoading == true
-        ? SplashScreen()
+        ? const SplashScreen()
         : Scaffold(
             appBar: AppBar(
               backgroundColor: Theme.of(context).cardColor,
               title: Text(
-                invoice.length > 0 ? 'Rechnung ${invoice[0].id}' : 'Rechnung',
+                invoice.isNotEmpty ? 'Rechnung ${invoice[0].id}' : 'Rechnung',
                 style: const TextStyle(color: Color(0xFF2C3333)),
+              ),
+              iconTheme: const IconThemeData(
+                  color: Color(0xFF2C3333),
               ),
             ),
             body: Container(
