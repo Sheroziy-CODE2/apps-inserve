@@ -6,8 +6,8 @@ class InvoiceItem {
   final String product;
   final List side_products;
   final double price;
-  final List<int> added_ingredients;
-  final List<int> deleted_ingredients;
+  final List<String> added_ingredients;
+  final List<String> deleted_ingredients;
 
   InvoiceItem({
     required this.id,
@@ -29,9 +29,9 @@ class InvoiceItem {
       quantity: jsonResponse["quantity"] as int,
       product: data["product"] as String,
       side_products: data["side_products"] as List<dynamic>,
-      price: data["selected_price"]["price"] as double,
-      added_ingredients: data["added_ingredients"].cast<int>(),
-      deleted_ingredients: data["deleted_ingredients"].cast<int>(),
+      price: data["selected_price"] as double,
+      added_ingredients: data["added_ingredients"].cast<String>(),
+      deleted_ingredients: data["deleted_ingredients"].cast<String>(),
     );
   }
 }
