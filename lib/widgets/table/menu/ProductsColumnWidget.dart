@@ -72,7 +72,7 @@ class ProductsColumnState extends State<ProductsColumn> {
     }
     List<Product> productsList = products;
     while(productsList.length % widget.elementsShown != 0){
-      productsList.add(Product(product_price: [], id: 0, name: "Platzhalter", allergien: [], ingredients: [], dips_number: 0, productSelection: []));
+      productsList.add(Product(product_price: [], id: 0, name: "Platzhalter", allergien: [], ingredients: [], productSelection: []));
     }
     return GridTile(
       child: Column(

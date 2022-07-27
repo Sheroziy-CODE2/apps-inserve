@@ -8,7 +8,7 @@ class Product {
   final List<ProductPrice> product_price;
   final List<String> allergien;
   final List<Ingredient> ingredients;
-  final int dips_number;
+  //final int dips_number;
   final List<ProductSelection> productSelection;
 
   Product(
@@ -17,7 +17,7 @@ class Product {
       required this.name,
       required this.allergien,
       required this.ingredients,
-      required this.dips_number,
+      //required this.dips_number,
       required this.productSelection});
 
   factory Product.fromJson(response, {required context}) {
@@ -30,7 +30,7 @@ class Product {
           (jsonResponse["product_price"] as List<dynamic>).length,
           (index) => ProductPrice.fromJson(
               (jsonResponse["product_price"] as List<dynamic>)[index])),
-      dips_number: jsonResponse["dips_number"] as int,
+      //dips_number: jsonResponse["dips_number"] as int,
       ingredients: List.generate(
           (jsonResponse["ingredients"] as List<dynamic>).length,
           (index) => Ingredient.fromJson(

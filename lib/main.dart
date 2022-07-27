@@ -6,7 +6,6 @@ import 'package:inspery_waiter/screens/FlorPlanScreen.dart';
 import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
-import 'Providers/DipsProvider.dart';
 import 'Providers/TableItemChangeProvidor.dart';
 import 'Providers/TableItemProvidor.dart';
 import 'Providers/TableItemsProvidor.dart';
@@ -79,9 +78,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => TableItemsProvidor(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => DipsProvider(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => WorkersProvider(),

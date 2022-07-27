@@ -5,7 +5,6 @@ import '/Models/ProductPrice.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/io.dart';
 
-import 'DipsProvider.dart';
 import 'Ingredients.dart';
 import 'Products.dart';
 import 'Tables.dart';
@@ -22,7 +21,6 @@ class TableItemProvidor with ChangeNotifier {
   int selected_price;
   int date;
   List<int> side_product;
-  List<int> dips;
   List<int> added_ingredients;
   List<int> deleted_ingredients;
   List<List<bool>>?
@@ -85,7 +83,6 @@ class TableItemProvidor with ChangeNotifier {
       showSnackbar(context: context, msg: "Produkt gesprerrt!");
       return;
     }
-    dips.add(new_dip);
     notify(context);
   }
 
@@ -103,7 +100,6 @@ class TableItemProvidor with ChangeNotifier {
       showSnackbar(context: context, msg: "Produkt gesprerrt!");
       return;
     }
-    dips.remove(dip);
     notify(context);
   }
 
@@ -171,8 +167,6 @@ class TableItemProvidor with ChangeNotifier {
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
-    //var sideProductProvidor = Provider.of<SideProducts>(context, listen: false);
-    var dipsProductProvidor = Provider.of<DipsProvider>(context, listen: false);
 
     for (var inc in added_ingredients) {
       value += ingredientsProvidor.findById(inc).price;
@@ -190,9 +184,6 @@ class TableItemProvidor with ChangeNotifier {
             productProvidor.findById(sp).name);
       }
     }
-    for (var di in dips) {
-      value += dipsProductProvidor.findById(di).price;
-    }
     if (checkout ?? paymode) {
       value *= getAmountInCard();
     } else {
@@ -204,7 +195,6 @@ class TableItemProvidor with ChangeNotifier {
   String getExtrasWithSemicolon({required context}) {
     String ret = "";
     var productProvidor = Provider.of<Products>(context, listen: false);
-    var dipsProvidor = Provider.of<DipsProvider>(context, listen: false);
     var productPro = productProvidor.findById(product);
     try {
       ret += productPro.product_price
@@ -217,9 +207,6 @@ class TableItemProvidor with ChangeNotifier {
 
     for (var element in side_product) {
       ret += productProvidor.findById(element).name + ", ";
-    }
-    for (var element in dips) {
-      ret += dipsProvidor.findById(element).name + ", ";
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
@@ -242,7 +229,6 @@ class TableItemProvidor with ChangeNotifier {
     this.side_product = const [],
     this.added_ingredients = const [],
     this.deleted_ingredients = const [],
-    this.dips = const [],
     this.date = 0,
   });
 
@@ -250,7 +236,6 @@ class TableItemProvidor with ChangeNotifier {
     var jsonResponse = response as Map<String, dynamic>;
     return TableItemProvidor(
       id: jsonResponse["id"] as int,
-      dips: List<int>.from(jsonResponse["dips"] as List<dynamic>),
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,
       table: jsonResponse["table"] as int,

@@ -71,7 +71,7 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
               ),
             ),
             const Spacer(),
-            const Text("Alle Beilagen", style: TextStyle(color: Colors.grey, fontSize: 11),),
+            const Text("Alle Zusätze", style: TextStyle(color: Colors.grey, fontSize: 11),),
             const Spacer(),
             SizedBox(
               width: widget.width /3 - 20,

@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import '../../Models/InvoiceItem.dart';
 import '../reusable/CenterText.dart';
 import '../../components/ProductNameComponent.dart';
-
 import '../invoice/InvoiceItemSideDishWidget.dart';
 import '../invoice/InvoiceItemIngredientsWidget.dart';
-import '../invoice/InvoiceItemDipWidget.dart';
 
 class InvoiceOrderWidget extends StatelessWidget {
   final InvoiceItem invoiceItem;
@@ -21,7 +18,7 @@ class InvoiceOrderWidget extends StatelessWidget {
     return Material(
       type: MaterialType.transparency,
       child: Container(
-          padding: EdgeInsets.only(left: 7.5, right: 7.5),
+          padding: const EdgeInsets.only(left: 7.5, right: 7.5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -79,7 +76,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                   ),
                 ),
               ]),
-              invoiceItem.side_products.length > 0
+              invoiceItem.side_products.isNotEmpty
                   ? Column(children: [
                       SizedBox(
                         height: invoiceItem.side_products.length * 28,
@@ -94,21 +91,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                       ),
                     ])
                   : Container(),
-              invoiceItem.dips.length > 0
-                  ? Column(children: [
-                      SizedBox(
-                        height: invoiceItem.dips.length * 28,
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: invoiceItem.dips.length,
-                          itemBuilder: (context, index) =>
-                              InvoiceItemDipWidget(id: invoiceItem.dips[index]),
-                        ),
-                      ),
-                    ])
-                  : Container(),
-              invoiceItem.added_ingredients.length > 0
+              invoiceItem.added_ingredients.isNotEmpty
                   ? Column(children: [
                       SizedBox(
                         height: invoiceItem.added_ingredients.length * 28,
@@ -124,7 +107,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                       ),
                     ])
                   : Container(),
-              invoiceItem.deleted_ingredients.length > 0
+              invoiceItem.deleted_ingredients.isNotEmpty
                   ? Column(children: [
                       SizedBox(
                         height: invoiceItem.deleted_ingredients.length * 28,

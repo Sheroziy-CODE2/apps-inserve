@@ -38,7 +38,6 @@ class Products with ChangeNotifier {
               allergien: [],
               ingredients: [],
               product_price: [],
-              dips_number: 0,
               productSelection: [],
             ));
     return debug;
@@ -52,7 +51,6 @@ class Products with ChangeNotifier {
               allergien: [],
               ingredients: [],
               product_price: [],
-              dips_number: 0,
               productSelection: [],
             ));
     return debug;

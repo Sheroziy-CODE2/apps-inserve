@@ -78,7 +78,6 @@ class Tables with ChangeNotifier {
         "side_products": elements[i].side_product,
         "added_ingredients": elements[i].added_ingredients,
         "deleted_ingredients": elements[i].deleted_ingredients,
-        "dips": elements[i].dips,
       };
       jsonElemnts.add(j);
     }

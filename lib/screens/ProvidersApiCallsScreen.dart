@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '/Providers/DipsProvider.dart';
 import '../Providers/Authy.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
@@ -59,8 +58,7 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
             .addIngredients(token: token, context: context);
         await Provider.of<Products>(context, listen: false)
             .addProducts(token: token, context: context);
-        await Provider.of<DipsProvider>(context, listen: false)
-            .addDips(token: token, context: context);
+        //await Provider.of<DipsProvider>(context, listen: false).addDips(token: token, context: context); Remove Dips 27.07 Andi
         await Provider.of<WorkersProvider>(context, listen: false)
             .addWorkers(token: token, context: context);
 

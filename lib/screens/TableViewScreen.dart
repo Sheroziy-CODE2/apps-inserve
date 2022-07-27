@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '/Providers/Products.dart';
-import '/widgets/table/menu/ChooseDips.dart';
 import '/widgets/table/menu/ChooseExtraOptionsWidget.dart';
 import '/widgets/table/menu/ChooseProductSize.dart';
 import 'package:provider/provider.dart';
@@ -108,7 +107,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
           goToNextPos: goToNextPos,
         ),
       ),
-      "Beilagen": SizedBox(
+      "Zusatz": SizedBox(
         width: MediaQuery.of(context).size.width,
         height: (MediaQuery.of(context).size.height / 2) - 40,
         child: ChooseSideProduct(
@@ -116,14 +115,14 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
           goToNextPos: goToNextPos,
         ),
       ),
-      "Dips": SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2 - 40,
-        child: ChooseDips(
-          tableName: tableId,
-          goToNextPos: goToNextPos,
-        ),
-      ),
+      // "Dips": SizedBox(
+      //   width: MediaQuery.of(context).size.width,
+      //   height: MediaQuery.of(context).size.height / 2 - 40,
+      //   child: ChooseDips(
+      //     tableName: tableId,
+      //     goToNextPos: goToNextPos,
+      //   ),
+      // ),
       "Extras": SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 2 - 40,
@@ -160,14 +159,14 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       }
       if (product.productSelection.isNotEmpty) {
         chooseProductWidget.putIfAbsent(
-            "Beilagen",
+            "Zusatz",
                 () => getElements(
-                key: "Beilagen", tableId: tableId, context: context));
+                key: "Zusatz", tableId: tableId, context: context));
       }
-      if (product.dips_number > 0) {
-        chooseProductWidget.putIfAbsent("Dips",
-                () => getElements(key: "Dips", tableId: tableId, context: context));
-      }
+      // if (product.dips_number > 0) {
+      //   chooseProductWidget.putIfAbsent("Dips",
+      //           () => getElements(key: "Dips", tableId: tableId, context: context));
+      // }
       if(tableItemChangeProvidor.selectedProcuctManual) {
         chooseProductWidget.putIfAbsent("Extras", () => getElements(key: "Extras", tableId: tableId, context: context));
       }
