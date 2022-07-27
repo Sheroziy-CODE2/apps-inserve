@@ -102,6 +102,7 @@ class _ProfileState extends State<Profile> {
                                         img,
                                         height: 150,
                                         width: 150,
+                                        fit: BoxFit.fill,
                                       ),
                                     )
                                   : const Text(''),
