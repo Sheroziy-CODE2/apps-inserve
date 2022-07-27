@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../Providers/Products.dart';
 import '../../../Providers/TableItemChangeProvidor.dart';
 import '../../../Providers/TableItemProvidor.dart';
@@ -46,9 +45,9 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
     int maxSelected = 0;
-    productPro.productSelection.forEach((element) {
+    for (var element in productPro.productSelection) {
       maxSelected += element.number;
-    });
+    }
 
     // if from server
     if(fromServer) {
@@ -97,7 +96,16 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
       );
     }
 
-    tableItemProvidor.selectetProductsInLine ??= List.generate(productPro.productSelection.length, (index1) => List.generate(productPro.productSelection[index1].products.length, (index) => false));
+    tableItemProvidor.selectetProductsInLine ??=
+        List.generate(productPro.productSelection.length, (index1) =>
+            List.generate(productPro.productSelection[index1].products.length, (index) {
+              if(productPro.productSelection[index1].standard.contains(productPro.productSelection[index1].products[index])){
+                return true;
+              }
+              return false;
+            }
+            )
+        );
 
     return Column(
       children: [
