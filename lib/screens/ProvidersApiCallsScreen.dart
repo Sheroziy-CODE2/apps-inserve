@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../Providers/Authy.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
@@ -37,9 +38,14 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
   @override
   Widget build(BuildContext context) {
     return _isLoading == true
-        ? const Center(
-      child: CircularProgressIndicator(),
-    )
+        ? Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+      child: Lottie.asset('assets/lottie/cateringfork-knife.json'),
+    ),
+          ),
+        )
         : const HomePage();
   }
 
