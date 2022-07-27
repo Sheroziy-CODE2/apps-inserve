@@ -78,7 +78,6 @@ class Tables with ChangeNotifier {
         "side_products": elements[i].side_product,
         "added_ingredients": elements[i].added_ingredients,
         "deleted_ingredients": elements[i].deleted_ingredients,
-        "dips": elements[i].dips,
       };
       jsonElemnts.add(j);
     }
@@ -634,7 +633,7 @@ class Tables with ChangeNotifier {
                                   },
                                   child: SizedBox(
                                       height: 40,
-                                      width: 90,
+                                      width: 75,
                                       child: Stack(
                                         children: [
                                           Positioned(
@@ -977,9 +976,6 @@ class Tables with ChangeNotifier {
             for (var element in item.order.side_products) {
               bluetooth.print4Column("", "","", element, 0);
             }
-            for (var element in item.order.dips) {
-              bluetooth.print4Column("", "","", element, 0);
-            }
             for (var element in item.order.added_ingredients) {
               bluetooth.print4Column("", "","", element, 0);
             }
@@ -1029,11 +1025,11 @@ class Tables with ChangeNotifier {
   Future<void> connectALlTablesSocket(
       {required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('ws://inspery.com/ws/restaurant_tables/?=$token');
+    print('wss://inspery.com:8443/ws/restaurant_tables/?=$token');
     sleep(const Duration(milliseconds: 300));
     _allTableschannel == null
         ? _allTableschannel = IOWebSocketChannel.connect(
-            Uri.parse('ws://inspery.com/ws/restaurant_tables/?=$token'),
+            Uri.parse('wss://inspery.com:8443/ws/restaurant_tables/?=$token'),
           )
         : null;
   }
@@ -1075,14 +1071,14 @@ class Tables with ChangeNotifier {
   Future<void> connectSocket(
       {required id, required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('ws://inspery.com/ws/restaurant_tables/${id}/?=${token}');
+    print('wss://inspery.com:8443/ws/restaurant_tables/${id}/?=${token}');
     //sleep(const Duration(milliseconds: 300));
     for (int i = 0; i < _items.length; i++) {
       if (_items[i].id == id) {
         await _items[i].channel == null
             ? _items[i].channel = IOWebSocketChannel.connect(
                 Uri.parse(
-                    'ws://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
+                    'wss://inspery.com:8443/ws/restaurant_tables/${id}/?=${token}'),
               )
             : null;
       }

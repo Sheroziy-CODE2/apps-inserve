@@ -9,7 +9,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert' as convert;
 import 'package:flutter/foundation.dart';
-import 'package:web_socket_channel/io.dart';
 
 class Authy extends ChangeNotifier {
   String? _token;
@@ -22,7 +21,6 @@ class Authy extends ChangeNotifier {
   String RestaurantPhotoLink = "";
 
   Future<void> getRestaurantPhoto() async {
-    //################################################################################################
     //callling the restaurant info Api
     final url = Uri.parse('https://www.inspery.com/app/api/restaurant/3');
     try {
@@ -36,7 +34,7 @@ class Authy extends ChangeNotifier {
     //comment out the next two lines to prevent the device from getting
     // the image from the web in order to prove that the picture is
     // coming from the device instead of the web.
-    var photoUrl = RestaurantPhotoLink; // <-- 1
+    //var photoUrl = RestaurantPhotoLink; // <-- 1
     var response = await get(url); // <--2
     var documentDirectory = await getApplicationDocumentsDirectory();
     var firstPath = documentDirectory.path + "/images";

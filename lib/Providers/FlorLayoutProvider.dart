@@ -14,17 +14,17 @@ class FlorLayoutProvider with ChangeNotifier {
 
   double highestX(){
     double value = 0;
-    _items.forEach((element) {
+    for (var element in _items) {
       if(value < element.size_x) value = element.size_x;
-    });
+    }
     return value;
   }
 
   double highestY(){
     double value = 0;
-    _items.forEach((element) {
+    for (var element in _items) {
       if(value < element.size_y) value = element.size_y;
-    });
+    }
     return value;
   }
 

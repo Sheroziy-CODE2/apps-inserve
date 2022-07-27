@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:provider/provider.dart';
 import '../Providers/Authy.dart';
 import '../Models/Invoice.dart';
-
 import '../widgets/NavBar.dart';
 import '../widgets/invoice/InvoiceItemWidget.dart';
 
@@ -44,7 +41,6 @@ class _InvoicesScreen extends State<InvoicesView> {
     });
   }
 
-  // const  ({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -62,7 +58,6 @@ class _InvoicesScreen extends State<InvoicesView> {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   gradient: LinearGradient(begin: Alignment.bottomRight,
-                      //stops: const [0, 1],
                       colors: [
                     const Color(0x00535353).withOpacity(.8),
                     const Color(0xFF535353).withOpacity(.1)
@@ -78,7 +73,6 @@ class _InvoicesScreen extends State<InvoicesView> {
                       child: const Text(
                         'Rechnungen',
                         textAlign: TextAlign.center,
-                        // textAlign: TextAlign.end,
                         style: TextStyle(
                             color: Color(0xFF2C3333),
                             fontWeight: FontWeight.bold,

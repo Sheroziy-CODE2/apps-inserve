@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../Providers/FlorLayoutProvider.dart';
 import '../../screens/TableViewScreen.dart';
 

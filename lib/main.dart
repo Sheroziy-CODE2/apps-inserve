@@ -6,7 +6,6 @@ import 'package:inspery_waiter/screens/FlorPlanScreen.dart';
 import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
-import 'Providers/DipsProvider.dart';
 import 'Providers/TableItemChangeProvidor.dart';
 import 'Providers/TableItemProvidor.dart';
 import 'Providers/TableItemsProvidor.dart';
@@ -81,9 +80,6 @@ class MyApp extends StatelessWidget {
           create: (ctx) => TableItemsProvidor(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => DipsProvider(),
-        ),
-        ChangeNotifierProvider(
           create: (ctx) => WorkersProvider(),
         ),
         ChangeNotifierProvider(
@@ -108,7 +104,7 @@ class MyApp extends StatelessWidget {
                     future: auth.tryAutoLogIn(),
                     builder: (ctx, snapshot) =>
                         snapshot.connectionState == ConnectionState.waiting
-                            ? SplashScreen()
+                            ? const SplashScreen()
                             : const SignIn()),
             routes: {
               // all of the raoutes in the app

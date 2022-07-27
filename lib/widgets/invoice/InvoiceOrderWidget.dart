@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import '../../Models/InvoiceItem.dart';
 import '../reusable/CenterText.dart';
 import '../../components/ProductNameComponent.dart';
-
 import '../invoice/InvoiceItemSideDishWidget.dart';
 import '../invoice/InvoiceItemIngredientsWidget.dart';
-import '../invoice/InvoiceItemDipWidget.dart';
 
 class InvoiceOrderWidget extends StatelessWidget {
   final InvoiceItem invoiceItem;
@@ -21,7 +18,7 @@ class InvoiceOrderWidget extends StatelessWidget {
     return Material(
       type: MaterialType.transparency,
       child: Container(
-          padding: EdgeInsets.only(left: 7.5, right: 7.5),
+          padding: const EdgeInsets.only(left: 7.5, right: 7.5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -32,7 +29,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                 const Expanded(
                   flex: 1,
                   child: Text(
-                    ' X ',
+                    ' x ',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
@@ -45,10 +42,11 @@ class InvoiceOrderWidget extends StatelessWidget {
                   child: ProductNameComponent(name: name),
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 4,
                   child: //PriceComponent(id: invoiceItem.price),
                       Text(
-                    invoiceItem.price.toString(),
+                    invoiceItem.price.toString()+ ' Euro',
+                        textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
@@ -56,21 +54,11 @@ class InvoiceOrderWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Euro',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF2C3333),
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Text(
                     '  ${invoiceItem.amount}',
+                    textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
@@ -79,12 +67,11 @@ class InvoiceOrderWidget extends StatelessWidget {
                   ),
                 ),
               ]),
-              invoiceItem.side_products.length > 0
+              invoiceItem.side_products.isNotEmpty
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.side_products.length * 28,
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.side_products.length,
                           itemBuilder: (context, index) =>
@@ -94,47 +81,31 @@ class InvoiceOrderWidget extends StatelessWidget {
                       ),
                     ])
                   : Container(),
-              invoiceItem.dips.length > 0
+              invoiceItem.added_ingredients.isNotEmpty
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.dips.length * 28,
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: invoiceItem.dips.length,
-                          itemBuilder: (context, index) =>
-                              InvoiceItemDipWidget(id: invoiceItem.dips[index]),
-                        ),
-                      ),
-                    ])
-                  : Container(),
-              invoiceItem.added_ingredients.length > 0
-                  ? Column(children: [
-                      SizedBox(
-                        height: invoiceItem.added_ingredients.length * 28,
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.added_ingredients.length,
                           itemBuilder: (context, index) =>
                               InvoiceItemIngredientsWidget(
-                                  id: invoiceItem.added_ingredients[index],
+                                  name: invoiceItem.added_ingredients[index],
                                   operator: '+'),
                         ),
                       ),
                     ])
                   : Container(),
-              invoiceItem.deleted_ingredients.length > 0
+              invoiceItem.deleted_ingredients.isNotEmpty
                   ? Column(children: [
                       SizedBox(
-                        height: invoiceItem.deleted_ingredients.length * 28,
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: invoiceItem.deleted_ingredients.length,
                           itemBuilder: (context, index) =>
                               InvoiceItemIngredientsWidget(
-                                  id: invoiceItem.side_products[index],
+                                  name: invoiceItem.side_products[index],
                                   operator: '-'),
                         ),
                       ),

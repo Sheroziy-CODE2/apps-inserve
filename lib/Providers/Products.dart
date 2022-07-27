@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import '../Models/Product.dart';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +15,7 @@ class Products with ChangeNotifier {
     final url = Uri.parse(
       'https://www.inspery.com/menu/all_products/',
     );
-    final headers = {"Authorization": "Token ${token}"};
+    final headers = {"Authorization": "Token $token"};
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final data = List<Map<String, dynamic>>.from(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -39,7 +38,6 @@ class Products with ChangeNotifier {
               allergien: [],
               ingredients: [],
               product_price: [],
-              dips_number: 0,
               productSelection: [],
             ));
     return debug;
@@ -53,7 +51,6 @@ class Products with ChangeNotifier {
               allergien: [],
               ingredients: [],
               product_price: [],
-              dips_number: 0,
               productSelection: [],
             ));
     return debug;

@@ -208,7 +208,7 @@ class _TestPrintWidgetState extends State<TestPrintWidget> {
   List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
     List<DropdownMenuItem<BluetoothDevice>> items = [];
     if (_devices.isEmpty) {
-      items.add(DropdownMenuItem(
+      items.add(const DropdownMenuItem(
         child: Text('NONE'),
       ));
     } else {
@@ -253,12 +253,12 @@ class _TestPrintWidgetState extends State<TestPrintWidget> {
     String message, {
     Duration duration: const Duration(seconds: 3),
   }) async {
-    await new Future.delayed(new Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     ScaffoldMessenger.of(context).showSnackBar(
-      new SnackBar(
-        content: new Text(
+      SnackBar(
+        content: Text(
           message,
-          style: new TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),

@@ -1,7 +1,6 @@
 
 
 class Invoice {
-//this class is the Invoice class
   late final int id;
   final String date;
   final double amount;

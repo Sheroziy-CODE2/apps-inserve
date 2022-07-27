@@ -53,7 +53,6 @@ class TableItemChangeProvidor extends ChangeNotifier {
         //saved_table: 0,
         deleted_ingredients: [],
         added_ingredients: [],
-        dips: [],
         date: (DateTime.now().microsecondsSinceEpoch / 1000).round(),
         user: 0,
         side_product: [],

@@ -2,7 +2,7 @@
 class WorkerModel {
   String username;
   int id;
-  String profile;
+  String? profile;
 
 
   WorkerModel(
@@ -15,7 +15,7 @@ class WorkerModel {
     return WorkerModel(
         username: jsonResponse["username"] as String,
         id: jsonResponse["id"] as int,
-        profile:  jsonResponse["profile"] as String
+        profile:  jsonResponse["profile"],
     );
   }
 }

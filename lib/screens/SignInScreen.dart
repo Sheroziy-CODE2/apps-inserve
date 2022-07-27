@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import '../Models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../Providers/Authy.dart';
 import 'ProvidersApiCallsScreen.dart';
 
@@ -28,15 +27,10 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  //Positions in percentage, so that widgets und color matches
-  List<double> widgetPositions = [0.20, 0.4, /*0.5,*/ 0.65, 0.85];
+  List<double> widgetPositions = [0.20, 0.4, 0.65, 0.85];
 
-  //You can test with: login("andreas", "bigsur99");
   final userController = TextEditingController();
   final pwController = TextEditingController();
-
-  var _isLoading = false;
-  final _passwordController = TextEditingController();
 
   void _showError(String message) {
     showDialog(
@@ -45,38 +39,25 @@ class _SignInState extends State<SignIn> {
           title: const Text('es gibt ein Fehler'),
           content: Text(message),
           actions: <Widget>[
-            FlatButton(
+            ElevatedButton(
                 child: const Text('Okay'), onPressed: () => {Navigator.of(ctx).pop()})
           ]),
     );
   }
 
   Future<void> _submit(String user, String pw) async {
-    setState(() {
-      _isLoading = true;
-    });
     try {
       // try to login
       await Provider.of<Authy>(context, listen: false).signIn(user, pw);
-
-      // .then((_) {});
-      //change the screen to TablesView
       Navigator.of(context).pushReplacementNamed(
         ProvidersApiCalls.routeName,
       );
     } on HttpException catch (error) {
-      var errorMessage = "Fehler";
-      // if (.contains('EMAIL_EXISTS')) {
       _showError(error.toString());
-      // }
     } catch (error) {
       _showError(error.toString());
-      var errorMessage = "Fehler bitte versuchen Sie später.";
+      //var errorMessage = "Fehler bitte versuchen Sie später.";
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override

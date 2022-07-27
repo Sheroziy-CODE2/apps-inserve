@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../Providers/Products.dart';
 import '../../../Providers/TableItemChangeProvidor.dart';
 import '../../../Providers/TableItemProvidor.dart';
@@ -41,14 +40,14 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
     catch (e){
       print("Table ID: " + widget.tableName.toString());
       print("CSP coulden't get Table: " + e.toString());
-      return const Center(child: Text('Beilagen Fehler'));
+      return const Center(child: Text('Zusatz Fehler'));
     }
 
     var productPro = productProvidor.findById(tableItemProvidor.product);
     int maxSelected = 0;
-    productPro.productSelection.forEach((element) {
+    for (var element in productPro.productSelection) {
       maxSelected += element.number;
-    });
+    }
 
     // if from server
     if(fromServer) {
@@ -56,7 +55,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Text("gewählte Beilage"+(tableItemProvidor.side_product.length != 1 ? "":"n" ), style: const TextStyle(color: Colors.black,fontSize: 18,),),
+            Text("gewählte "+(tableItemProvidor.side_product.length != 1 ? "Zusatz":"Zusätze" ), style: const TextStyle(color: Colors.black,fontSize: 18,),),
             const SizedBox(height: 20,),
             GridView.count(
               //physics: const NeverScrollableScrollPhysics(),
@@ -97,12 +96,21 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
       );
     }
 
-    tableItemProvidor.selectetProductsInLine ??= List.generate(productPro.productSelection.length, (index1) => List.generate(productPro.productSelection[index1].products.length, (index) => false));
+    tableItemProvidor.selectetProductsInLine ??=
+        List.generate(productPro.productSelection.length, (index1) =>
+            List.generate(productPro.productSelection[index1].products.length, (index) {
+              if(productPro.productSelection[index1].standard.contains(productPro.productSelection[index1].products[index])){
+                return true;
+              }
+              return false;
+            }
+            )
+        );
 
     return Column(
       children: [
         const SizedBox(height: 15,),
-        Text("Beilage"+(tableItemProvidor.side_product.length != 1 ? "":"n" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
+        Text((tableItemProvidor.side_product.length != 1 ? "Zusatz":"Zusätze" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child:
@@ -110,10 +118,10 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Wähle noch " + productPro.productSelection[0].number.toString() +"x Beilagen", textAlign: TextAlign.left),
+              Text("Wähle noch " + productPro.productSelection[0].number.toString() +"x " +productPro.productSelection[0].name, textAlign: TextAlign.left),
               ListView.separated(
                 shrinkWrap: true,
-                separatorBuilder: (_,index) => Text("Wähle noch " + productPro.productSelection[index+1].number.toString()+"x Beilagen" ),
+                separatorBuilder: (_,index) => Text("Wähle noch " + productPro.productSelection[index+1].number.toString()+"x " + productPro.productSelection[index+1].name),
                 itemCount: productPro.productSelection.length,
                 itemBuilder: (_, indexList) =>
 
@@ -143,15 +151,16 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                               else {
                                 tableItemProvidor.selectetProductsInLine![indexList][index] = false;
                                 tableItemProvidor.removeSideProducts(context: context, side_pro: productPro.productSelection[indexList].products[index]);
-                                return;
+                                //return;
                               }
                               int amountTrue = 0;
                               for (var elementX in tableItemProvidor.selectetProductsInLine!) {
                                 amountTrue += elementX.where((element) => element).length;
                               }
                               if(maxSelected == amountTrue){
-                                widget.goToNextPos(indicator: amountTrue.toStringAsFixed(0) + (amountTrue == 1 ? "xBeilage" : "xBeilagen"));
+                                widget.goToNextPos(indicator: amountTrue.toStringAsFixed(0) + (amountTrue == 1 ? "x Zusatz" : "x Zusätze"));
                               }
+                              setState((){});
                             },
                             child: Container(
                               height: 10,

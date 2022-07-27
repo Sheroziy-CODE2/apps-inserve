@@ -182,7 +182,7 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                             ),
                           ),
                           const Spacer(),
-                          const Text("Beilagen des Gerichtes", style: TextStyle(color: Colors.grey, fontSize: 11),),
+                          const Text("Zuätze des Gerichtes", style: TextStyle(color: Colors.grey, fontSize: 11),),
                           const Spacer(),
                           SizedBox(
                             width: MediaQuery.of(context).size.width /3 - 30,

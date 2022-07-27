@@ -16,7 +16,6 @@ class _FlorPlanScreenState extends State<FlorPlanScreen> with TickerProviderStat
   late final AnimationController _controller;
   late Animation<double> animation;
   int? selectedFloor;
- //late List<GlobalObjectKey<SingleFlorWidgetState>> globalKeys;
 
   @override
   void initState() {
@@ -45,7 +44,6 @@ class _FlorPlanScreenState extends State<FlorPlanScreen> with TickerProviderStat
     final double florSizeY = florProv.highestY();
     final double drawnFlorSizeX = screenwidth*0.5;
     final double drawnFlorSizeY = (screenwidth*0.5*(florSizeX/florSizeY));
-    //globalKeys = List.generate(florProv.items.length, (index) => GlobalObjectKey(987654321 + index));
 
 
     return Scaffold(
@@ -81,7 +79,6 @@ class _FlorPlanScreenState extends State<FlorPlanScreen> with TickerProviderStat
                   if(selectedFloor != null && animation.value == 0){
                     showWidgets = List.generate(florProv.items.length, (index) => false);
                     showWidgets[selectedFloor!] = true;
-                    //globalKeys[selectedFloor!].currentState!.setNewHight(newHight: screenheight);
                   }
 
                   return SizedBox(

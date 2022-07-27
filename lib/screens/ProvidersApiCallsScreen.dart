@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '/Providers/DipsProvider.dart';
+import 'package:lottie/lottie.dart';
 import '../Providers/Authy.dart';
-
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
 import '../Providers/Categorys.dart';
@@ -27,8 +26,6 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
 
   @override
   void didChangeDependencies() {
-    // get all the tables
-    // later it should be only opened tables
     if (_isInit) {
       setState(() {
         _isLoading = true;
@@ -41,9 +38,14 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
   @override
   Widget build(BuildContext context) {
     return _isLoading == true
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
+        ? Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+      child: Lottie.asset('assets/lottie/cateringfork-knife.json'),
+    ),
+          ),
+        )
         : const HomePage();
   }
 
@@ -62,31 +64,20 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
             .addIngredients(token: token, context: context);
         await Provider.of<Products>(context, listen: false)
             .addProducts(token: token, context: context);
-        await Provider.of<DipsProvider>(context, listen: false)
-            .addDips(token: token, context: context);
+        //await Provider.of<DipsProvider>(context, listen: false).addDips(token: token, context: context); Remove Dips 27.07 Andi
         await Provider.of<WorkersProvider>(context, listen: false)
             .addWorkers(token: token, context: context);
 
         await tablesData.connectALlTablesSocket(context: context, token: token);
         await tablesData.listenToAllTabelsSocket(
             context: context, token: token);
-        //optimise time to load, test Andi 31.Mai
-        //var futures1 = <Future>[]; //only now because i had some serios websocket problems, will it maybe implement later again. 4.Juni Andi
-        //var futures2 = <Future>[];
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
           await tablesData.connectSocket(
               id: table.id, context: context, token: token);
           await tablesData.listenSocket(
               id: table.id, context: context, token: token);
-          // futures1.add(tablesData.connectSocket(id: table.id, context: context, token: token));
         }
-        //for (var i = 0; i < tablesData.items.length; i++) {
-        //var table = tablesData.items[i];
-        // futures2.add(tablesData.listenSocket(id: table.id, context: context, token: token));
-        //}
-        //await Future.wait(futures1);
-        //await Future.wait(futures2);
         setState(() {
           _isLoading = false;
         });

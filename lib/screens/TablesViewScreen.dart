@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import '../widgets/table/TableItemWidget.dart';
-
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
-
 import '../widgets/NavBar.dart';
 import 'TableChangePopUp.dart';
 import 'WeiterChangePopUp.dart';
 
 class TablesView extends StatefulWidget {
-  // const TablesView({Key? key}) : super(key: key);
   static const routeName = '/tables-view';
 
+  const TablesView({Key? key}) : super(key: key);
   @override
   State<TablesView> createState() => _TablesViewState();
 }

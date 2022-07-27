@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:inspery_waiter/Models/DailyInvoiceModel.dart';
 import 'package:provider/provider.dart';
-
 import '../Providers/Authy.dart';
 import '../printer/ConfigPrinter.dart';
 import '../widgets/NavBar.dart';
@@ -102,6 +100,7 @@ class _ProfileState extends State<Profile> {
                                         img,
                                         height: 150,
                                         width: 150,
+                                        fit: BoxFit.fill,
                                       ),
                                     )
                                   : const Text(''),

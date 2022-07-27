@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
 import 'flushbar_route.dart' as route;
 
 // ignore: constant_identifier_names

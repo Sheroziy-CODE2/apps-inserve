@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../Models/TableModel.dart';
 import '../Providers/Authy.dart';
 import '../Providers/Tables.dart';
@@ -44,16 +43,12 @@ class TableChange {
   //ShowDialog to choose the table
   showTableChangeDialog(BuildContext context) {
     final authy = Provider.of<Authy>(context, listen: false);
-
     final tablesData = Provider.of<Tables>(context, listen: false);
     final tables = tablesData.items;
     List<TableModel> ownedTables = [];
-
     final workersData = Provider.of<WorkersProvider>(context, listen: false);
-
     var id = workersData.findByName(authy.userName).id;
     ownedTables = tables.where((i) => i.owner == id).toList();
-
     List _buttonText = [];
 
     for (int i = 0; i < ownedTables.length; i++) {
@@ -149,13 +144,8 @@ class TableChange {
 
   //ShowDialog to find the table by putting the table number
   showTableSearchDialog(BuildContext context) {
-
-
     final tablesData = Provider.of<Tables>(context, listen: false);
-
-
     tablesprov = Provider.of<Tables>(context, listen: false);
-
     final List<String> buttons = [
       "7", "8", "9",
       "4", "5", "6",
