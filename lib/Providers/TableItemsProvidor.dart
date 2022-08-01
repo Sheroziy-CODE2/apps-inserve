@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import '/Providers/Products.dart';
 import '/Providers/TableItemChangeProvidor.dart';
@@ -265,29 +262,29 @@ class TableItemsProvidor with ChangeNotifier {
   }
 
   ///Override all Products with the Products from the Server
-  Future<void> loadAllProduct({required String tableName}) async {
-    //LISTS!
-    final url = Uri.parse(
-      'https://www.inspery.com/table/api/tablel_items/' + tableName,
-    );
-    final headers = {"Content-type": "application/json"};
-    if (isLoading) return;
-    isLoading = true;
-    final response = await http.get(url, headers: headers);
-    if (response.statusCode == 200) {
-      _tableItems.clear();
-      var jsonResponse =
-          convert.jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
-      for (var body in jsonResponse) {
-        _tableItems.add(TableItemProvidor.fromResponse(body));
-      }
-      isLoading = false;
-      notifyListeners();
-    } else {
-      print(
-          'TabelOverviewWidget: Request failed with status: ${response.statusCode}.');
-    }
-  }
+  // Future<void> loadAllProduct({required String tableName}) async {
+  //   //LISTS!
+  //   final url = Uri.parse(
+  //     'https://www.inspery.com/table/api/tablel_items/' + tableName,
+  //   );
+  //   final headers = {"Content-type": "application/json"};
+  //   if (isLoading) return;
+  //   isLoading = true;
+  //   final response = await http.get(url, headers: headers);
+  //   if (response.statusCode == 200) {
+  //     _tableItems.clear();
+  //     var jsonResponse =
+  //         convert.jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+  //     for (var body in jsonResponse) {
+  //       _tableItems.add(TableItemProvidor.fromResponse(body, ));
+  //     }
+  //     isLoading = false;
+  //     notifyListeners();
+  //   } else {
+  //     print(
+  //         'TabelOverviewWidget: Request failed with status: ${response.statusCode}.');
+  //   }
+  // }
 
   void editItemFromWaiter({
     required context,
