@@ -79,7 +79,7 @@ class _InvoicesScreen extends State<InvoicesView> {
             const SizedBox(
               height: 20,
             ),
-            !invoicesList.isEmpty ?
+            invoicesList.isEmpty ?
                 Expanded(
                       child:
                       Center(

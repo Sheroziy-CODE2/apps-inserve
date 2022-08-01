@@ -34,7 +34,7 @@ class InvoiceItemIngredientsWidget extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 6,
                   child: Text(
                     name,
                     textAlign: TextAlign.left,
@@ -47,7 +47,7 @@ class InvoiceItemIngredientsWidget extends StatelessWidget {
                 ),
 
                 const Expanded(
-                  flex: 7,
+                  flex: 6,
                   child: Text(
                     ' ',
                   ),

@@ -46,7 +46,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
      var tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
      var productProvidor = Provider.of<Products>(context, listen: true);
      var productTyp = Provider.of<Categorys>(context, listen: true).productTypeByProductID(productID: widget.tableItemProvidor.product);
-     print("Product Type: " + productTyp);
+     //print("Product Type: " + productTyp);
 
     return GestureDetector(
       onTap: () async {

@@ -38,19 +38,19 @@ class InvoiceOrderWidget extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 6,
                   child: ProductNameComponent(name: name),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: //PriceComponent(id: invoiceItem.price),
                       Text(
-                    invoiceItem.price.toString()+ ' Euro',
+                    invoiceItem.price.toString(),
                         textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -62,7 +62,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
-                      fontSize: 22,
+                      fontSize: 20,
                     ),
                   ),
                 ),

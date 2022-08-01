@@ -36,7 +36,7 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
                 child: Text(""),
               ),
               Expanded(
-                flex: 4,
+                flex: 6,
                 child: Text(
                   productName,
                   textAlign: TextAlign.left,
@@ -48,9 +48,9 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: Text(
-                  '  $price Euro',
+                  price.toStringAsFixed(2),
                   textAlign: TextAlign.right,
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,

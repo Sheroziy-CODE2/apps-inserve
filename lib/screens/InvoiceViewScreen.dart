@@ -129,9 +129,9 @@ class _InvoiceViewState extends State<InvoiceView> {
                                   ),
                                 ),
                                 Text(
-                                  invoice.length > 0
+                                  invoice.isNotEmpty
                                       ? invoice[0].id.toString()
-                                      : 'ssss',
+                                      : '?',
                                   textAlign: TextAlign.end,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
@@ -142,9 +142,9 @@ class _InvoiceViewState extends State<InvoiceView> {
                               ],
                             ),
                             Text(
-                              invoice.length > 0
+                              invoice.isNotEmpty
                                   ? invoice[0].date.substring(11, 16)
-                                  : 'ssss',
+                                  : '?',
                               textAlign: TextAlign.end,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w400,
@@ -184,7 +184,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                             const Expanded(
                               flex: 8,
                               child: Text(
-                                'Summe Waren',
+                                'Summe',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
