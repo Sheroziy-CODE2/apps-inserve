@@ -95,6 +95,7 @@ flutter:
     - assets/images/PayCard.png
     - assets/images/PayCash.png
     - assets/images/PayCardCash.png
+    - assets/images/logo_icon.png
     - assets/img/logo.png
     - assets/images/yourlogo.png #this logo will be printet in the TestPrinterWidget
     - assets/lottie/cateringfork-knife.json

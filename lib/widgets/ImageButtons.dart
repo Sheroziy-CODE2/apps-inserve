@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class MyImageButton extends StatefulWidget {
   final selectedIconColor;
   var buttonTapped;
-  final image;
+  String? image;
   final borderRadius;
   final unselectedIconColor;
   final username;
@@ -42,8 +42,10 @@ class _MyImageButtonState extends State<MyImageButton> {
                 padding: const EdgeInsets.all(5.0),
                 child: ClipRRect(
                   borderRadius: widget.borderRadius,
-                  child: Image.network(
-                    "https://www.inspery.com"+widget.image,
+                  child: widget.image == null ?
+                  Image.asset("assets/images/logo_icon.png") :
+                  Image.network(
+                    "https://www.inspery.com"+widget.image!,
                     fit: BoxFit.cover,
                   ),
                 ),
