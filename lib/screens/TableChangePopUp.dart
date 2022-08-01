@@ -122,7 +122,7 @@ class TableChange {
                         if (_chosenTable[0] != "") {
                           TableChange.getInstance()?.showTableSearchDialog(context);
                         } else {
-                          snackBar(msg: "Sie müssen die Tabelle auswählen.", context: contextXX);
+                          snackBar(msg: "Sie müssen einen Tisch auswählen.", context: contextXX);
                         }
                       },
                     ),

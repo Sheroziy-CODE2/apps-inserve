@@ -195,12 +195,12 @@ class WeiterChange {
                           //var tableToTransfer = tablesData.findByName(_chosenTable[0]).id;
                           tablesprov.transferTableToAnotherUserSocket(newUserID: _chosenWorker[0], tableIDs: tableToTransfer);
                           Navigator.of(context).pushReplacementNamed(TablesView.routeName);
-                          snackBar(msg: "Die Tabelle: "+_chosenTable.join(", ").toString()+" wurde an den Benutzer übertragen: "+ _chosenWorker[0], context: contextXX);
+                          snackBar(msg: "Der Tisch  "+_chosenTable.join(", ").toString()+" wurde an den Benutzer "+ _chosenWorker[0] + " übergeben.", context: contextXX);
                           _chosenWorker[0] = "";
                           _chosenTable.clear( );
                         }
                         else {
-                          snackBar(msg: "Sie müssen sowohl die übertragende Tabelle als auch den Arbeiter, der sie erhält, auswählen.", context: contextXX);
+                          snackBar(msg: "Sie müssen sowohl einen Tisch als auch denen Kollegen, auswählen.", context: contextXX);
                         }
 
                       },
