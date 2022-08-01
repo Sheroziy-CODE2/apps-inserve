@@ -20,7 +20,7 @@ class TableChange {
   }
 
   static const snackBarTable = SnackBar(
-    content: Text('Such Table doesnt exist'),
+    content: Text('Soch ein Tisch existiert nicht'),
   );
 
   var userText = "";
@@ -241,11 +241,11 @@ class TableChange {
                           var oldTableId = tablesData.findByName(_chosenTable[0]).id;
                           tablesprov.transferAllItemsToSocket(context: context, tableID: oldTableId, newTableID: newTableId);
                           Navigator.of(context).pushReplacementNamed(TablesView.routeName);
-                          snackBar(msg: "Alle Tabellenbestellungen aus " +_chosenTable[0]+" wurden in den "+userText+" übertragen", context: context);
+                          snackBar(msg: "Alle Tisch-Bestellungen aus " +_chosenTable[0]+" wurden auf den Tisch "+userText+" übertragen", context: context);
                           userText = _chosenTable[0] = "";
                         }
                         else {
-                          snackBar(msg: "Die Tabelle, die Sie hinzugefügt haben, existiert nicht, bitte versuchen Sie eine andere Tabelle", context: context);
+                          snackBar(msg: "Den Tisch, den Sie hinzugefügt haben, existiert nicht. Bitte versuchen Sie einen anderen Tisch", context: context);
                         }
                       },
                     ),
