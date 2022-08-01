@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       padding: const EdgeInsets.all(20),
                       alignment: Alignment.centerRight,
-                      child: userText.length < 1 ? Text('Tisch', maxLines: 1, style: const TextStyle(fontSize: 50))
+                      child: userText.isEmpty ? const Text('Tisch', maxLines: 1, style: TextStyle(fontSize: 50))
                       : Text(userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
                     ),
                   ]),
