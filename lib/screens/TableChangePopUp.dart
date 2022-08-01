@@ -61,7 +61,7 @@ class TableChange {
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext contextXX, setState) {
         return AlertDialog(
-          title: const Text("Tische zum weitergeben",
+          title: const Text("Tische ändern",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           content: Container
             (
@@ -155,10 +155,11 @@ class TableChange {
 
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext contextXX, setState) {
+        Tables tablesProvidor = Provider.of<Tables>(context, listen: false);
         return AlertDialog(
           content: Container(
             width: MediaQuery.of(context).size.width,
-            height: 500,
+            height: 600,
             alignment: Alignment.center,
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -170,9 +171,10 @@ class TableChange {
                       child: Column(children: <Widget>[
                         const SizedBox(height: 5),
                         Container(
+                          height: 30,
                           alignment: Alignment.topRight,
-                          child: const Text('Tisch existiert: ',
-                              maxLines: 1, style: TextStyle(fontSize: 20)),
+                          child: tablesProvidor.items.where((element) => element.name == userText).isNotEmpty ? const Text('Tisch existiert',
+                              maxLines: 1, style: TextStyle(fontSize: 20, color: Colors.green)) : Container(),
                         ),
                         Container(
                           alignment: Alignment.topRight,
@@ -199,7 +201,7 @@ class TableChange {
                                       });
                                     },
                                     buttonText: buttons[index],
-                                    color: Theme.of(context).primaryColorDark,
+                                    color: buttons[index] == "DEL" ? Colors.red.shade900 : Theme.of(context).primaryColorDark,
                                     textColor: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(10));
                               } else {
