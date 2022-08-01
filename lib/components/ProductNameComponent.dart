@@ -7,7 +7,7 @@ class ProductNameComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '${name}',
+      name,
       textAlign: TextAlign.left,
       style: const TextStyle(
         fontWeight: FontWeight.w500,
