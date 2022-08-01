@@ -83,6 +83,7 @@ class _InvoiceViewState extends State<InvoiceView> {
     return _isLoading == true
         ? const SplashScreen()
         : Scaffold(
+            backgroundColor: Theme.of(context).cardColor,
             appBar: AppBar(
               backgroundColor: Theme.of(context).cardColor,
               title: Text(
@@ -93,124 +94,251 @@ class _InvoiceViewState extends State<InvoiceView> {
                   color: Color(0xFF2C3333),
               ),
             ),
-            body: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-              ),
-              child: Container(
-                margin: const EdgeInsets.only(top: 5),
-                child: ListView(
-                  children: [
-                    InvoiceRestaurantInfo(
-                        address: address,
-                        plz: plz,
-                        stadt: stadt,
-                        phone: phone,
-                        img: img),
-                    Container(
-                      padding: const EdgeInsets.only(right: 10, bottom: 0),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      width: MediaQuery.of(context).size.width,
-                      child: Material(
-                        type: MaterialType.transparency,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                const Text(
-                                  'Rechnung / Bon-Nr.: ' ' ',
-                                  textAlign: TextAlign.center,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height-60,
+                  child: Column(
+                    children: [
+                      InvoiceRestaurantInfo(
+                          address: address,
+                          plz: plz,
+                          stadt: stadt,
+                          phone: phone,
+                          img: img),
+                      Container(
+                        padding: const EdgeInsets.only(right: 10, bottom: 0),
+                        margin: const EdgeInsets.only(bottom: 10),
+                        width: MediaQuery.of(context).size.width,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    'Rechnung / Bon-Nr.: ' ' ',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF2C3333),
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    invoice.isNotEmpty
+                                        ? invoice[0].id.toString()
+                                        : '?',
+                                    textAlign: TextAlign.end,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF2C3333),
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                invoice.isNotEmpty
+                                    ? invoice[0].date.substring(11, 16)
+                                    : '?',
+                                textAlign: TextAlign.end,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF2C3333),
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: IIWidgetSize.toDouble(),
+                        child: MediaQuery(
+                          data: MediaQuery.of(context).removePadding(
+                            removeLeft: false,
+                            removeTop: true,
+                            removeRight: false,
+                            removeBottom: false,
+                          ),
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: invoiceItems.length,
+                            itemBuilder: (context, index) => InvoiceOrderWidget(
+                                invoiceItem: invoiceItems[index]),
+                          ),
+                        ),
+                      ),
+                      Column(children: [
+                        const InvoiceSeparator(color: Color(0xFF2C3333)),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Material(
+                            type: MaterialType.transparency,
+                            child: Row(children: [
+                              const Expanded(
+                                flex: 8,
+                                child: Text(
+                                  'Summe',
+                                  textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Color(0xFF2C3333),
-                                    fontSize: 20,
+                                    fontSize: 25,
                                   ),
                                 ),
-                                Text(
-                                  invoice.isNotEmpty
-                                      ? invoice[0].id.toString()
-                                      : '?',
-                                  textAlign: TextAlign.end,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF2C3333),
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              invoice.isNotEmpty
-                                  ? invoice[0].date.substring(11, 16)
-                                  : '?',
-                              textAlign: TextAlign.end,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF2C3333),
-                                fontSize: 20,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: IIWidgetSize.toDouble(),
-                      child: MediaQuery(
-                        data: MediaQuery.of(context).removePadding(
-                          removeLeft: false,
-                          removeTop: true,
-                          removeRight: false,
-                          removeBottom: false,
-                        ),
-                        child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: invoiceItems.length,
-                          itemBuilder: (context, index) => InvoiceOrderWidget(
-                              invoiceItem: invoiceItems[index]),
-                        ),
-                      ),
-                    ),
-                    Column(children: [
-                      const InvoiceSeparator(color: Color(0xFF2C3333)),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: Row(children: [
-                            const Expanded(
-                              flex: 8,
-                              child: Text(
-                                'Summe',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
+                              Text(
+                                invoice.isNotEmpty
+                                    ? invoice[0].amount.toString() + " EUR"
+                                    : '',
+                                textAlign: TextAlign.end,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xFF2C3333),
                                   fontSize: 25,
                                 ),
-                              ),
-                            ),
-                            Text(
-                              invoice.length > 0
-                                  ? invoice[0].amount.toString()
-                                  : '',
-                              textAlign: TextAlign.end,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF2C3333),
-                                fontSize: 25,
-                              ),
-                            )
-                          ]),
+                              )
+                            ]),
+                          ),
                         ),
+                        const InvoiceSeparator(color: Color(0xFF2C3333)),
+                        const InvoicetaxInfo(),
+                      ]
                       ),
-                      const InvoiceSeparator(color: Color(0xFF2C3333)),
-                      const InvoicetaxInfo(),
-                    ]),
-                  ],
+                      const Spacer(),
+                      SizedBox(
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height: 40,
+                                width: 125,
+                                child: GestureDetector(
+                                  onTap: () {
+
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                        BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color:
+                                              const Color(0xFFF3F3F3),
+                                              borderRadius:
+                                              BorderRadius.circular(20),
+                                            ),
+                                            child: Icon(
+                                              Icons.assignment_return_outlined,
+                                              color: Colors.black
+                                                  .withOpacity(0.4),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const Text("Rückgabe"),
+                                        ],
+                                      )),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 40,
+                                width: 105,
+                                child: GestureDetector(
+                                  onTap: () {
+
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                        BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color:
+                                              const Color(0xFFF3F3F3),
+                                              borderRadius:
+                                              BorderRadius.circular(20),
+                                            ),
+                                            child: Icon(
+                                              Icons.print_outlined,
+                                              color: Colors.black
+                                                  .withOpacity(0.4),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const Text("Beleg"),
+                                        ],
+                                      )),
+                                ),
+                              ),
+
+                              SizedBox(
+                                height: 40,
+                                width: 105,
+                                child: GestureDetector(
+                                  onTap: () {
+
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                        BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color:
+                                              const Color(0xFFF3F3F3),
+                                              borderRadius:
+                                              BorderRadius.circular(20),
+                                            ),
+                                            child: Icon(
+                                              Icons.print,
+                                              color: Colors.black
+                                                  .withOpacity(0.4),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const Text("Drucken"),
+                                        ],
+                                      )),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
