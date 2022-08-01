@@ -96,16 +96,25 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
       );
     }
 
-    tableItemProvidor.selectetProductsInLine ??=
-        List.generate(productPro.productSelection.length, (index1) =>
-            List.generate(productPro.productSelection[index1].products.length, (index) {
-              if(productPro.productSelection[index1].standard.contains(productPro.productSelection[index1].products[index])){
-                return true;
-              }
-              return false;
+    if(tableItemProvidor.selectetProductsInLine == null){
+      tableItemProvidor.selectetProductsInLine = List.generate(productPro.productSelection.length, (index1) =>
+          List.generate(productPro.productSelection[index1].products.length, (index) {
+            if(productPro.productSelection[index1].standard.contains(productPro.productSelection[index1].products[index])){
+              return true;
             }
-            )
-        );
+            return false;
+          }
+          )
+      );
+      for( int x = 0; x < tableItemProvidor.selectetProductsInLine!.length; x++){
+        for( int y = 0; y < tableItemProvidor.selectetProductsInLine![x].length; y++){
+          if(tableItemProvidor.selectetProductsInLine![x][y]) {
+            tableItemProvidor.setSideProducts(context: context, new_side_product: productPro.productSelection[x].products[y]);
+          }
+        }
+      }
+    }
+
 
     return Column(
       children: [
