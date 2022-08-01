@@ -12,9 +12,6 @@ class InvoiceOrderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var name = invoiceItem.product.length > 10
-        ? invoiceItem.product.substring(0, 10)
-        : invoiceItem.product;
     return Material(
       type: MaterialType.transparency,
       child: Container(
@@ -39,7 +36,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 6,
-                  child: ProductNameComponent(name: name),
+                  child: ProductNameComponent(name: invoiceItem.product),
                 ),
                 Expanded(
                   flex: 3,
