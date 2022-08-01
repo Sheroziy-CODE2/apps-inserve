@@ -1102,7 +1102,7 @@ class Tables with ChangeNotifier {
                 List<TableItemProvidor> _tIPItems = [];
                 var jsonResponse = data['table_items'] as List<dynamic>;
                 for (var body in jsonResponse) {
-                  _tIPItems.add(TableItemProvidor.fromResponse(body));
+                  _tIPItems.add(TableItemProvidor.fromResponse(body, tableID: id));
                   _tIPItems.last.fromWaiter =
                       false; //Set it to false, because it comes from the server
                 }
