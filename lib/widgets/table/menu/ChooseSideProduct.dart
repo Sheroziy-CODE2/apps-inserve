@@ -59,16 +59,15 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
             const SizedBox(height: 20,),
             GridView.count(
               //physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: (1 / 1),
+              childAspectRatio: (2 / 1),
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
               shrinkWrap: true,
-              crossAxisCount: 5,
+              crossAxisCount: 3,
               children:
               tableItemProvidor.side_product.map((sideProductID) {
                 var product = productProvidor.findById(sideProductID);
                 return Container(
-                  height: 10,
                   decoration: BoxDecoration(
                     color: tableItemProvidor.side_product.contains(sideProductID) ? const Color(0xFFD3E03A) : Colors.transparent,
                     border: Border.all(
@@ -136,11 +135,11 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
 
                     GridView.count(
                       //physics: const NeverScrollableScrollPhysics(),
-                      childAspectRatio: (1 / 1),
+                      childAspectRatio: (2 / 1),
                       crossAxisSpacing: 5,
                       mainAxisSpacing: 5,
                       shrinkWrap: true,
-                      crossAxisCount: 5,
+                      crossAxisCount: 3,
                       children:
                       List.generate(productPro.productSelection[indexList].products.length, (index) {
                         //productPro.productSelection[indexList].products.map((sideProductID) {
