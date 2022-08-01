@@ -201,7 +201,7 @@ class TableChange {
                                       });
                                     },
                                     buttonText: buttons[index],
-                                    color: buttons[index] == "DEL" ? Colors.red.shade900 : Theme.of(context).primaryColorDark,
+                                    color: buttons[index] == "DEL" ? const Color.fromARGB(255, 165, 39, 30) : Theme.of(context).primaryColorDark,
                                     textColor: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(10));
                               } else {
