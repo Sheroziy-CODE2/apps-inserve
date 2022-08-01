@@ -281,12 +281,21 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                       //SizedBox(height: 5,),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Text(
-                          productProvidor.findById(widget.tableItemProvidor.product).name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                        child: Row(
+                          children: [
+                             widget.tableItemProvidor.status == 0 ? const Icon(Icons.access_time, size: 17,):
+                             widget.tableItemProvidor.status == 1 ? const Icon(Icons.precision_manufacturing_outlined, size: 17,) :
+                             widget.tableItemProvidor.status == 2 ? const Icon(Icons.check, size: 17,) :
+                            const Icon(Icons.clear, size: 17,),
+                            const SizedBox(width: 3,),
+                            Text(
+                              productProvidor.findById(widget.tableItemProvidor.product).name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SingleChildScrollView(

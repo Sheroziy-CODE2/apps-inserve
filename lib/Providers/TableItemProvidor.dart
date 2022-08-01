@@ -16,7 +16,8 @@ class TableItemProvidor with ChangeNotifier {
   //double total_price;
   late int table;
   //int saved_table;
-  int user;
+  int status; // 0 waiting 1 preparing 2 done
+  int? user;
   int product;
   int selected_price;
   int date;
@@ -208,6 +209,7 @@ class TableItemProvidor with ChangeNotifier {
     this.table = 0,
     //this.total_price = 0.0,
    // this.saved_table = 0,
+    this.status = 0,
     this.user = 0,
     this.product = 0,
     this.selected_price = 0,
@@ -217,16 +219,18 @@ class TableItemProvidor with ChangeNotifier {
     this.date = 0,
   });
 
-  factory TableItemProvidor.fromResponse(response) {
+  factory TableItemProvidor.fromResponse(response, {required int tableID}) {
     var jsonResponse = response as Map<String, dynamic>;
+    if(jsonResponse["selected_price"] == null) print("FAILED ID: " + (jsonResponse["id"].toString()));
     return TableItemProvidor(
       id: jsonResponse["id"] as int,
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,
-      table: jsonResponse["table"] as int,
+      table: tableID,//jsonResponse["table"] as int,
       //saved_table: jsonResponse["saved_table"] as int,
-      user: jsonResponse["user"] as int,
+      user: jsonResponse["user"],
       product: jsonResponse["product"] as int,
+      status: jsonResponse["status"] as int,
       selected_price: jsonResponse["selected_price"] as int,
       side_product:
           List<int>.from(jsonResponse["side_products"] as List<dynamic>),
