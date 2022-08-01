@@ -48,7 +48,7 @@ class _TableItemState extends State<TableItem> {
       }
     }
 
-    const double dropdownHight = 37;
+    const double dropdownHight = 39;
 
     return GridTile(
       child: GestureDetector(
@@ -62,7 +62,7 @@ class _TableItemState extends State<TableItem> {
         child: Padding(
           padding: const EdgeInsets.only(top: 7, bottom: 7),
           child: SizedBox(
-            height: 61,
+            height: dropDownHistoryTime ? (50 * tabl.timeHistory.length).toDouble() : 63,
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
@@ -139,7 +139,6 @@ class _TableItemState extends State<TableItem> {
                                 onTap: (){
                                   setState(() {
                                     dropDownHistoryTime = !dropDownHistoryTime;
-                                    print("Length of hist: " + tabl.timeHistory.length.toString());
                                   });
                                 },
                                 child: AnimatedContainer(
@@ -206,7 +205,7 @@ class _TableItemState extends State<TableItem> {
                 Expanded(
                   flex: 2,
                   child: Container(
-                    height: dropdownHight+24,
+                    height: 65,
                     padding: const EdgeInsets.only(top: 5, right: 10),
                     // color: Color.fromARGB(255, 21, 82, 71),
                     // padding: const EdgeInsets.all(5),

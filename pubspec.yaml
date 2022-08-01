@@ -99,6 +99,7 @@ flutter:
     - assets/img/logo.png
     - assets/images/yourlogo.png #this logo will be printet in the TestPrinterWidget
     - assets/lottie/cateringfork-knife.json
+    - assets/lottie/empty-box.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
