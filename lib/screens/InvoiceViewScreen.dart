@@ -151,6 +151,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                                   fontSize: 20,
                                 ),
                               ),
+                              const SizedBox(height: 5,)
                             ],
                           ),
                         ),

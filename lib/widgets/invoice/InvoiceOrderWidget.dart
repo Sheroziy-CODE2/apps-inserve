@@ -42,7 +42,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                   flex: 3,
                   child: //PriceComponent(id: invoiceItem.price),
                       Text(
-                    invoiceItem.price.toString(),
+                    invoiceItem.price.toStringAsFixed(2).replaceAll(".", ","),
                         textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
@@ -54,7 +54,7 @@ class InvoiceOrderWidget extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    '  ${invoiceItem.amount}',
+                    invoiceItem.amount.toStringAsFixed(2).replaceAll(".", ","),
                     textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,

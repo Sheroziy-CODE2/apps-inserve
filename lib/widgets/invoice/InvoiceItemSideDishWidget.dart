@@ -50,7 +50,7 @@ class InvoiceItemSideDishWidget extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: Text(
-                  price.toStringAsFixed(2),
+                  price.toStringAsFixed(2).replaceAll(".", ","),
                   textAlign: TextAlign.right,
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
