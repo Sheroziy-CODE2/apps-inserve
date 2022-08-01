@@ -9,10 +9,10 @@ import '../../Providers/TableItemProvidor.dart';
 class TableOverviewProductItem extends StatefulWidget {
   TableOverviewProductItem(
       {//required this.tablesItemID,
-      required this.width,
-      required this.tableItemProvidor,
+        required this.width,
+        required this.tableItemProvidor,
         required this.index,
-      Key? key})
+        Key? key})
       : super(key: key);
   final double width;
   final double _height = 55;
@@ -43,10 +43,10 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
 
   @override
   Widget build(BuildContext context) {
-     var tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
-     var productProvidor = Provider.of<Products>(context, listen: true);
-     var productTyp = Provider.of<Categorys>(context, listen: true).productTypeByProductID(productID: widget.tableItemProvidor.product);
-     print("Product Type: " + productTyp);
+    var tableItemChangeProvidor = Provider.of<TableItemChangeProvidor>(context, listen: true);
+    var productProvidor = Provider.of<Products>(context, listen: true);
+    var productTyp = Provider.of<Categorys>(context, listen: true).productTypeByProductID(productID: widget.tableItemProvidor.product);
+    //print("Product Type: " + productTyp);
 
     return GestureDetector(
       onTap: () async {
@@ -63,7 +63,8 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
             borderRadius: const BorderRadius.all(Radius.circular(15.0)),
             color: widget.tableItemProvidor.fromWaiter ? const Color(0xFFE08A3A).withOpacity(0.8) : Colors.transparent,
           ),
-          height: (widget.tableItemProvidor.paymode && widget.tableItemProvidor.fromWaiter)  ? 0 : widget._height + 2,
+          height: (widget.tableItemProvidor.paymode && widget.tableItemProvidor.fromWaiter)  ? 0 : widget._height + (widget.tableItemProvidor.getExtrasWithSemicolon(
+              context: context).length /30).round() * 10,
           duration: const Duration(milliseconds: 300),
           curve: Curves.fastOutSlowIn,
           child: Stack(
@@ -106,8 +107,8 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                     child: Center(
                       child: Text(
                         widget.tableItemProvidor
-                                .getTotalPrice(context: context)
-                                .toStringAsFixed(2) +
+                            .getTotalPrice(context: context)
+                            .toStringAsFixed(2) +
                             "€",
                         style: const TextStyle(
                           fontSize: 20,
@@ -135,7 +136,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                   },
                   child: Container(
                     width: widget.width * 0.10,
-                    height: widget._height-4,
+                    height: widget._height-7,
                     //color: Colors.blue,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 0.5),
@@ -169,7 +170,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                 //     bottom: 10,
                 child: SizedBox(
                   width: widget.width * 0.55,
-                  height: widget._height-4,
+                  //height: widget._height-4,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,17 +187,17 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                             children: [
                               widget.tableItemProvidor.getPaymode()
                                   ? Text(
-                                      (widget.tableItemProvidor.quantity -
-                                          widget.tableItemProvidor
-                                                      .getAmountInCard())
-                                              .toString() +
-                                          " remain ",
-                                      style: const TextStyle(
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    )
+                                (widget.tableItemProvidor.quantity -
+                                    widget.tableItemProvidor
+                                        .getAmountInCard())
+                                    .toString() +
+                                    " remain ",
+                                style: const TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              )
                                   : Container(),
                               Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -205,7 +206,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: List.generate(
                                       widget.tableItemProvidor.getAmountInCard(),
-                                      (index) => Padding(
+                                          (index) => Padding(
                                         padding: const EdgeInsets.only(left: 3),
                                         child: Container(
                                           height: 10,
@@ -213,10 +214,10 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                           decoration: BoxDecoration(
                                             color:
                                             widget.tableItemProvidor.getPaymode()
-                                                    ? productTyp == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0)
-                                                    : Colors.white,
+                                                ? productTyp == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0)
+                                                : Colors.white,
                                             borderRadius:
-                                                BorderRadius.circular(5),
+                                            BorderRadius.circular(5),
                                             // boxShadow: [
                                             //   BoxShadow(
                                             //     color: widget.tableItemProvidor
@@ -241,7 +242,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                     children: List.generate(
                                       widget.tableItemProvidor.quantity -
                                           widget.tableItemProvidor.getAmountInCard(),
-                                      (index) => Padding(
+                                          (index) => Padding(
                                         padding: const EdgeInsets.only(left: 3),
                                         child: Container(
                                           height: 10,
@@ -249,10 +250,10 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                                           decoration: BoxDecoration(
                                             color:
                                             widget.tableItemProvidor.getPaymode()
-                                                    ? Colors.white
-                                                    : productTyp == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0),
+                                                ? Colors.white
+                                                : productTyp == "food" ? const Color(0xFFD3E03A) : const Color(0xFF3AC2E0),
                                             borderRadius:
-                                                BorderRadius.circular(5),
+                                            BorderRadius.circular(5),
                                             // boxShadow: [
                                             //   BoxShadow(
                                             //     color: widget.tableItemProvidor
@@ -281,41 +282,44 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                       //SizedBox(height: 5,),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Text(
-                          productProvidor.findById(widget.tableItemProvidor.product).name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            const SizedBox(
-                              width: 5,
-                            ),
+                            widget.tableItemProvidor.status == 0 ? const Icon(Icons.access_time, size: 17,):
+                            widget.tableItemProvidor.status == 1 ? const Icon(Icons.precision_manufacturing_outlined, size: 17,) :
+                            widget.tableItemProvidor.status == 2 ? const Icon(Icons.check, size: 17,) :
+                            const Icon(Icons.clear, size: 17,),
+                            const SizedBox(width: 3,),
                             Text(
-                              widget.tableItemProvidor.getExtrasWithSemicolon(
-                                  context: context),
-                              overflow: TextOverflow.fade,
-                              maxLines: 3,
+                              productProvidor.findById(widget.tableItemProvidor.product).name,
                               style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                                 color: Colors.black,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
+
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        widget.tableItemProvidor.getExtrasWithSemicolon(
+                            context: context),
+                        overflow: TextOverflow.fade,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
             ],
-          )),
+          )
+      ),
     );
   }
 }

@@ -23,8 +23,6 @@ class InvoiceItemWidget extends StatefulWidget {
 }
 
 class _InvoiceCardState extends State<InvoiceItemWidget> {
-  var _isInit = true;
-  var _isLoading = true;
   var invoiceDetails = Invoice(
     id: 0,
     date: '',
@@ -38,16 +36,9 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
 
   @override
   void didChangeDependencies() {
-    // get all the invoices
-    setState(() {
-      _isLoading = true;
-    });
     final tokenData = Provider.of<Authy>(context);
     String token = tokenData.token;
     invoiceCall(token);
-    setState(() {
-      _isLoading = false;
-    });
     super.didChangeDependencies();
   }
 
@@ -83,9 +74,6 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final tokenData = Provider.of<Authy>(context);
-    String token = tokenData.token;
-    // final String id = ModalRoute.of(context)?.settings.arguments as String;
     String date = '';
     if (invoiceDetails.date.length > 0) {
       date = invoiceDetails.date.substring(11, 13) +
@@ -108,7 +96,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
           padding:
               const EdgeInsets.only(top: 10.0, bottom: 10.0, right: 0, left: 0),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
@@ -121,8 +109,8 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                 Expanded(
                   flex: 6,
                   child: Container(
-                    height: 75,
-                    padding: const EdgeInsets.all(5),
+                    height: 65,
+                    padding: const EdgeInsets.only(left: 15,right: 20, top: 2),
                     width: MediaQuery.of(context).size.width / 2,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -134,7 +122,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 5,
                           blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
+                          offset: const Offset(0, 3), // changes position of shadow
                         ),
                       ],
                       borderRadius: const BorderRadius.only(
@@ -156,7 +144,6 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.bold,
                                     color: Color(0xFF2C3333),
                                   ),
                                 ),
@@ -171,18 +158,17 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                           ),
                         ),
                         Expanded(
-                          flex: 4,
+                          flex: 5,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               const Material(
                                 type: MaterialType.transparency,
                                 child: Text(
-                                  'bezahlt um',
+                                  'bezahlt um  ',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.bold,
                                     color: Color(0xFF2C3333),
                                   ),
                                 ),
@@ -190,12 +176,14 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                               Material(
                                 type: MaterialType.transparency,
                                 child: Container(
-                                  padding: EdgeInsets.all(6),
-                                  margin: EdgeInsets.only(left: 6),
-                                  decoration: new BoxDecoration(
+                                  width: 100,
+                                  height: 38,
+                                  padding: const EdgeInsets.all(6),
+                                  margin: const EdgeInsets.only(left: 6),
+                                  decoration: BoxDecoration(
                                     color: Theme.of(context).primaryColorDark,
                                     borderRadius:
-                                        new BorderRadius.circular(16.0),
+                                        BorderRadius.circular(16.0),
                                   ),
                                   child: Text(
                                     date,
@@ -203,7 +191,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Theme.of(context).cardColor,
-                                      fontSize: 25,
+                                      fontSize: 20,
                                     ),
                                   ),
                                 ),
@@ -220,9 +208,9 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                   child: Container(),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: Container(
-                    height: 75,
+                    height: 65,
                     padding: const EdgeInsets.only(top: 20, right: 15),
                     // color: Color.fromARGB(255, 21, 82, 71),
                     // padding: const EdgeInsets.all(5),
@@ -237,7 +225,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 5,
                           blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
+                          offset: const Offset(0, 3), // changes position of shadow
                         ),
                       ],
                       borderRadius: const BorderRadius.only(
@@ -262,8 +250,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                             // textAlign: TextAlign.end,
                             style: const TextStyle(
                                 color: Color(0xFF2C3333),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25,
+                                fontSize: 20,
                                 fontStyle: FontStyle.normal),
                           ),
                         ),

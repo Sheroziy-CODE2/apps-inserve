@@ -3,6 +3,7 @@ import '../widgets/table/TableItemWidget.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
 import '../widgets/NavBar.dart';
+import '../widgets/table/tables/TablesNotificationWidget.dart';
 import 'TableChangePopUp.dart';
 import 'WeiterChangePopUp.dart';
 
@@ -61,8 +62,13 @@ class _TablesViewState extends State<TablesView> {
             const SizedBox(height: 30,),
             const Text("Offene Tische", style: TextStyle(fontSize: 16),),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+                SizedBox(
+                  height: 40,
+                    width: MediaQuery.of(context).size.width/2,
+                    child: TablesNotificationWidget()
+                ),
+                Spacer(),
                 IconButton(
                   padding: const EdgeInsets.only(right: 15),
                   icon: const Icon(Icons.multiple_stop, size: 28,color: Color(0xFF7B7B7B),),

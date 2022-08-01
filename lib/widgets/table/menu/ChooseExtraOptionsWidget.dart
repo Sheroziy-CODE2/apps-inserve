@@ -177,7 +177,7 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                             child:
                             const Divider(
                               height: 5,
-                              thickness: 1,
+                              thickness: 1.5,
                               color: Colors.grey,
                             ),
                           ),
@@ -189,7 +189,7 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                             child:
                             const Divider(
                               height: 5,
-                              thickness: 1,
+                              thickness: 1.5,
                               color: Colors.grey,
                             ),
                           ),
@@ -197,11 +197,11 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                       ),
                       GridView.count(
                         physics: const NeverScrollableScrollPhysics(),
-                        childAspectRatio: (1 / .6),
+                        childAspectRatio: (2 / 1),
                         crossAxisSpacing: 5,
                         mainAxisSpacing: 5,
                         shrinkWrap: true,
-                        crossAxisCount: 5,
+                        crossAxisCount: 3,
                         children:
                         List.generate(tableItemProvidor.added_ingredients.length, (index) {
                           return GestureDetector(
@@ -228,11 +228,13 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                                   ),
                                 ),
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(ingedienceProv.findById(tableItemProvidor.added_ingredients[index]).name, overflow: TextOverflow.ellipsis, style: const
-                                    TextStyle(color: Colors.black,fontSize: 10),),
+                                    TextStyle(color: Colors.black,fontSize: 13),),
                                     Text(ingedienceProv.findById(tableItemProvidor.added_ingredients[index]).price.toStringAsFixed(2) + "€", style: const
-                                    TextStyle(color: Colors.black,fontSize: 12, fontWeight: FontWeight.bold),),
+                                    TextStyle(color: Colors.black,fontSize: 13, fontWeight: FontWeight.bold),),
                                   ],
                                 )
                             ),
@@ -252,7 +254,10 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
               ),
             ),
           ),
-          HorizontalAlphabetGridviewControllerWidget(gridViewKey: ingredientsGridViewKey),
+          Padding(
+            padding: const EdgeInsets.only(right: 10, left: 10),
+            child: HorizontalAlphabetGridviewControllerWidget(gridViewKey: ingredientsGridViewKey),
+          ),
         ],
       ),
     );

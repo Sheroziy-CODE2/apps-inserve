@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Authy.dart';
 import '../Models/Invoice.dart';
@@ -52,46 +53,51 @@ class _InvoicesScreen extends State<InvoicesView> {
       bottomNavigationBar: const NavBar(selectedIcon: 3),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
-            )
+        child: CircularProgressIndicator(),
+      )
           : Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(begin: Alignment.bottomRight,
-                      colors: [
-                    const Color(0x00535353).withOpacity(.8),
-                    const Color(0xFF535353).withOpacity(.1)
-                  ])),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      child: const Text(
-                        'Rechnungen',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Color(0xFF2C3333),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                            fontStyle: FontStyle.normal),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.bottomRight,
+                colors: [
+                  const Color(0x00535353).withOpacity(.8),
+                  const Color(0xFF535353).withOpacity(.1)
+                ])),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            const Text(
+              'Heutige Rechnungen',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color(0xFF2C3333),
+                  fontSize: 16,
+                  fontStyle: FontStyle.normal),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            invoicesList.isEmpty ?
+                Expanded(
+                      child:
+                      Center(
+                        child: SizedBox(
+                          height: 150,
+                            child: Lottie.asset("assets/lottie/empty-box.json", repeat: false)),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 9,
-                    child: ListView.builder(
-                      itemCount: invoicesList.length,
-                      itemBuilder: (context, index) =>
-                          InvoiceItemWidget(id: invoicesList[index].id),
-                    ),
-                  )
-                ],
+                )
+            : Expanded(
+              child: ListView.builder(
+                itemCount: invoicesList.length,
+                itemBuilder: (context, index) =>
+                    InvoiceItemWidget(id: invoicesList[index].id),
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 

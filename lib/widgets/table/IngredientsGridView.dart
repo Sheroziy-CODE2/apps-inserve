@@ -66,7 +66,7 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
               width: widget.width /3 - 20,
               child:
               const Divider(
-                thickness: 1,
+                thickness: 1.5,
                 color: Colors.grey,
               ),
             ),
@@ -77,7 +77,7 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
               width: widget.width /3 - 20,
               child:
               const Divider(
-                thickness: 1,
+                thickness: 1.5,
                 color: Colors.grey,
               ),
             ),
@@ -85,11 +85,11 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
         ),
         GridView.count(
           physics: const NeverScrollableScrollPhysics(),
-          childAspectRatio: (1 / .6),
+          childAspectRatio: (2 / 1),
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
           shrinkWrap: true,
-          crossAxisCount: 5,
+          crossAxisCount: 3,
           children:
           ingedienceProv_items.map((e) {
             int amountOfItemsAlreadyAdded = 0;
@@ -120,13 +120,15 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
                     ),
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(e.name,
                           overflow: TextOverflow.ellipsis,
                           style: const
-                        TextStyle(color: Colors.black,fontSize: 10),),
+                        TextStyle(color: Colors.black,fontSize: 13),),
                         Text(e.price.toStringAsFixed(2) + "€", style: const
-                        TextStyle(color: Colors.black,fontSize: 12, fontWeight: FontWeight.bold),),
+                        TextStyle(color: Colors.black,fontSize: 13, fontWeight: FontWeight.bold),),
                         Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: Row(

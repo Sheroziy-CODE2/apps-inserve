@@ -12,9 +12,6 @@ class InvoiceOrderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var name = invoiceItem.product.length > 10
-        ? invoiceItem.product.substring(0, 10)
-        : invoiceItem.product;
     return Material(
       type: MaterialType.transparency,
       child: Container(
@@ -38,31 +35,31 @@ class InvoiceOrderWidget extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 4,
-                  child: ProductNameComponent(name: name),
+                  flex: 6,
+                  child: ProductNameComponent(name: invoiceItem.product),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: //PriceComponent(id: invoiceItem.price),
                       Text(
-                    invoiceItem.price.toString()+ ' Euro',
+                    invoiceItem.price.toStringAsFixed(2).replaceAll(".", ","),
                         textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                   ),
                 ),
                 Expanded(
                   flex: 3,
                   child: Text(
-                    '  ${invoiceItem.amount}',
+                    invoiceItem.amount.toStringAsFixed(2).replaceAll(".", ","),
                     textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF2C3333),
-                      fontSize: 22,
+                      fontSize: 20,
                     ),
                   ),
                 ),

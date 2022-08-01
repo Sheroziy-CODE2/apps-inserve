@@ -1025,11 +1025,11 @@ class Tables with ChangeNotifier {
   Future<void> connectALlTablesSocket(
       {required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('wss://inspery.com:8443/ws/restaurant_tables/?=$token');
+    print('wss://inspery.com/ws/restaurant_tables/?=$token');
     sleep(const Duration(milliseconds: 300));
     _allTableschannel == null
         ? _allTableschannel = IOWebSocketChannel.connect(
-            Uri.parse('wss://inspery.com:8443/ws/restaurant_tables/?=$token'),
+            Uri.parse('wss://inspery.com/ws/restaurant_tables/?=$token'),
           )
         : null;
   }
@@ -1071,14 +1071,14 @@ class Tables with ChangeNotifier {
   Future<void> connectSocket(
       {required id, required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('wss://inspery.com:8443/ws/restaurant_tables/${id}/?=${token}');
+    print('wss://inspery.com/ws/restaurant_tables/${id}/?=${token}');
     //sleep(const Duration(milliseconds: 300));
     for (int i = 0; i < _items.length; i++) {
       if (_items[i].id == id) {
         await _items[i].channel == null
             ? _items[i].channel = IOWebSocketChannel.connect(
                 Uri.parse(
-                    'wss://inspery.com:8443/ws/restaurant_tables/${id}/?=${token}'),
+                    'wss://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
               )
             : null;
       }
@@ -1102,7 +1102,7 @@ class Tables with ChangeNotifier {
                 List<TableItemProvidor> _tIPItems = [];
                 var jsonResponse = data['table_items'] as List<dynamic>;
                 for (var body in jsonResponse) {
-                  _tIPItems.add(TableItemProvidor.fromResponse(body));
+                  _tIPItems.add(TableItemProvidor.fromResponse(body, tableID: id));
                   _tIPItems.last.fromWaiter =
                       false; //Set it to false, because it comes from the server
                 }
@@ -1120,7 +1120,7 @@ class Tables with ChangeNotifier {
                 List<TableItemProvidor> _tIPItems = [];
                 for (var body in jsonResponse) {
                   // print(TableItemProvidor.fromResponse(body));
-                  _tIPItems.add(TableItemProvidor.fromResponse(body));
+                  _tIPItems.add(TableItemProvidor.fromResponse(body, tableID: id));
                 }
                 this._items[i].tIP.addItemsFromServer(_tIPItems);
                 this._items[i].total_price =

@@ -20,7 +20,7 @@ class TableChange {
   }
 
   static const snackBarTable = SnackBar(
-    content: Text('Such Table doesnt exist'),
+    content: Text('Soch ein Tisch existiert nicht'),
   );
 
   var userText = "";
@@ -61,7 +61,7 @@ class TableChange {
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext contextXX, setState) {
         return AlertDialog(
-          title: const Text("Tische zum weitergeben",
+          title: const Text("Tische ändern",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           content: Container
             (
@@ -122,7 +122,7 @@ class TableChange {
                         if (_chosenTable[0] != "") {
                           TableChange.getInstance()?.showTableSearchDialog(context);
                         } else {
-                          snackBar(msg: "Sie müssen die Tabelle auswählen.", context: contextXX);
+                          snackBar(msg: "Sie müssen einen Tisch auswählen.", context: contextXX);
                         }
                       },
                     ),
@@ -155,10 +155,11 @@ class TableChange {
 
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext contextXX, setState) {
+        Tables tablesProvidor = Provider.of<Tables>(context, listen: false);
         return AlertDialog(
           content: Container(
             width: MediaQuery.of(context).size.width,
-            height: 500,
+            height: 600,
             alignment: Alignment.center,
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -170,9 +171,10 @@ class TableChange {
                       child: Column(children: <Widget>[
                         const SizedBox(height: 5),
                         Container(
+                          height: 30,
                           alignment: Alignment.topRight,
-                          child: const Text('Tisch existiert: ',
-                              maxLines: 1, style: TextStyle(fontSize: 20)),
+                          child: tablesProvidor.items.where((element) => element.name == userText).isNotEmpty ? const Text('Tisch existiert',
+                              maxLines: 1, style: TextStyle(fontSize: 20, color: Colors.green)) : Container(),
                         ),
                         Container(
                           alignment: Alignment.topRight,
@@ -199,7 +201,7 @@ class TableChange {
                                       });
                                     },
                                     buttonText: buttons[index],
-                                    color: Theme.of(context).primaryColorDark,
+                                    color: buttons[index] == "DEL" ? const Color.fromARGB(255, 165, 39, 30) : Theme.of(context).primaryColorDark,
                                     textColor: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(10));
                               } else {
@@ -239,11 +241,11 @@ class TableChange {
                           var oldTableId = tablesData.findByName(_chosenTable[0]).id;
                           tablesprov.transferAllItemsToSocket(context: context, tableID: oldTableId, newTableID: newTableId);
                           Navigator.of(context).pushReplacementNamed(TablesView.routeName);
-                          snackBar(msg: "Alle Tabellenbestellungen aus " +_chosenTable[0]+" wurden in den "+userText+" übertragen", context: context);
+                          snackBar(msg: "Alle Tisch-Bestellungen aus " +_chosenTable[0]+" wurden auf den Tisch "+userText+" übertragen", context: context);
                           userText = _chosenTable[0] = "";
                         }
                         else {
-                          snackBar(msg: "Die Tabelle, die Sie hinzugefügt haben, existiert nicht, bitte versuchen Sie eine andere Tabelle", context: context);
+                          snackBar(msg: "Den Tisch, den Sie hinzugefügt haben, existiert nicht. Bitte versuchen Sie einen anderen Tisch", context: context);
                         }
                       },
                     ),

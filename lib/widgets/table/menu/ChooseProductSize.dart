@@ -56,11 +56,11 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
           padding: const EdgeInsets.all(20.0),
           child: GridView.count(
             //physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: (1 / 1),
+            childAspectRatio: (2 / 1),
             crossAxisSpacing: 5,
             mainAxisSpacing: 5,
             shrinkWrap: true,
-            crossAxisCount: 5,
+            crossAxisCount: 3,
             children:
             productPro.product_price.where((element) => !element.isSD).map((priceItem) {
               return GestureDetector(

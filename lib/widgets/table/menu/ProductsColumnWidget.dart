@@ -80,7 +80,7 @@ class ProductsColumnState extends State<ProductsColumn> {
           Expanded(
             child: GestureDetector(
               onVerticalDragUpdate: (details) {
-                const int sensitivity = 8;
+                const int sensitivity = 20;
                 if (details.delta.dy > sensitivity) {
                   // Down Swipe
                   print("Swipe Down " + (scrollController.position.pixels + hight).toString());
@@ -128,12 +128,14 @@ class ProductsColumnState extends State<ProductsColumn> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     margin: const EdgeInsets.only(top: 4.0, left: 7.5, right: 7.5, bottom: 4.0),
-                    child: Text(
-                      productsList[index].name,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Color(0xFF1B262C),
+                    child: Center(
+                      child: Text(
+                        productsList[index].name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF1B262C),
+                        ),
                       ),
                     ),
                   ),

@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final tablesData = Provider.of<Tables>(context);
+    final tablesData = Provider.of<Tables>(context, listen: true);
     var id = tablesData.findByName(userText).id;
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
@@ -56,9 +56,17 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 30),
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      height: 30,
+                      padding: const EdgeInsets.only(right: 20),
+                      alignment: Alignment.topRight,
+                      child: tablesData.items.where((element) => element.name == userText).isNotEmpty ? const Text('Tisch existiert',
+                          maxLines: 1, style: TextStyle(fontSize: 20, color: Colors.green)) : Container(),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(top: 8, right: 20),
                       alignment: Alignment.centerRight,
-                      child: Text('Tisch: ' + userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
+                      child: userText.isEmpty ? const Text('Tisch', maxLines: 1, style: TextStyle(fontSize: 50))
+                      : Text(userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
                     ),
                   ]),
             ),
