@@ -91,6 +91,10 @@ class MyApp extends StatelessWidget {
             navigatorKey: navKey,
             title: 'Flutter Demo',
             theme: ThemeData(
+              pageTransitionsTheme: const PageTransitionsTheme(builders: {
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+              }),
               // the colors and font
               primaryColorDark: const Color(0xFF2C3333),
               cardColor: const Color(0xFFF5F2E7),
