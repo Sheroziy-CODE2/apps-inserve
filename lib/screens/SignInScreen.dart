@@ -84,7 +84,7 @@ class _SignInState extends State<SignIn> {
             ],
           ),
           SvgPicture.asset(
-            'assets/illustrations/possystem.svg',
+            'assets/illustrations/inspery.svg',
             matchTextDirection: true,
           ),
           const Center(

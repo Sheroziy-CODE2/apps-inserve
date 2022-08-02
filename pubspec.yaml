@@ -48,6 +48,8 @@ dependencies:
   flutter_launcher_icons: ^0.9.3
   flutter_phoenix: "^1.0.0"
   lottie: ^1.4.0
+  qr_flutter: ^4.0.0
+  screenshot: ^1.2.3
 
 flutter_icons:
   android: true
@@ -97,6 +99,7 @@ flutter:
     - assets/images/PayCardCash.png
     - assets/images/logo_icon.png
     - assets/img/logo.png
+    - assets/images/inspery_custom_logo.png
     - assets/images/yourlogo.png #this logo will be printet in the TestPrinterWidget
     - assets/lottie/cateringfork-knife.json
     - assets/lottie/empty-box.json
