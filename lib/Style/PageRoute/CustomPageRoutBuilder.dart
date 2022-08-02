@@ -23,7 +23,7 @@ class CustomPageRouteBuilder<T> extends PageRoute<T> {
   bool get maintainState => true;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 600); // Can give custom Duration, unlike in MaterialPageRoute
+  Duration get transitionDuration => const Duration(milliseconds: 400); // Can give custom Duration, unlike in MaterialPageRoute
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
