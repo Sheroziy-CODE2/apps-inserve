@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../QRcode/TableQRCodeAlert.dart';
 import '/widgets/table/TableOverviewProductList.dart';
 
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
     tableItemProvidor = table.tIP;
 
     return Padding(
-        padding: const EdgeInsets.only(left: 5, right: 5, top: 15),
+        padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 450),
           curve: Curves.fastOutSlowIn,
@@ -93,57 +94,60 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                 ]))
               : Column(
                   children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
                     Row(
                       children: [
                         const SizedBox(
                           width: 5,
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Tisch",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            Text(table.name,
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                          ],
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Tisch",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Text(table.name,
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)),
+                            ],
+                          ),
                         ),
                         const Spacer(),
                         Text(paymode ? "Zahlen" : "Offen",
                             style: const TextStyle(
                                 fontSize: 20, color: Colors.black)),
                         const Spacer(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const Text(
-                              "Betray",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            Text(
-                                (paymode
-                                            ? tableItemProvidor
-                                                .getTotalCartTablePrice(
-                                                    context: context)
-                                            : tableItemProvidor
-                                                .getTotalOpenTablePrice(
-                                                    context: context))!
-                                        .toStringAsFixed(2) +
-                                    "€",
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                          ],
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Text(
+                                "Betrag",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                  (paymode
+                                              ? tableItemProvidor
+                                                  .getTotalCartTablePrice(
+                                                      context: context)
+                                              : tableItemProvidor
+                                                  .getTotalOpenTablePrice(
+                                                      context: context))!
+                                          .toStringAsFixed(2) +
+                                      "€",
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)),
+                            ],
+                          ),
                         ),
                         const SizedBox(
                           width: 5,
@@ -167,23 +171,31 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                         const SizedBox(
                           width: 10,
                         ),
-                        paymode
-                            ? SizedBox(
+                        SizedBox(
                                 height: 40,
-                                width: 110,
+                                width: paymode ? 110 : 120,
                                 child: GestureDetector(
                                   onTap: () {
-                                    Provider.of<TableItemChangeProvidor>(context, listen: false).showProduct(index: null, context: context);
-                                    tableItemProvidor.setItemsPaymode(
-                                        paymode: !paymode);
-                                    setState(() {
-                                      paymode = !paymode;
-                                      tableItemProvidor.setHightModeExtendet(
-                                        hight_mode_extendet: false,
-                                      );
-                                    });
-                                    Provider.of<Tables>(context, listen: false)
-                                        .notify();
+                                    if(paymode) {
+                                      Provider.of<TableItemChangeProvidor>(
+                                          context, listen: false).showProduct(
+                                          index: null, context: context);
+                                      tableItemProvidor.setItemsPaymode(
+                                          paymode: !paymode);
+                                      setState(() {
+                                        paymode = !paymode;
+                                        tableItemProvidor.setHightModeExtendet(
+                                          hight_mode_extendet: false,
+                                        );
+                                      });
+                                      Provider.of<Tables>(
+                                          context, listen: false)
+                                          .notify();
+                                    }
+                                    else{
+                                      TableQRCodeAlert().showTableChangeDialog(
+                                          context: context, restaurantImageSVG: "assets/img/logo.svg", tableKey: 'A1B2C3');
+                                    }
                                      },
                                   child: Container(
                                       decoration: BoxDecoration(
@@ -201,7 +213,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                                                   BorderRadius.circular(20),
                                             ),
                                             child: Icon(
-                                              Icons.arrow_back_ios,
+                                              paymode ? Icons.arrow_back_ios : Icons.qr_code_scanner,
                                               color:
                                                   Colors.black.withOpacity(0.4),
                                             ),
@@ -209,12 +221,11 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                                           const SizedBox(
                                             width: 5,
                                           ),
-                                          const Text("Zurück"),
+                                          Text(paymode ? "Zurück" : "QR Code"),
                                         ],
                                       )),
                                 ),
-                              )
-                            : Container(),
+                              ),
                         const Spacer(),
                         paymode
                             ? GestureDetector(
