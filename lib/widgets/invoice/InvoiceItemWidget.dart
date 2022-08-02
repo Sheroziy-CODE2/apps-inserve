@@ -158,17 +158,17 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
                           ),
                         ),
                         Expanded(
-                          flex: 5,
+                          flex: 3,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Material(
                                 type: MaterialType.transparency,
                                 child: Text(
-                                  'bezahlt um  ',
+                                  ' bezahlt um',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 12,
                                     color: Color(0xFF2C3333),
                                   ),
                                 ),
