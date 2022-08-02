@@ -86,6 +86,133 @@ class _InvoiceViewState extends State<InvoiceView> {
         ? const SplashScreen()
         : Scaffold(
       backgroundColor: Theme.of(context).cardColor,
+      bottomNavigationBar:
+      SizedBox(
+        height: 50,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                height: 40,
+                width: 125,
+                child: GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                        BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color:
+                              const Color(0xFFF3F3F3),
+                              borderRadius:
+                              BorderRadius.circular(20),
+                            ),
+                            child: Icon(
+                              Icons.assignment_return_outlined,
+                              color: Colors.black
+                                  .withOpacity(0.4),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text("Rückgabe"),
+                        ],
+                      )),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                width: 105,
+                child: GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                        BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color:
+                              const Color(0xFFF3F3F3),
+                              borderRadius:
+                              BorderRadius.circular(20),
+                            ),
+                            child: Icon(
+                              Icons.print_outlined,
+                              color: Colors.black
+                                  .withOpacity(0.4),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text("Beleg"),
+                        ],
+                      )),
+                ),
+              ),
+
+              SizedBox(
+                height: 40,
+                width: 105,
+                child: GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                        BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color:
+                              const Color(0xFFF3F3F3),
+                              borderRadius:
+                              BorderRadius.circular(20),
+                            ),
+                            child: Icon(
+                              Icons.print,
+                              color: Colors.black
+                                  .withOpacity(0.4),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text("Drucken"),
+                        ],
+                      )),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -248,132 +375,6 @@ class _InvoiceViewState extends State<InvoiceView> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 50,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      width: 125,
-                      child: GestureDetector(
-                        onTap: () {
-
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                              BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    color:
-                                    const Color(0xFFF3F3F3),
-                                    borderRadius:
-                                    BorderRadius.circular(20),
-                                  ),
-                                  child: Icon(
-                                    Icons.assignment_return_outlined,
-                                    color: Colors.black
-                                        .withOpacity(0.4),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text("Rückgabe"),
-                              ],
-                            )),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                      width: 105,
-                      child: GestureDetector(
-                        onTap: () {
-
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                              BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    color:
-                                    const Color(0xFFF3F3F3),
-                                    borderRadius:
-                                    BorderRadius.circular(20),
-                                  ),
-                                  child: Icon(
-                                    Icons.print_outlined,
-                                    color: Colors.black
-                                        .withOpacity(0.4),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text("Beleg"),
-                              ],
-                            )),
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 40,
-                      width: 105,
-                      child: GestureDetector(
-                        onTap: () {
-
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                              BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    color:
-                                    const Color(0xFFF3F3F3),
-                                    borderRadius:
-                                    BorderRadius.circular(20),
-                                  ),
-                                  child: Icon(
-                                    Icons.print,
-                                    color: Colors.black
-                                        .withOpacity(0.4),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text("Drucken"),
-                              ],
-                            )),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
           ],
         ),
       ),

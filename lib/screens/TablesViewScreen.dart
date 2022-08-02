@@ -56,54 +56,55 @@ class _TablesViewState extends State<TablesView> {
                   const Color(0x00535353).withOpacity(.8),
                   const Color(0xFF535353).withOpacity(.1)
                 ])),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 30,),
-            const Text("Offene Tische", style: TextStyle(fontSize: 16),),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  height: 40,
-                    width: MediaQuery.of(context).size.width/2,
-                    child: TablesNotificationWidget()
-                ),
-                Spacer(),
-                IconButton(
-                  padding: const EdgeInsets.only(right: 15),
-                  icon: const Icon(Icons.multiple_stop, size: 28,color: Color(0xFF7B7B7B),),
-                  onPressed: () { TableChange.getInstance()?.showTableChangeDialog(context);
-                    },
-                ),
-                IconButton(
-                  padding: const EdgeInsets.only(right: 15),
-                  icon: const Icon(Icons.supervised_user_circle_outlined, size: 28,color: Color(0xFF7B7B7B)),
-                  onPressed: () { WeiterChange.getInstance()?.showWeiterChangeDialog(context);
-                    },
-                ),
-                IconButton(
-                  padding: const EdgeInsets.only(right: 15),
-                  icon: const Icon(Icons.settings, size: 28,color: Color(0xFF7B7B7B)),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            Expanded(
-              child: _isLoading
-                  ? const Center(
-                child: CircularProgressIndicator(),
-              )
-                  : SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                  itemCount: opendTables.length,
-                  itemBuilder: (context, i) => TableItem(
-                    id: opendTables[i].id,
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Offene Tische", style: TextStyle(fontSize: 16),),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 40,
+                      width: MediaQuery.of(context).size.width/2,
+                      child: TablesNotificationWidget()
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    padding: const EdgeInsets.only(right: 15),
+                    icon: const Icon(Icons.multiple_stop, size: 28,color: Color(0xFF7B7B7B),),
+                    onPressed: () { TableChange.getInstance()?.showTableChangeDialog(context);
+                      },
+                  ),
+                  IconButton(
+                    padding: const EdgeInsets.only(right: 15),
+                    icon: const Icon(Icons.supervised_user_circle_outlined, size: 28,color: Color(0xFF7B7B7B)),
+                    onPressed: () { WeiterChange.getInstance()?.showWeiterChangeDialog(context);
+                      },
+                  ),
+                  IconButton(
+                    padding: const EdgeInsets.only(right: 15),
+                    icon: const Icon(Icons.settings, size: 28,color: Color(0xFF7B7B7B)),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              Expanded(
+                child: _isLoading
+                    ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+                    : SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    itemCount: opendTables.length,
+                    itemBuilder: (context, i) => TableItem(
+                      id: opendTables[i].id,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
