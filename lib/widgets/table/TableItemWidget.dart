@@ -48,7 +48,7 @@ class _TableItemState extends State<TableItem> {
       }
     }
 
-    const double dropdownHight = 39;
+    const double dropdownHight = 38;
 
     return GridTile(
       child: GestureDetector(
@@ -123,7 +123,7 @@ class _TableItemState extends State<TableItem> {
                         ),
                         const Spacer(),
                         Padding(
-                          padding: EdgeInsets.only(right: 12, top: dropDownHistoryTime ? 10 : 0),
+                          padding: EdgeInsets.only(right: 12, top: dropDownHistoryTime ? 9 : 0),
                           child: Column(
                             children: [
                               dropDownHistoryTime ? Container() : Text(
