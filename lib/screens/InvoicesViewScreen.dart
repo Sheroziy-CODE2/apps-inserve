@@ -63,39 +63,38 @@ class _InvoicesScreen extends State<InvoicesView> {
                   const Color(0x00535353).withOpacity(.8),
                   const Color(0xFF535353).withOpacity(.1)
                 ])),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            const Text(
-              'Heutige Rechnungen',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Color(0xFF2C3333),
-                  fontSize: 16,
-                  fontStyle: FontStyle.normal),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            invoicesList.isEmpty ?
-                Expanded(
-                      child:
-                      Center(
-                        child: SizedBox(
-                          height: 150,
-                            child: Lottie.asset("assets/lottie/empty-box.json", repeat: false)),
-                      ),
-                )
-            : Expanded(
-              child: ListView.builder(
-                itemCount: invoicesList.length,
-                itemBuilder: (context, index) =>
-                    InvoiceItemWidget(id: invoicesList[index].id),
+        child: SafeArea(
+          child: Column(
+            children: [
+              const Text(
+                'Heutige Rechnungen',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Color(0xFF2C3333),
+                    fontSize: 16,
+                    fontStyle: FontStyle.normal),
               ),
-            ),
-          ],
+              const SizedBox(
+                height: 20,
+              ),
+              invoicesList.isEmpty ?
+                  Expanded(
+                        child:
+                        Center(
+                          child: SizedBox(
+                            height: 150,
+                              child: Lottie.asset("assets/lottie/empty-box.json", repeat: false)),
+                        ),
+                  )
+              : Expanded(
+                child: ListView.builder(
+                  itemCount: invoicesList.length,
+                  itemBuilder: (context, index) =>
+                      InvoiceItemWidget(id: invoicesList[index].id),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
