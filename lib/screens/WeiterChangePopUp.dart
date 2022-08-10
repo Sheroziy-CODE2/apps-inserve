@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Models/TableModel.dart';
@@ -10,26 +9,29 @@ import '../widgets/SelectButtons.dart';
 import '../widgets/dartPackages/another_flushbar/flushbar.dart';
 import 'TablesViewScreen.dart';
 
-
 //ShowDialog to change the tables owner.
 class WeiterChange {
-  static WeiterChange ? utility;
+  static WeiterChange? utility;
   static WeiterChange? getInstance() {
     utility ??= WeiterChange();
     return utility;
   }
 
-  final List <String> _chosenTable = [];
-  final List <String> _chosenWorker= [""];
+  final List<String> _chosenTable = [];
+  final List<String> _chosenWorker = [""];
   late Tables tablesprov;
 
-  void snackBar({required String msg,required context}){
+  void snackBar({required String msg, required context}) {
     Flushbar(
       message: msg,
-      icon: Icon(Icons.info_outline, size: 28.0, color: Colors.blue[300],),
+      icon: Icon(
+        Icons.info_outline,
+        size: 28.0,
+        color: Colors.blue[300],
+      ),
       margin: const EdgeInsets.all(8),
       borderRadius: BorderRadius.circular(8),
-      duration:  const Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     ).show(context);
   }
 
@@ -45,18 +47,17 @@ class WeiterChange {
     List workers = [];
 
     for (int i = 0; i < worker.length; i++) {
-      if (worker[i].id != loggedInUser){
+      if (worker[i].id != loggedInUser) {
         workers.add(worker[i].username);
       }
     }
 
     List workersImage = [];
     for (int i = 0; i < worker.length; i++) {
-      if (worker[i].id != loggedInUser){
+      if (worker[i].id != loggedInUser) {
         workersImage.add(worker[i].profile);
       }
     }
-
 
     List _buttonText = [];
     for (int i = 0; i < ownedTables.length; i++) {
@@ -70,50 +71,53 @@ class WeiterChange {
       builder: (BuildContext contextXX, setState) {
         return AlertDialog(
           content: SizedBox(
-            width: MediaQuery.of(context).size.width-20,
-            height: MediaQuery.of(context).size.height-200,
+            width: MediaQuery.of(context).size.width - 20,
+            height: MediaQuery.of(context).size.height - 200,
             child: Scaffold(
               backgroundColor: Colors.white,
               body: SingleChildScrollView(
-                child : Column(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Container(
                       alignment: Alignment.center,
                       child: const Text('Tische zum weitergeben',
-                          maxLines: 1, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w500)),
                     ),
                     const SizedBox(height: 10),
                     ConstrainedBox(
                         constraints: BoxConstraints(
-                            maxHeight: (_buttonText.length <= 8) ? MediaQuery.of(context).size.height / 5 : MediaQuery.of(context).size.height / 4),
+                            maxHeight: (_buttonText.length <= 8)
+                                ? MediaQuery.of(context).size.height / 5
+                                : MediaQuery.of(context).size.height / 4),
                         child: GridView.builder(
                             padding: EdgeInsets.zero,
                             itemCount: _buttonText.length,
                             gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 4,
                             ),
-
                             itemBuilder: (BuildContext context, int index) {
                               return MySelectedButton(
                                   buttonTapped: () {
                                     setState(() {
-                                      if (!_chosenTable.contains(_buttonText[index])){
+                                      if (!_chosenTable
+                                          .contains(_buttonText[index])) {
                                         _chosenTable.add(_buttonText[index]);
-                                      }
-                                      else {
+                                      } else {
                                         _chosenTable.remove(_buttonText[index]);
                                       }
                                     });
                                   },
                                   buttonText: _buttonText[index],
-                                  selectedColor: Theme.of(context).primaryColorDark,
+                                  selectedColor:
+                                      Theme.of(context).primaryColorDark,
                                   unselectedColor: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(30),
                                   chosenButton: _chosenTable);
-                            })
-                    ),
+                            })),
                     const SizedBox(height: 10),
                     const Divider(
                       color: Colors.black,
@@ -126,12 +130,14 @@ class WeiterChange {
                     Container(
                       alignment: Alignment.center,
                       child: const Text('Kollegen wählen',
-                          maxLines: 1, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w500)),
                     ),
                     const SizedBox(height: 10),
                     Scrollbar(
                       interactive: true,
-                      thumbVisibility: true,
+                      // thumbVisibility: true,
                       trackVisibility: true,
                       thickness: 5,
                       controller: scrollController,
@@ -139,70 +145,82 @@ class WeiterChange {
                         padding: const EdgeInsets.only(right: 8),
                         child: ConstrainedBox(
                             constraints: BoxConstraints(
-                                maxHeight:  MediaQuery.of(context).size.height / 3),
+                                maxHeight:
+                                    MediaQuery.of(context).size.height / 3),
                             child: GridView.builder(
                                 controller: scrollController,
                                 padding: EdgeInsets.zero,
                                 itemCount: workers.length,
                                 gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   childAspectRatio: 0.95,
                                 ),
-
                                 itemBuilder: (BuildContext context, int index) {
                                   return MyImageButton(
                                     buttonTapped: () {
                                       setState(() {
                                         _chosenWorker[0] = workers[index];
-                                        debugPrint("YOU CHOSE "+ _chosenWorker[0]);
+                                        debugPrint(
+                                            "YOU CHOSE " + _chosenWorker[0]);
                                       });
                                     },
                                     unselectedIconColor: Colors.transparent,
-                                    selectedIconColor: Theme.of(context).primaryColorDark,
+                                    selectedIconColor:
+                                        Theme.of(context).primaryColorDark,
                                     image: workersImage[index],
                                     borderRadius: BorderRadius.circular(30),
                                     username: workers[index],
                                     chosenButton: _chosenWorker[0],
                                   );
-                                })
-                        ),
+                                })),
                       ),
                     ),
-                    const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     ElevatedButton(
                       child: SizedBox(
-                          width: MediaQuery.of(context).size.width -50,
-                          child: const Center(child: Text("ÜBERGEBEN"))
-                      ),
+                          width: MediaQuery.of(context).size.width - 50,
+                          child: const Center(child: Text("ÜBERGEBEN"))),
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Theme
-                              .of(context)
-                              .primaryColorDark),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).primaryColorDark),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             ),
                           ),
-                          alignment: Alignment.center
-                      ),
+                          alignment: Alignment.center),
                       onPressed: () {
                         List tableToTransfer = [];
-                        if (_chosenWorker[0] != "" && _chosenTable.isNotEmpty){
-                          for (int i = 0; i < _chosenTable.length; i++){
-                            tableToTransfer.add(tablesData.findByName(_chosenTable[i]).id);
+                        if (_chosenWorker[0] != "" && _chosenTable.isNotEmpty) {
+                          for (int i = 0; i < _chosenTable.length; i++) {
+                            tableToTransfer
+                                .add(tablesData.findByName(_chosenTable[i]).id);
                           }
                           //var tableToTransfer = tablesData.findByName(_chosenTable[0]).id;
-                          tablesprov.transferTableToAnotherUserSocket(newUserID: _chosenWorker[0], tableIDs: tableToTransfer);
-                          Navigator.of(context).pushReplacementNamed(TablesView.routeName);
-                          snackBar(msg: "Der Tisch  "+_chosenTable.join(", ").toString()+" wurde an den Benutzer "+ _chosenWorker[0] + " übergeben.", context: contextXX);
+                          tablesprov.transferTableToAnotherUserSocket(
+                              newUserID: _chosenWorker[0],
+                              tableIDs: tableToTransfer);
+                          Navigator.of(context)
+                              .pushReplacementNamed(TablesView.routeName);
+                          snackBar(
+                              msg: "Der Tisch  " +
+                                  _chosenTable.join(", ").toString() +
+                                  " wurde an den Benutzer " +
+                                  _chosenWorker[0] +
+                                  " übergeben.",
+                              context: contextXX);
                           _chosenWorker[0] = "";
-                          _chosenTable.clear( );
+                          _chosenTable.clear();
+                        } else {
+                          snackBar(
+                              msg:
+                                  "Sie müssen sowohl einen Tisch als auch denen Kollegen, auswählen.",
+                              context: contextXX);
                         }
-                        else {
-                          snackBar(msg: "Sie müssen sowohl einen Tisch als auch denen Kollegen, auswählen.", context: contextXX);
-                        }
-
                       },
                     ),
                   ],
@@ -219,8 +237,6 @@ class WeiterChange {
         context: context,
         builder: (BuildContext contextY) {
           return builder;
-        }
-    );
+        });
   }
 }
-

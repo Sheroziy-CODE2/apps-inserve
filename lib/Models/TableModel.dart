@@ -5,7 +5,7 @@ class TableModel {
   late final int id;
   final String name;
   double total_price;
-  int owner;
+  int? owner;
   final String type;
   Map<String, int> timeHistory = {};
 
@@ -28,8 +28,7 @@ class TableModel {
   }
 
   Future<void> sendItems(tB) async {
-    _channel!.sink.add(
-        '{"command": "new_table_items","table_items": $tB}');
+    _channel!.sink.add('{"command": "new_table_items","table_items": $tB}');
   }
 
   Future<void> closeSocket(tB) async {
@@ -50,7 +49,8 @@ class TableModel {
     return TableModel(
         name: jsonResponse["name"] as String,
         id: jsonResponse["id"] as int,
-        owner: jsonResponse["owner"] as int,
+        owner:
+            jsonResponse["owner"] == null ? null : jsonResponse["owner"] as int,
         type: jsonResponse["type"] as String,
         total_price: jsonResponse["total_price"].toDouble() as double);
   }
