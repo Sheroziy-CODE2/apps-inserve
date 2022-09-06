@@ -147,9 +147,13 @@ class TableItemProvidor with ChangeNotifier {
         productProvidor.findById(product).product_price;
     double value = 0;
     if (productPriceList.isNotEmpty) {
-      value += productPriceList
-          .firstWhere((element) => element.id == selected_price)
-          .price;
+      try {
+        value += productPriceList
+            .firstWhere((element) => element.id == selected_price)
+            .price;
+      } catch(e){
+        print("ProductPricelist for Product: " + productProvidor.findById(product).name + " don't contain " + selected_price.toString() +"! Error: " + e.toString());
+      }
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
