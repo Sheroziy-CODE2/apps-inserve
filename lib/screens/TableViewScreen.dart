@@ -84,13 +84,14 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
   ScrollController horizontalScrollControllerSteps = ScrollController();
   List<String> buttonNames = [];
   int lastSelectedItem = 0;
+  double barsize = AppBar().preferredSize.height-15;
 
   Widget getElements(
       {required String key, required tableId, required context}) {
     final Map<String, Widget> chooseProductWidget = {
       "Produkt": SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2),
+        height: (MediaQuery.of(context).size.height / 2) - barsize,
         child: ChooseProductForm(
           tableName: tableId,
           goToNextPos: goToNextPos,
@@ -101,7 +102,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       ),
       "Größe": SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2) - 40,
+        height: (MediaQuery.of(context).size.height / 2) - barsize,
         child: ChooseProductSize(
           tableName: tableId,
           goToNextPos: goToNextPos,
@@ -109,7 +110,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       ),
       "Zusatz": SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2) - 40,
+        height: (MediaQuery.of(context).size.height / 2) - barsize,
         child: ChooseSideProduct(
           tableName: tableId,
           goToNextPos: goToNextPos,
@@ -125,7 +126,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       // ),
       "Extras": SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2 - 40,
+        height: MediaQuery.of(context).size.height / 2 - barsize,
         child: ChooseExtraOptionWidget(tableName: tableId),
       ),
     };
@@ -211,166 +212,170 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Theme.of(context).primaryColorDark,
-          child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF5F2E7), //Theme.of(context).primaryColorDark
-              ),
-              child: Column(
-                children: [
-                  TableOverviewWidgetFrame(
+            decoration: const BoxDecoration(
+              color: Color(0xFFF5F2E7),
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: TableOverviewWidgetFrame(
                     height: (MediaQuery.of(context).size.height / 2 - 20),
                     height_expended: MediaQuery.of(context).size.height - 5,
                     width: MediaQuery.of(context).size.width,
                     id: tableId,
                   ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SingleChildScrollView(
-                            controller: horizontalScrollController,
-                            scrollDirection: Axis.horizontal,
-                            physics: const NeverScrollableScrollPhysics(),
-                            child: Row(
-                              children: chooseProductWidget.values.toList(),
-                            )),
-                        chooseProductWidget.keys
-                            .where((element) => element != "Produkt")
-                            .isNotEmpty
-                            ? SizedBox(
-                          height: 38,
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      SingleChildScrollView(
+                          controller: horizontalScrollController,
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
                           child: Row(
-                            children: [
-                              Flexible(
-                                child: ListView.builder(
-                                  controller:
-                                  horizontalScrollControllerSteps,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: chooseProductWidget.length,
-                                  itemBuilder: (context, index) =>
-                                  //index == chooseProductWidget.length ?
+                            children: chooseProductWidget.values.toList(),
+                          ),
+                      ),
+                      chooseProductWidget.keys
+                          .where((element) => element != "Produkt")
+                          .isNotEmpty
+                          ?
+                      SizedBox(
+                        height: 38,
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: ListView.builder(
+                                controller:
+                                horizontalScrollControllerSteps,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: chooseProductWidget.length,
+                                itemBuilder: (context, index) =>
+                                //index == chooseProductWidget.length ?
 
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        actPos = index;
-                                        horizontalScrollController
-                                            .animateTo(
-                                            MediaQuery.of(context)
-                                                .size
-                                                .width *
-                                                actPos,
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      actPos = index;
+                                      horizontalScrollController
+                                          .animateTo(
+                                          MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                              actPos,
+                                          duration: const Duration(
+                                              milliseconds: 500),
+                                          curve:
+                                          Curves.easeInOutQuart);
+                                      if (actPos > 1) {
+                                        horizontalScrollControllerSteps
+                                            .animateTo(actPos * 35,
                                             duration: const Duration(
-                                                milliseconds: 500),
-                                            curve:
-                                            Curves.easeInOutQuart);
-                                        if (actPos > 1) {
-                                          horizontalScrollControllerSteps
-                                              .animateTo(actPos * 35,
-                                              duration: const Duration(
-                                                  milliseconds: 200),
-                                              curve: Curves
-                                                  .easeInOutQuart);
-                                        }
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(2),
-                                      child: Container(
-                                          width: 75,
-                                          padding: const EdgeInsets.only(
-                                              right: 5, left: 5),
-                                          decoration: BoxDecoration(
-                                            color: actPos == index
-                                                ? const Color(0xFFD3E03A)
-                                                : const Color(0xFFF3F3F3),
-                                            borderRadius:
-                                            BorderRadius.circular(20),
-                                            border:
-                                            buttonNames.length > index
-                                                ? Border.all()
-                                                : null,
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                                (
-                                                    //buttonNames.length > index
-                                                    //? buttonNames[index]
-                                                    //: /*(index+1).toString() + "." + */
-                                                    chooseProductWidget
-                                                        .keys
-                                                        .toList()[index]),
-                                                style: const TextStyle(
-                                                  fontSize: 10,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                              ))),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(3),
-                                child: SizedBox(
-                                  height: 40,
-                                  width: 100,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      productReadyToEnter();
-                                    },
+                                                milliseconds: 200),
+                                            curve: Curves
+                                                .easeInOutQuart);
+                                      }
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2),
                                     child: Container(
+                                        width: 75,
+                                        padding: const EdgeInsets.only(
+                                            right: 5, left: 5),
                                         decoration: BoxDecoration(
-                                          color: tableItemChangeProvidor
-                                              .getActProduct() !=
-                                              null
+                                          color: actPos == index
                                               ? const Color(0xFFD3E03A)
-                                              : Colors.white,
+                                              : const Color(0xFFF3F3F3),
                                           borderRadius:
                                           BorderRadius.circular(20),
+                                          border:
+                                          buttonNames.length > index
+                                              ? Border.all()
+                                              : null,
                                         ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                color: tableItemChangeProvidor
-                                                    .getActProduct() !=
-                                                    null
-                                                    ? const Color(
-                                                    0xFFE3F05A)
-                                                    : const Color(
-                                                    0xFFF3F3F3),
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    20),
+                                        child: Center(
+                                            child: Text(
+                                              (
+                                                  //buttonNames.length > index
+                                                  //? buttonNames[index]
+                                                  //: /*(index+1).toString() + "." + */
+                                                  chooseProductWidget
+                                                      .keys
+                                                      .toList()[index]),
+                                              style: const TextStyle(
+                                                fontSize: 10,
                                               ),
-                                              child: Icon(
-                                                Icons.arrow_circle_up,
-                                                color: Colors.black
-                                                    .withOpacity(0.4),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            const Text("Fertig"),
-                                          ],
-                                        )),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ))),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        )
-                            : Container(),
-                      ],
-                    ),
+                            ),
+                           Padding(
+                              padding: const EdgeInsets.all(3),
+                              child: SizedBox(
+                                height: 40,
+                                width: 100,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    productReadyToEnter();
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        color: tableItemChangeProvidor
+                                            .getActProduct() !=
+                                            null
+                                            ? const Color(0xFFD3E03A)
+                                            : Colors.white,
+                                        borderRadius:
+                                        BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color: tableItemChangeProvidor
+                                                  .getActProduct() !=
+                                                  null
+                                                  ? const Color(
+                                                  0xFFE3F05A)
+                                                  : const Color(
+                                                  0xFFF3F3F3),
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  20),
+                                            ),
+                                            child: Icon(
+                                              Icons.arrow_circle_up,
+                                              color: Colors.black
+                                                  .withOpacity(0.4),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const Text("Fertig"),
+                                        ],
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                          : Container(),
+                    ],
                   ),
-                ],
-              )),
-        ),
+                ),
+              ],
+            )
+    ),
       ),
     );
   }

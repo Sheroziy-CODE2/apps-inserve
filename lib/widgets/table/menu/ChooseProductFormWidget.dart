@@ -22,7 +22,7 @@ class ChooseProductForm extends StatefulWidget {
 }
 
 class ChooseProductFormState extends State<ChooseProductForm> {
- // Category? category;
+  // Category? category;
   int id = 0;
   bool rotate = false;
   final List<GlobalKey<CategorysColumnState>> list_key = List.generate(2, (index) => GlobalObjectKey<CategorysColumnState>(index*Random().nextInt(10000)));
@@ -41,7 +41,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
   Widget build(BuildContext context) {
 
 
-    final hight = MediaQuery.of(context).size.height / 2 +20;
+    final hight = MediaQuery.of(context).size.height / 2-10;
     return GestureDetector(
       onPanUpdate: (details) {
         updateListWidgets();
@@ -50,7 +50,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
         children: [
           AnimatedPositioned(
             //flex: 3,
-            height: hight,
+            height: hight-15,
             width: MediaQuery
                 .of(context)
                 .size
@@ -66,11 +66,11 @@ class ChooseProductFormState extends State<ChooseProductForm> {
               children: [
                 CategorysColumn(
                   controlledWidget: singel_key,
-                    key: list_key[0],
-                    id: id,
-                    type: widget.categorieTypeLeft,
-                    //categorieID: widget.categorieIDLeft,
-                    categoryHandler: changeCategory,
+                  key: list_key[0],
+                  id: id,
+                  type: widget.categorieTypeLeft,
+                  //categorieID: widget.categorieIDLeft,
+                  categoryHandler: changeCategory,
                 ),
                 Positioned(
                   left: 20,
@@ -94,7 +94,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
             ),
           ),
           Positioned(
-            height: hight-20,
+            height: hight-35,
             width: MediaQuery
                 .of(context)
                 .size
@@ -139,7 +139,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
           ),
           AnimatedPositioned(
             //flex: 3,
-            height: hight,
+            height: hight-15,
             width: MediaQuery
                 .of(context)
                 .size
@@ -154,10 +154,10 @@ class ChooseProductFormState extends State<ChooseProductForm> {
               children: [
                 CategorysColumn(
                   controlledWidget: singel_key,
-                    id: id,
-                    key: list_key[1],
-                    type: widget.categorieTypeRight,
-                    categoryHandler: changeCategory,
+                  id: id,
+                  key: list_key[1],
+                  type: widget.categorieTypeRight,
+                  categoryHandler: changeCategory,
                 ),
                 Positioned(
                   left: 20,
