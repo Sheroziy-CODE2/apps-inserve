@@ -233,7 +233,7 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                                   children: [
                                     Text(ingedienceProv.findById(tableItemProvidor.added_ingredients[index]).name, overflow: TextOverflow.ellipsis, style: const
                                     TextStyle(color: Colors.black,fontSize: 13),),
-                                    Text(ingedienceProv.findById(tableItemProvidor.added_ingredients[index]).price.toStringAsFixed(2) + "€", style: const
+                                    Text(ingedienceProv.findById(tableItemProvidor.added_ingredients[index]).price.toStringAsFixed(2) + " €", style: const
                                     TextStyle(color: Colors.black,fontSize: 13, fontWeight: FontWeight.bold),),
                                   ],
                                 )

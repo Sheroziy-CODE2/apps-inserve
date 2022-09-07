@@ -83,7 +83,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                       children: [
                         const Spacer(),
                         Text(product.name, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
-                        Text(product.product_price.firstWhere((element) => element.isSD).price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
+                        Text(product.product_price.firstWhere((element) => element.isSD).price.toStringAsFixed(2) + " €", style: const TextStyle(color: Colors.black,fontSize: 12,),),
                         const Spacer(),
                       ]
                   ),
@@ -187,7 +187,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
                                   children: [
                                     const Spacer(),
                                     Text(productSD.name, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
-                                    Text(productSD.product_price.firstWhere((element) => element.isSD).price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
+                                    Text(productSD.product_price.firstWhere((element) => element.isSD).price.toStringAsFixed(2) + " €", style: const TextStyle(color: Colors.black,fontSize: 12,),),
                                     const Spacer(),
                                   ]
                               ),

@@ -253,7 +253,7 @@ class Tables with ChangeNotifier {
                             ),
                             const Text("Rechnung"),
                             Text(
-                              totalPrice.toStringAsFixed(2) + "€",
+                              totalPrice.toStringAsFixed(2) + " €",
                               style: const TextStyle(
                                 fontSize: 20,
                                 decoration: TextDecoration.underline,
@@ -264,7 +264,7 @@ class Tables with ChangeNotifier {
                             ),
                             const Text("Trinkgeld"),
                             Text(
-                              tip.toStringAsFixed(2) + "€",
+                              tip.toStringAsFixed(2) + " €",
                               style: const TextStyle(
                                 fontSize: 20,
                                 decoration: TextDecoration.underline,
@@ -275,7 +275,7 @@ class Tables with ChangeNotifier {
                             ),
                             const Text("Gesamt"),
                             Text(
-                              (totalPrice + tip).toStringAsFixed(2) + "€",
+                              (totalPrice + tip).toStringAsFixed(2) + " €",
                               style: const TextStyle(
                                 fontSize: 20,
                                 decoration: TextDecoration.underline,
@@ -797,7 +797,7 @@ class Tables with ChangeNotifier {
                                 children: [
                                   const Text("Zu bezahlen:  "),
                                   Text(
-                                    amount.toStringAsFixed(2) + "€",
+                                    amount.toStringAsFixed(2) + " €",
                                     style: const TextStyle(
                                       fontSize: 20,
                                       decoration: TextDecoration.underline,
