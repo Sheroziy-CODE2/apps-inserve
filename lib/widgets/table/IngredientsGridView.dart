@@ -127,7 +127,7 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
                           overflow: TextOverflow.ellipsis,
                           style: const
                         TextStyle(color: Colors.black,fontSize: 13),),
-                        Text(e.price.toStringAsFixed(2) + "€", style: const
+                        Text(e.price.toStringAsFixed(2) + " €", style: const
                         TextStyle(color: Colors.black,fontSize: 13, fontWeight: FontWeight.bold),),
                         Padding(
                           padding: const EdgeInsets.all(2.0),

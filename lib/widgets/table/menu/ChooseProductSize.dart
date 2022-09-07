@@ -85,7 +85,7 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
                         children: [
                           const Spacer(),
                           Text(priceItem.description, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(color: Colors.black,fontSize: 10, fontWeight: FontWeight.bold),),
-                          Text(priceItem.price.toStringAsFixed(2) + "€", style: const TextStyle(color: Colors.black,fontSize: 12,),),
+                          Text(priceItem.price.toStringAsFixed(2) + " €", style: const TextStyle(color: Colors.black,fontSize: 12,),),
                           const Spacer(),
                         ]
                     ),
