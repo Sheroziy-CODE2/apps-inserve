@@ -30,6 +30,17 @@ import 'screens/ProvidersApiCallsScreen.dart';
 import 'screens/ProfileScreen.dart';
 
 void main() {
+  // Step 2
+  WidgetsFlutterBinding.ensureInitialized();
+  // Step 3
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((value) => runApp(
+      Phoenix(
+        child: MyApp(),
+      )
+  ));
   runApp(
       Phoenix(
         child: MyApp(),
