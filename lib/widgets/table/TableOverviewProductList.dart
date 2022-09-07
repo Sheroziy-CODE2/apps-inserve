@@ -51,23 +51,9 @@ class _TableOverviewProductListState extends State<TableOverviewProductList> {
             ),
           );
         },
-        separatorBuilder: (_, x) {
-          return Padding(
-              padding:
-                  const EdgeInsets.only(left: 10, right: 20, top: 3, bottom: 3),
-              child: Row(
-                children: List.generate(
-                    600 ~/ 10,
-                    (index) => Expanded(
-                          child: Container(
-                            color: index % 2 == 0
-                                ? Colors.transparent
-                                : Colors.black,
-                            height: 0.5,
-                          ),
-                        )),
-              ));
-        },
+        separatorBuilder: (_, x) => const Divider(
+          color: Colors.black,
+        ),
         itemCount: tableItemsProvidor.tableItems.length,
       ),
     );
