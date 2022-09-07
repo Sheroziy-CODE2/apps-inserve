@@ -116,10 +116,7 @@ class _ChooseSideProductState extends State<ChooseSideProduct> {
 
 
     return Column(
-      children: [
-        const SizedBox(height: 15,),
-        Text((tableItemProvidor.side_product.length != 1 ? "Zusatz":"Zusätze" )+ " wählen", style: const TextStyle(color: Colors.black,fontSize: 18,),),
-        Padding(
+      children: [Padding(
           padding: const EdgeInsets.all(20.0),
           child:
           Column(

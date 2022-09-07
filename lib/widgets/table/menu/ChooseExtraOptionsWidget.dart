@@ -55,14 +55,6 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
             height: 40,
             child: Row(
               children: [
-                const Text(
-                  "Extras",
-                    //productProvidor.findById(tableItemProvidor.product).name,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    )),
                 const Spacer(),
                 // Text(
                 //     tableItemProvidor.getTotalPrice(context: context).toStringAsFixed(2) + "€",
