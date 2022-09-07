@@ -1,4 +1,5 @@
 import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import '/Providers/TableItemsProvidor.dart';
 
 class TableModel {
@@ -9,7 +10,7 @@ class TableModel {
   final String type;
   Map<String, int> timeHistory = {};
 
-  IOWebSocketChannel? _channel;
+  WebSocketChannel? _channel;
   late final _tIP = TableItemsProvidor(); //tIP = tableItemProvider
   TableItemsProvidor get tIP {
     return _tIP;
