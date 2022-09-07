@@ -109,7 +109,7 @@ class _TableOverviewProductItemState extends State<TableOverviewProductItem> {
                         widget.tableItemProvidor
                             .getTotalPrice(context: context)
                             .toStringAsFixed(2) +
-                            "€",
+                            " €",
                         style: const TextStyle(
                           fontSize: 20,
                           decoration: TextDecoration.underline,

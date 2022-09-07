@@ -183,7 +183,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                                 .getTotalOpenTablePrice(
                                 context: context))!
                                 .toStringAsFixed(2) +
-                                "€",
+                                " €",
                             style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
