@@ -102,7 +102,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       ),
       "Größe": SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2) - barsize,
+        height: (MediaQuery.of(context).size.height / 2) - barsize-38,
         child: ChooseProductSize(
           tableName: tableId,
           goToNextPos: goToNextPos,
@@ -110,7 +110,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       ),
       "Zusatz": SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2) - barsize,
+        height: (MediaQuery.of(context).size.height / 2) - barsize-38,
         child: ChooseSideProduct(
           tableName: tableId,
           goToNextPos: goToNextPos,
@@ -126,7 +126,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       // ),
       "Extras": SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2 - barsize,
+        height: MediaQuery.of(context).size.height / 2 - barsize-38,
         child: ChooseExtraOptionWidget(tableName: tableId),
       ),
     };
@@ -217,17 +217,13 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
             ),
             child: Column(
               children: [
-                Expanded(
-                  flex: 5,
-                  child: TableOverviewWidgetFrame(
-                    height: (MediaQuery.of(context).size.height / 2 - 20),
-                    height_expended: MediaQuery.of(context).size.height - 5,
-                    width: MediaQuery.of(context).size.width,
-                    id: tableId,
-                  ),
+                TableOverviewWidgetFrame(
+                  height: (MediaQuery.of(context).size.height / 2 - 20),
+                  height_expended: MediaQuery.of(context).size.height - 5,
+                  width: MediaQuery.of(context).size.width,
+                  id: tableId,
                 ),
                 Expanded(
-                  flex: 5,
                   child: Column(
                     children: [
                       SingleChildScrollView(
