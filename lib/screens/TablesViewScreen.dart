@@ -60,7 +60,7 @@ class _TablesViewState extends State<TablesView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Offene Tische", style: TextStyle(fontSize: 16),),
+              //const Text("Offene Tische", style: TextStyle(fontSize: 16),),
               Row(
                 children: <Widget>[
                   SizedBox(

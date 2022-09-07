@@ -66,14 +66,14 @@ class _InvoicesScreen extends State<InvoicesView> {
         child: SafeArea(
           child: Column(
             children: [
-              const Text(
+              /*const Text(
                 'Heutige Rechnungen',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Color(0xFF2C3333),
                     fontSize: 16,
                     fontStyle: FontStyle.normal),
-              ),
+              ),*/
               const SizedBox(
                 height: 20,
               ),
