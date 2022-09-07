@@ -50,8 +50,6 @@ class _ChooseProductSizeState extends State<ChooseProductSize> {
 
     return Column(
       children: [
-        const SizedBox(height: 15,),
-        const Text("Größe Wählen", style: TextStyle(color: Colors.black,fontSize: 20,),),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: GridView.count(
