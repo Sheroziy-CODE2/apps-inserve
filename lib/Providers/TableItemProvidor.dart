@@ -1,9 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import '/Models/ProductPrice.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/io.dart';
 
 import 'Ingredients.dart';
 import 'Products.dart';
@@ -147,9 +145,13 @@ class TableItemProvidor with ChangeNotifier {
         productProvidor.findById(product).product_price;
     double value = 0;
     if (productPriceList.isNotEmpty) {
-      value += productPriceList
-          .firstWhere((element) => element.id == selected_price)
-          .price;
+      try {
+        value += productPriceList
+            .firstWhere((element) => element.id == selected_price)
+            .price;
+      } catch(e){
+        print("ProductPricelist for Product: " + productProvidor.findById(product).name + " don't contain " + selected_price.toString() +"! Error: " + e.toString());
+      }
     }
 
     var ingredientsProvidor = Provider.of<Ingredients>(context, listen: false);
@@ -240,20 +242,5 @@ class TableItemProvidor with ChangeNotifier {
           List<int>.from(jsonResponse["deleted_ingredients"] as List<dynamic>),
       date: jsonResponse["date"],
     );
-  }
-
-  void connectSocket({required id, required context, required token}) {
-    // {required data}
-    final _channel = IOWebSocketChannel.connect(
-      Uri.parse(''), //TODO: Websocket URL hinzufügen
-    );
-    _channel.stream.listen(
-      (message) {
-        //TODO: Do something with da Data
-        notifyListeners();
-      },
-      onError: (error) => print("Error Websocket TableItemProvidor: " + error),
-    );
-    _channel.sink.add(jsonEncode({"command": "fetch_table_items"}));
   }
 }

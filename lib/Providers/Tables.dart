@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
 import '/printer/ConfigPrinter.dart';
@@ -24,7 +25,10 @@ import 'package:intl/intl.dart';
 class Tables with ChangeNotifier {
   final List<TableModel> _items = [];
 
-  IOWebSocketChannel? _allTableschannel;
+  WebSocketChannel? _allTableschannel;
+  final int delay = 4;
+  final StreamController<dynamic> _recipientCtrl1 = StreamController<dynamic>();
+  final StreamController<dynamic> _recipientCtrl2 = StreamController<dynamic>();
   final streamController = StreamController.broadcast();
   String? token;
 
@@ -42,7 +46,7 @@ class Tables with ChangeNotifier {
   }
 
   notify() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) => notifyListeners());
+    WidgetsBinding.instance.addPostFrameCallback((_) => notifyListeners());
   }
 
   //write to app path, this belongs to the printer
@@ -1061,7 +1065,7 @@ class Tables with ChangeNotifier {
     print('wss://inspery.com/ws/restaurant_tables/?=$token');
     sleep(const Duration(milliseconds: 300));
     _allTableschannel == null
-        ? _allTableschannel = IOWebSocketChannel.connect(
+        ? _allTableschannel = WebSocketChannel.connect(
             Uri.parse('wss://inspery.com/ws/restaurant_tables/?=$token'),
           )
         : null;
@@ -1090,13 +1094,48 @@ class Tables with ChangeNotifier {
             break;
         }
       },
-      onError: (error) => {
-        connectALlTablesSocket(context: context, token: token).then((_) {
+        onError: (e) async {
+          _recipientCtrl1.addError(e);
+          await Future.delayed(Duration(seconds: delay));
           listenToAllTabelsSocket(context: context, token: token);
-          print(error);
-        }),
-      },
-    );
+        }, onDone: () async {
+      await Future.delayed(Duration(seconds: delay));
+      listenToAllTabelsSocket(context: context, token: token);
+    }, cancelOnError: true
+
+    ).onError((error) {
+      AlertDialog alert = AlertDialog(
+        title: Row(
+          children: const [
+            Icon(Icons.warning, color: Colors.red,),
+            Text("  Table Socket Probleme!"),
+          ],
+        ),
+        content: Container(
+          height: MediaQuery.of(context).size.height-100,
+          width: MediaQuery.of(context).size.width-100,
+          child: Center(
+            child: Text(error),
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text("Abbrechen"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    });
     //fetch the table items
     _allTableschannel?.sink.add(jsonEncode({"command": "fetch_tables"}));
   }
@@ -1109,7 +1148,7 @@ class Tables with ChangeNotifier {
     for (int i = 0; i < _items.length; i++) {
       if (_items[i].id == id) {
         await _items[i].channel == null
-            ? _items[i].channel = IOWebSocketChannel.connect(
+            ? _items[i].channel = WebSocketChannel.connect(
                 Uri.parse(
                     'wss://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
               )
@@ -1211,13 +1250,47 @@ class Tables with ChangeNotifier {
                 break;
             }
           },
-          onError: (error) => {
-            connectSocket(id: id, context: context, token: token).then((_) {
-              listenSocket(id: id, context: context, token: token);
-              print(error);
-            }),
-          },
-        );
+            onError: (e) async {
+              _recipientCtrl2.addError(e);
+              await Future.delayed(Duration(seconds: delay));
+              listenSocket(context: context, token: token, id: id);
+            }, onDone: () async {
+          await Future.delayed(Duration(seconds: delay));
+          listenSocket(context: context, token: token, id: id);
+        }, cancelOnError: true
+
+        ).onError((error) {
+          AlertDialog alert = AlertDialog(
+            title: Row(
+              children: const [
+                Icon(Icons.warning, color: Colors.red,),
+                Text("  Items Socket Probleme!"),
+              ],
+            ),
+            content: Container(
+              height: MediaQuery.of(context).size.height-100,
+              width: MediaQuery.of(context).size.width-100,
+              child: Center(
+                child: Text(error),
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Abbrechen"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+          // show the dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        },);
         //fetch the table items
         table.channel?.sink.add(jsonEncode({"command": "fetch_table_items"}));
       }
