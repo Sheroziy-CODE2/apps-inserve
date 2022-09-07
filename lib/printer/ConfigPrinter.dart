@@ -7,6 +7,7 @@ import 'package:inspery_waiter/printer/Testprint.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';
+import '../widgets/dartPackages/another_flushbar/flushbar.dart';
 
 class ConfigPrinter {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
@@ -104,22 +105,18 @@ class ConfigPrinter {
             }
           }
 
-          Future show(
-            String message, {
-            Duration duration: const Duration(seconds: 3),
-          }) async {
-            await Future.delayed(const Duration(milliseconds: 100));
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                duration: duration,
+          void snackBar({required String msg, required context}) {
+            Flushbar(
+              message: msg,
+              icon: Icon(
+                Icons.info_outline,
+                size: 28.0,
+                color: Colors.blue[300],
               ),
-            );
+              margin: const EdgeInsets.all(8),
+              borderRadius: BorderRadius.circular(8),
+              duration: const Duration(seconds: 2),
+            ).show(context);
           }
 
           List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
@@ -141,7 +138,7 @@ class ConfigPrinter {
 
           void _connect() {
             if (_device == null) {
-              show('No device selected.');
+              snackBar(msg: "Kein Gerät ausgewählt", context: context);
             } else {
               bluetooth.isConnected.then((isConnected) {
                 if (!(isConnected ?? false)) {
