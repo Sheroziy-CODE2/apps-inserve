@@ -55,11 +55,11 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
     final token = Provider.of<Authy>(context, listen: false).token;
     {
       tablesData.addTabl(token: token).then((_) async {
-        await Provider.of<Categorys>(context, listen: false)
-            .addCategory(context: context);
         final tokenProvider = Provider.of<Authy>(context, listen: false);
-        _isInit = false;
         final token = tokenProvider.token;
+        await Provider.of<Categorys>(context, listen: false)
+            .addCategory(context: context, token: token);
+        _isInit = false;
         await Provider.of<Ingredients>(context, listen: false)
             .addIngredients(token: token, context: context);
         await Provider.of<Products>(context, listen: false)
@@ -69,14 +69,14 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
             .addWorkers(token: token, context: context);
 
         await tablesData.connectALlTablesSocket(context: context, token: token);
-        await tablesData.listenToAllTabelsSocket(
-            context: context, token: token);
+        // await tablesData.listenToAllTabelsSocket(
+        //     context: context, token: token);
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
           await tablesData.connectSocket(
               id: table.id, context: context, token: token);
-          await tablesData.listenSocket(
-              id: table.id, context: context, token: token);
+          // await tablesData.listenSocket(
+          //     id: table.id, context: context, token: token);
         }
         setState(() {
           _isLoading = false;
