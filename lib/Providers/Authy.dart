@@ -12,6 +12,13 @@ import 'package:flutter/foundation.dart';
 
 class Authy extends ChangeNotifier {
   String? _token;
+  String? email;
+  String? first_name;
+  String? last_name;
+  String? profile_info;
+  String? created;
+  bool? is_email_verified;
+  List<UserGroupModel> groups = [];
   late int _id;
   String _userName = '';
   static final _storage = FlutterSecureStorage();
@@ -19,6 +26,20 @@ class Authy extends ChangeNotifier {
   static const _keyPassword = 'password';
   late String photoLink = "";
   String RestaurantPhotoLink = "";
+
+  String getUserName(){
+    String name = "";
+    if(first_name != null){
+      name += first_name!;
+    }
+    if(last_name != null){
+      name += " " + last_name!;
+    }
+    if(name == ""){
+      name = _userName;
+    }
+    return name;
+  }
 
   Future<void> getRestaurantPhoto() async {
     //callling the restaurant info Api
@@ -42,7 +63,7 @@ class Authy extends ChangeNotifier {
     //comment out the next three lines to prevent the image from being saved
     //to the device to show that it's coming from the internet
     await Directory(firstPath).create(recursive: true); // <-- 1
-    File file2 = new File(filePathAndName); // <-- 2
+    File file2 = File(filePathAndName); // <-- 2
     file2.writeAsBytesSync(response.bodyBytes); // <-- 3
     RestaurantPhotoLink = filePathAndName;
   }
@@ -133,6 +154,15 @@ class Authy extends ChangeNotifier {
         setPassword(passWord);
         _id = jsonResponse["user"]["id"];
         _userName = jsonResponse["user"]["username"];
+        print(jsonResponse["user"]["groups"].length);
+        groups = jsonResponse["user"]["groups"] == null ? [] : List.generate(jsonResponse["user"]["groups"].length, (index) =>
+            UserGroupModel(id: jsonResponse["user"]["groups"][index]["id"],name: jsonResponse["user"]["groups"][index]["name"]));
+        is_email_verified = jsonResponse["user"]["profile"]["is_email_verified"];
+        first_name = jsonResponse["user"]["profile"]["first_name"];
+        last_name = jsonResponse["user"]["profile"]["last_name"];
+        created = jsonResponse["user"]["profile"]["created"];
+        email = jsonResponse["user"]["email"];
+        profile_info = jsonResponse["user"]["profile"]["profile_info"];
         photoLink = jsonResponse["user"]["profile"]["picture"] ?? '';
         _token = jsonResponse["token"];
       }
@@ -152,4 +182,14 @@ class Authy extends ChangeNotifier {
 
     getRestaurantPhoto();
   }
+}
+
+class UserGroupModel{
+  int id;
+  String name;
+
+  UserGroupModel({
+    required this.id,
+    required this.name,
+  });
 }
