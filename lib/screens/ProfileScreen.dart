@@ -116,7 +116,7 @@ class _ProfileState extends State<Profile> {
                     )
                   ],
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 Text(
                   authy.getUserName(),
                   textAlign: TextAlign.center,
