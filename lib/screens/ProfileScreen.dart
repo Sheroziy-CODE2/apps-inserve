@@ -80,329 +80,364 @@ class _ProfileState extends State<Profile> {
     return _isLoading == true
         ? SplashScreen()
         : Scaffold(
-            bottomNavigationBar: const NavBar(selectedIcon: 4),
-            body: Container(
-              child: ListView(
-                children: [
-                  Row(
+      bottomNavigationBar: const NavBar(selectedIcon: 4),
+      body: Container(
+        child: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: img != ''
+                          ? ClipRRect(
+                        borderRadius: BorderRadius.circular(75.0),
+                        child: Image.network(
+                          img,
+                          height: 150,
+                          width: 150,
+                          fit: BoxFit.fill,
+                        ),
+                      )
+                          : const Text(''),
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: GestureDetector(
+                      child: const Icon(Icons.logout),
+                      onTap: () {
+                        logout();
+                        Phoenix.rebirth(context);
+                      },
+                    ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Text(
+                  authy.getUserName(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF2C3333),
+                  ),
+                ),
+                Text(
+                  authy.email != null ? authy.email! : "keine Email-Adresse hinterlegt",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF2C3333),
+                  ),
+                ),
+                authy.is_email_verified != null ? !authy.is_email_verified! ?
+                const Text(
+                  "Bitte verifiziere deine Email Adresse!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red,
+                  ),
+                ) : Container() : Container(),
+                const SizedBox(height: 10,),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children:
+                    authy.groups.map((group) =>
+                        Container(
+                          margin: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+                          child: Text(group.name),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Theme.of(context).primaryColorLight,
+                          ),
+                        )
+                    ).toList(),
+                ),
+                const SizedBox(height: 10,),
+              ],
+            ),
+            SizedBox(
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(flex: 1, child: Container()),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 20),
-                              child: img != ''
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(75.0),
-                                      child: Image.network(
-                                        img,
-                                        height: 150,
-                                        width: 150,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    )
-                                  : const Text(''),
-                            ),
-                            Text(
-                              '@' + authy.userName,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 30,
+                      Container(
+                        margin: const EdgeInsets.only(top: 10, left: 15),
+                        child: Row(children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              'Umsatz',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 18,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFF2C3333),
+                                color: Theme.of(context).cardColor,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Expanded(
+                            flex: 6,
+                            child: Container(),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                right: 15,
+                              ),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final ConfigPrinter _configPrinter =
+                                  ConfigPrinter();
+                                  print("connection " +
+                                      (await _configPrinter.checkState())
+                                          .toString());
+                                  BlueThermalPrinter bluetooth =
+                                      BlueThermalPrinter.instance;
+                                  var now = DateTime.now();
+                                  var formatter =
+                                  DateFormat('HH:mm dd-MM-yyyy');
+                                  String formattedDate =
+                                  formatter.format(now);
+                                  bluetooth.isConnected.then((isConnected) {
+                                    if (isConnected ?? false) {
+                                      bluetooth.printNewLine();
+                                      bluetooth.printCustom(
+                                          "Tagesabrechnung", 2, 1);
+                                      bluetooth.printNewLine();
+                                      bluetooth.printCustom(
+                                          formattedDate, 1, 0);
+                                      bluetooth.printCustom(
+                                          authy.userName, 1, 0);
+                                      bluetooth.printNewLine();
+                                      bluetooth.printLeftRight(
+                                          "Gesammt", dailyIncoiveModel.sum.toString(), 1);
+                                      bluetooth.printLeftRight("Karte",
+                                          dailyIncoiveModel.card.toStringAsFixed(2), 1);
+                                      bluetooth.printLeftRight(
+                                          "Bar", dailyIncoiveModel.cash.toStringAsFixed(2), 1);
+                                      bluetooth.printLeftRight(
+                                          "Tip Karte:", dailyIncoiveModel.card_tip.toStringAsFixed(2), 1);
+                                      bluetooth.printLeftRight(
+                                          "Tip Bar", dailyIncoiveModel.cash_tip.toStringAsFixed(2), 1);
+                                      bluetooth.printNewLine();
+                                      bluetooth.printQRcode(
+                                          "https://www.inspery.com/",
+                                          150,
+                                          150,
+                                          1);
+                                      bluetooth.printNewLine();
+                                      bluetooth.printNewLine();
+                                      bluetooth.printNewLine();
+                                    }
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.print,
+                                  color: Theme.of(context).cardColor,
+                                  size: 24.0,
+                                  semanticLabel:
+                                  'Text to announce in accessibility modes',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          child: const Icon(Icons.logout),
-                          onTap: () {
-                            logout();
-                            Phoenix.rebirth(context);
-                          },
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 15, top: 5, right: 7.5, bottom: 5),
+                              child: Column(children: [
+                                Container(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    'gesammt',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context)
+                                            .primaryColorDark),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 7, bottom: 7),
+                                  child: Text(
+                                    dailyIncoiveModel.sum.toStringAsFixed(2),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w600,
+                                      color:
+                                      Theme.of(context).primaryColorDark,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Theme.of(context).cardColor,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 7.5, right: 15, top: 5, bottom: 5),
+                              child: Column(children: [
+                                Container(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    'Tip',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context)
+                                            .primaryColorDark),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 7, bottom: 7),
+                                  child: Text(
+                                    (dailyIncoiveModel.card_tip+dailyIncoiveModel.cash_tip).toStringAsFixed(2),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w600,
+                                      color:
+                                      Theme.of(context).primaryColorDark,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Theme.of(context).cardColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 15, right: 7.5, top: 5, bottom: 15),
+                              child: Column(children: [
+                                Container(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    'EC',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context)
+                                            .primaryColorDark),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 7, bottom: 7),
+                                  child: Text(
+                                    dailyIncoiveModel.card.toStringAsFixed(2),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w600,
+                                      color:
+                                      Theme.of(context).primaryColorDark,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Theme.of(context).cardColor,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 7.5, right: 15, top: 5, bottom: 15),
+                              child: Column(children: [
+                                Container(
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    'Bar',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context)
+                                            .primaryColorDark),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 7, bottom: 7),
+                                  child: Text(
+                                    dailyIncoiveModel.cash.toStringAsFixed(2),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w600,
+                                      color:
+                                      Theme.of(context).primaryColorDark,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Theme.of(context).cardColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
-                  SizedBox(
-                      child: Container(
-                    margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Theme.of(context).primaryColorDark,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 10, left: 15),
-                          child: Row(children: [
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                'Umstaz',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).cardColor,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 6,
-                              child: Container(),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  right: 15,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    final ConfigPrinter _configPrinter =
-                                        ConfigPrinter();
-                                    print("connection " +
-                                        (await _configPrinter.checkState())
-                                            .toString());
-                                    BlueThermalPrinter bluetooth =
-                                        BlueThermalPrinter.instance;
-                                    var now = DateTime.now();
-                                    var formatter =
-                                        DateFormat('HH:mm dd-MM-yyyy');
-                                    String formattedDate =
-                                        formatter.format(now);
-                                    bluetooth.isConnected.then((isConnected) {
-                                      if (isConnected ?? false) {
-                                        bluetooth.printNewLine();
-                                        bluetooth.printCustom(
-                                            "Tagesabrechnung", 2, 1);
-                                        bluetooth.printNewLine();
-                                        bluetooth.printCustom(
-                                            formattedDate, 1, 0);
-                                        bluetooth.printCustom(
-                                            authy.userName, 1, 0);
-                                        bluetooth.printNewLine();
-                                        bluetooth.printLeftRight(
-                                            "Gesammt", dailyIncoiveModel.sum.toString(), 1);
-                                        bluetooth.printLeftRight("Karte",
-                                            dailyIncoiveModel.card.toStringAsFixed(2), 1);
-                                        bluetooth.printLeftRight(
-                                            "Bar", dailyIncoiveModel.cash.toStringAsFixed(2), 1);
-                                        bluetooth.printLeftRight(
-                                            "Tip Karte:", dailyIncoiveModel.card_tip.toStringAsFixed(2), 1);
-                                        bluetooth.printLeftRight(
-                                            "Tip Bar", dailyIncoiveModel.cash_tip.toStringAsFixed(2), 1);
-                                        bluetooth.printNewLine();
-                                        bluetooth.printQRcode(
-                                            "https://www.inspery.com/",
-                                            150,
-                                            150,
-                                            1);
-                                        bluetooth.printNewLine();
-                                        bluetooth.printNewLine();
-                                        bluetooth.printNewLine();
-                                      }
-                                    });
-                                  },
-                                  child: Icon(
-                                    Icons.print,
-                                    color: Theme.of(context).cardColor,
-                                    size: 24.0,
-                                    semanticLabel:
-                                        'Text to announce in accessibility modes',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 15, top: 5, right: 7.5, bottom: 5),
-                                child: Column(children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      'gesammt',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Theme.of(context)
-                                              .primaryColorDark),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 7, bottom: 7),
-                                    child: Text(
-                                      dailyIncoiveModel.sum.toStringAsFixed(2),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Theme.of(context).cardColor,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 7.5, right: 15, top: 5, bottom: 5),
-                                child: Column(children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      'Tip',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Theme.of(context)
-                                              .primaryColorDark),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 7, bottom: 7),
-                                    child: Text(
-                                      (dailyIncoiveModel.card_tip+dailyIncoiveModel.cash_tip).toStringAsFixed(2),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Theme.of(context).cardColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 15, right: 7.5, top: 5, bottom: 15),
-                                child: Column(children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      'EC',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Theme.of(context)
-                                              .primaryColorDark),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 7, bottom: 7),
-                                    child: Text(
-                                      dailyIncoiveModel.card.toStringAsFixed(2),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Theme.of(context).cardColor,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 7.5, right: 15, top: 5, bottom: 15),
-                                child: Column(children: [
-                                  Container(
-                                    padding: EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      'Bar',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Theme.of(context)
-                                              .primaryColorDark),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 7, bottom: 7),
-                                    child: Text(
-                                      dailyIncoiveModel.cash.toStringAsFixed(2),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w600,
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Theme.of(context).cardColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height / 4,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                        ),
-                      )),
-                ],
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-              ),
-            ),
-          );
+                )),
+            SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                  ),
+                )),
+          ],
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+        ),
+      ),
+    );
   }
 }

@@ -1297,10 +1297,6 @@ class Tables with ChangeNotifier {
     }
   }
 
-  void fetchTable({required id}) {
-    var table = findById(id);
-    table.channel?.sink.add(jsonEncode({"command": "fetch_table_items"}));
-  }
 
   Future<void> addTabl({required token}) async {
     // _items.add()
