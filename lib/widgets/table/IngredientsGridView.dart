@@ -6,6 +6,7 @@ import '../../Providers/TableItemChangeProvidor.dart';
 import '../../Providers/TableItemProvidor.dart';
 import '../../Providers/TableItemsProvidor.dart';
 import '../../Providers/Tables.dart';
+import '../dartPackages/another_flushbar/flushbar.dart';
 
 class IngredientsGridView extends StatefulWidget {
   const IngredientsGridView({Key? key, required this.tableID, required this.width}) : super(key: key);
@@ -100,11 +101,24 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
             }
             return GestureDetector(
                 onTap: (){
-                  setState((){
-                    if(tableItemProvidor.paymode || tableItemProvidor.isFromServer()) return;
-                    tableItemProvidor.added_ingredients.add(e.id);
-                    tableItemProvidor.notify(context);
-                  });
+                    if(tableItemProvidor.paymode || tableItemProvidor.isFromServer()) {
+                      setState((){
+                        tableItemProvidor.added_ingredients.add(e.id);
+                        tableItemProvidor.notify(context);
+                      });
+                    } else {
+                      Flushbar(
+                        message: "Produkt gesperrt",
+                        icon: Icon(
+                          Icons.lock,
+                          size: 28.0,
+                          color: Colors.blue[300],
+                        ),
+                        margin: const EdgeInsets.all(8),
+                        borderRadius: BorderRadius.circular(8),
+                        duration: const Duration(seconds: 2),
+                      ).show(context);
+                    }
                 },
                 child: Container(
                   height: 10,
