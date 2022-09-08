@@ -13,7 +13,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProducts({required token, required context}) async {
     final url = Uri.parse(
-      'https://www.inspery.com/menu/all_products/',
+      'https://www.inspery.com/menu/products/',
     );
     final headers = {"Authorization": "Token $token"};
     final response = await http.get(url, headers: headers);
