@@ -17,8 +17,7 @@ class _horizontalAlphabetGridviewControllerWidgetState extends State<HorizontalA
 
   int position = -1;
   double widgetWith = 1;
-  final double hight = 45;
-
+  final double hight = 35;
   @override
   Widget build(BuildContext context) {
 
@@ -40,7 +39,19 @@ class _horizontalAlphabetGridviewControllerWidgetState extends State<HorizontalA
     }
 
     return
-    SizedBox(
+    Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+            colors: [
+              Colors.transparent,
+              Color(0x11000000),
+              Colors.transparent,
+            ],
+            begin: FractionalOffset(0.0, 0.0),
+            end: FractionalOffset(1.0, 0.0),
+            stops: [0.0, 0.5, 1.0],
+            tileMode: TileMode.clamp),
+      ),
         height: hight,
         child:Stack(
           children: [
