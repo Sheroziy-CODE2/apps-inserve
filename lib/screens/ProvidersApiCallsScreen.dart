@@ -69,14 +69,14 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
             .addWorkers(token: token, context: context);
 
         await tablesData.connectALlTablesSocket(context: context, token: token);
-        // await tablesData.listenToAllTabelsSocket(
-        //     context: context, token: token);
+         await tablesData.listenToAllTabelsSocket(
+             context: context, token: token);
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
           await tablesData.connectSocket(
               id: table.id, context: context, token: token);
-          // await tablesData.listenSocket(
-          //     id: table.id, context: context, token: token);
+           await tablesData.listenSocket(
+               id: table.id, context: context, token: token);
         }
         setState(() {
           _isLoading = false;
