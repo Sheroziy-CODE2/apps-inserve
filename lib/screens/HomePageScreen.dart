@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     "7", "8", "9", " ",
     "4", "5", "6", " ",
     "1", "2", "3", " ",
-    "0", ".", "DEL", "Tisch",
+    "0", ".", "DEL", "Öffnen",
   ];
 
   @override
@@ -38,38 +38,36 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           ConstrainedBox(
             constraints: const BoxConstraints(),
-            child: Container(
-              child: Column(
-                  children: <Widget>[
-                    const SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        IconButton(
-                          padding: const EdgeInsets.only(right: 15),
-                          icon: const Icon(Icons.layers, size: 28,color: Color(0xFF7B7B7B),),
-                          onPressed: () {
-                            Navigator.of(context).pushReplacementNamed(FlorPlanScreen.routeName);
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      height: 30,
-                      padding: const EdgeInsets.only(right: 20),
-                      alignment: Alignment.topRight,
-                      child: tablesData.items.where((element) => element.name == userText).isNotEmpty ? const Text('Tisch existiert',
-                          maxLines: 1, style: TextStyle(fontSize: 20, color: Colors.green)) : Container(),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 8, right: 20),
-                      alignment: Alignment.centerRight,
-                      child: userText.isEmpty ? const Text('Tisch', maxLines: 1, style: TextStyle(fontSize: 50))
-                      : Text(userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
-                    ),
-                  ]),
-            ),
+            child: Column(
+                children: <Widget>[
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      IconButton(
+                        padding: const EdgeInsets.only(right: 15),
+                        icon: const Icon(Icons.layers, size: 28,color: Color(0xFF7B7B7B),),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacementNamed(FlorPlanScreen.routeName);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  Container(
+                    height: 30,
+                    padding: const EdgeInsets.only(right: 20),
+                    alignment: Alignment.topRight,
+                    child: tablesData.items.where((element) => element.name == userText).isNotEmpty ? const Text('Tisch existiert',
+                        maxLines: 1, style: TextStyle(fontSize: 20, color: Colors.green)) : Container(),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 8, right: 20),
+                    alignment: Alignment.centerRight,
+                    child: userText.isEmpty ? const Text('Tisch', maxLines: 1, style: TextStyle(fontSize: 50))
+                    : Text(userText, maxLines: 1, style: const TextStyle(fontSize: 50)),
+                  ),
+                ]),
           ),
           const Spacer(),
           ConstrainedBox(
