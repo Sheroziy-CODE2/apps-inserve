@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/table/menu/ChooseAmountWidget.dart';
 import '/Providers/Products.dart';
 import '/widgets/table/menu/ChooseExtraOptionsWidget.dart';
 import '/widgets/table/menu/ChooseProductSize.dart';
@@ -129,6 +130,11 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
         height: MediaQuery.of(context).size.height / 2 - barsize-38,
         child: ChooseExtraOptionWidget(tableName: tableId),
       ),
+      "Anzahl": SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 2 - barsize-38,
+        child: ChooseAmountWidget(tableName: tableId, productReadyToEnter: productReadyToEnter,),
+      ),
     };
     return chooseProductWidget[key]!;
   }
@@ -170,6 +176,7 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
       // }
       if(tableItemChangeProvidor.selectedProcuctManual) {
         chooseProductWidget.putIfAbsent("Extras", () => getElements(key: "Extras", tableId: tableId, context: context));
+        chooseProductWidget.putIfAbsent("Anzahl", () => getElements(key: "Anzahl", tableId: tableId, context: context));
       }
       if (lastSelectedItem != actItem) {
         //when select other item in List

@@ -18,12 +18,12 @@ class Categorys with ChangeNotifier {
     return _items.firstWhere((cat) => cat.products.where((pro) => pro.id == productID).isNotEmpty).product_type;
   }
 
-  Future<void> addProducts(cat, {required context}) async {
+  Future<void> addProducts(cat, {required token, required context}) async {
     //this function will get all the products for the category sent to it
     final url = Uri.parse(
       'https://www.inspery.com/menu/products/${cat.id}',
     );
-    final headers = {"Content-type": "application/json"};
+    final headers = {"Content-type": "application/json", "Authorization": "Token $token"};
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final productsData =
@@ -41,7 +41,7 @@ class Categorys with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addCategory({required context}) async {
+  Future<void> addCategory({required token, required context}) async {
     // this function will add categorys to the _items List
     final url = Uri.parse(
       'https://www.inspery.com/menu/category/4',
@@ -55,6 +55,7 @@ class Categorys with ChangeNotifier {
         addProducts(
             //adding the products to the category we are saving
             cat,
+            token: token,
             context: context);
         _items.add(cat);
       }

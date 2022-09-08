@@ -1111,7 +1111,7 @@ class Tables with ChangeNotifier {
             Text("  Table Socket Probleme!"),
           ],
         ),
-        content: Container(
+        content: SizedBox(
           height: MediaQuery.of(context).size.height-100,
           width: MediaQuery.of(context).size.width-100,
           child: Center(

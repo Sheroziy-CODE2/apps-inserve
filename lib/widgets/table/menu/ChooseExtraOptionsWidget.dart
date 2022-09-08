@@ -7,6 +7,7 @@ import '../../../Providers/TableItemChangeProvidor.dart';
 import '../../../Providers/TableItemProvidor.dart';
 import '../../../Providers/TableItemsProvidor.dart';
 import '../../../Providers/Tables.dart';
+import '../../dartPackages/another_flushbar/flushbar.dart';
 import '../HorizontalAlphabetGridviewControllerWidget.dart';
 import '../IngredientsGridView.dart';
 
@@ -48,106 +49,10 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
       return Container();
     }
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.only(right: 5, left: 5, top: 20, bottom: 5),
       child: Column(
         children: [
-          SizedBox(
-            height: 40,
-            child: Row(
-              children: [
-                const Spacer(),
-                // Text(
-                //     tableItemProvidor.getTotalPrice(context: context).toStringAsFixed(2) + "€",
-                //     style: const TextStyle(
-                //       fontSize: 18,
-                //       color: Colors.black,
-                //     )),
-                tableItemProvidor.getPaymode() || tableItemProvidor.isFromServer()
-                    ? Container()
-                    : Row(children: [
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState((){
-                        tableItemProvidor.addQuantity(amountToAdd: -1, context: context);
-                      });
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.3),
-                        border: Border.all(
-                            color: Colors.grey, width: 1),
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(5.0) //
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "-",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        tableItemProvidor.quantity
-                            .toStringAsFixed(0),
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState((){
-                        tableItemProvidor.addQuantity(amountToAdd: 1, context: context);
-                      });
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.3),
-                        border: Border.all(
-                            color: Colors.grey, width: 1),
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(5.0) //
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "+",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ]),
-              ],
-            ),
-          ),
           Expanded(
-            // SizedBox( //ok
-            //   height: ((tIP.hight_mode_extendet
-            //       ? widget.height_expended
-            //       : widget.height) * 0.6 )- 95,
             child:
             Scrollbar(
               interactive: true,
@@ -203,6 +108,18 @@ class _ChooseExtraOptionWidgetState extends State<ChooseExtraOptionWidget> {
                                   tableItemProvidor.added_ingredients.removeAt(
                                       index);
                                   tableItemProvidor.notify(context);
+                                } else {
+                                  Flushbar(
+                                    message: "Produkt gesperrt",
+                                    icon: Icon(
+                                      Icons.lock,
+                                      size: 28.0,
+                                      color: Colors.blue[300],
+                                    ),
+                                    margin: const EdgeInsets.all(8),
+                                    borderRadius: BorderRadius.circular(8),
+                                    duration: const Duration(seconds: 2),
+                                  ).show(context);
                                 }
                               });
                             },
