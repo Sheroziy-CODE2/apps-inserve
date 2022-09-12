@@ -23,7 +23,7 @@ class TableModel {
     return _tIP;
   }
 
-  void addNotification({required notificationID, required context}){
+  String addNotification({required notificationID, required context}){
     //TODO: in feature we could send the notifications in the table websocket
     notifications.add(Provider.of<NotificationProvider>(context, listen: false).notificationTypes.firstWhere((not) => not.id == notificationID));
     //for(int x = 0; x < 5; x++){
@@ -49,6 +49,7 @@ class TableModel {
       context: context,
       onTap: () => print('Notification tapped!'),
     );
+    return notifications.last.type;
   }
 
   get channel {

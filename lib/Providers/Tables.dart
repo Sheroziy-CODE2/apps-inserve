@@ -31,6 +31,8 @@ class Tables with ChangeNotifier {
   final StreamController<dynamic> _recipientCtrl2 = StreamController<dynamic>();
   final streamController = StreamController.broadcast();
   String? token;
+  bool notificationFromKitch = false;
+  bool notificationFromBar = false;
 
   final ConfigPrinter _configPrinter = ConfigPrinter();
 
@@ -1105,7 +1107,12 @@ class Tables with ChangeNotifier {
           case 'new_notification_workstation':
             for(int x = 0; x < _items.length; x++){
               if(_items[x].id == data['table']){
-                _items[x].addNotification(notificationID: data['notification'], context: context);
+                String type = _items[x].addNotification(notificationID: data['notification'], context: context);
+                if(type == "kitchen") {
+                  notificationFromKitch = true;
+                } else if(type == "bar") {
+                  notificationFromBar = true;
+                }
                 notifyListeners();
                 break;
               }
