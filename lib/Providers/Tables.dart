@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,6 @@ import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
 import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/io.dart';
 import '../Models/CheckoutModel.dart';
 import '../Models/TableModel.dart';
 import 'dart:convert';
@@ -1080,7 +1080,7 @@ class Tables with ChangeNotifier {
         //print(data);
         switch (data['type']) {
           case 'fetch_tables':
-            //print(data);
+            print("fetch_tables " + data.toString());
             break;
           case 'transfered_tables':
             for (var i = 0;
@@ -1091,6 +1091,15 @@ class Tables with ChangeNotifier {
               table.owner = data['transfered_tables']["owner"];
             }
             notifyListeners();
+            break;
+          case 'new_notification_workstation':
+            for(int x = 0; x < _items.length; x++){
+              if(_items[x].id == data['table']){
+                _items[x].addNotification(notificationID: data['notification'], context: context);
+                notifyListeners();
+                break;
+              }
+            }
             break;
         }
       },
@@ -1156,6 +1165,8 @@ class Tables with ChangeNotifier {
       }
     }
   }
+
+
 
   Future<void> listenSocket(
       {required id, required context, required token}) async {
@@ -1338,3 +1349,22 @@ class Tables with ChangeNotifier {
             id: 0, name: '0', owner: 0, total_price: 0.0, type: '0'));
   }
 }
+
+
+// class TableNotification{
+//   late final int table;
+//   late final int notification;
+//
+//   TableNotification({
+//     required this.notification,
+//     required this.table,
+//   });
+//
+//   factory TableNotification.fromJson(response, {required context}) {
+//     var jsonResponse = response as Map<String, dynamic>;
+//     return TableNotification(
+//       table: jsonResponse["table"] as int,
+//       notification: jsonResponse["notification"] as int,
+//     );
+//   }
+// }

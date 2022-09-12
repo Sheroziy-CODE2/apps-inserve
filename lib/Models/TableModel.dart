@@ -1,8 +1,15 @@
-import 'package:web_socket_channel/io.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:in_app_notification/in_app_notification.dart';
+import 'package:inspery_waiter/Providers/NotificationProvider.dart';
+import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import '../components/vibration.dart';
 import '/Providers/TableItemsProvidor.dart';
+import 'NotificationModel.dart';
 
 class TableModel {
+  List<NotificationModel> notifications = [];
   late final int id;
   final String name;
   double total_price;
@@ -14,6 +21,34 @@ class TableModel {
   late final _tIP = TableItemsProvidor(); //tIP = tableItemProvider
   TableItemsProvidor get tIP {
     return _tIP;
+  }
+
+  void addNotification({required notificationID, required context}){
+    //TODO: in feature we could send the notifications in the table websocket
+    notifications.add(Provider.of<NotificationProvider>(context, listen: false).notificationTypes.firstWhere((not) => not.id == notificationID));
+    //for(int x = 0; x < 5; x++){
+      Vibration.vibrate(pattern: [1000, 300, 1000, 300]);
+    //}
+    FlutterRingtonePlayer.playNotification();
+    InAppNotification.show(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.orange,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(notifications.last.name, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),),
+            Text(notifications.last.msg, style: const TextStyle(fontSize: 18),),
+          ],
+        ),
+      ),
+      duration: const Duration(seconds: 4),
+      context: context,
+      onTap: () => print('Notification tapped!'),
+    );
   }
 
   get channel {

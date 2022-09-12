@@ -198,9 +198,40 @@ class _TableItemState extends State<TableItem> {
                     ),
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   flex: 2,
-                  child: TablesNotificationWidget(),
+                  child: Container(
+                    height: 50,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Container(
+                            height: 5,
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context)
+                                      .primaryColorDark
+                                      .withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset:
+                                  const Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(50),
+                                  bottomLeft: Radius.circular(50)),
+                              color: Theme.of(context).cardColor,//Theme.of(context).primaryColorDark,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                            child: Center(child: TablesNotificationWidget(tableID: widget.id,))
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 Expanded(
                   flex: 2,
@@ -211,21 +242,21 @@ class _TableItemState extends State<TableItem> {
                     // padding: const EdgeInsets.all(5),
                     width: MediaQuery.of(context).size.width / 3,
                     decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context)
-                                .primaryColorDark
-                                .withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset:
-                            const Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            bottomLeft: Radius.circular(50)),
-                        color: Theme.of(context).cardColor,//Theme.of(context).primaryColorDark,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context)
+                              .primaryColorDark
+                              .withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset:
+                          const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(50),
+                          bottomLeft: Radius.circular(50)),
+                      color: Theme.of(context).cardColor,//Theme.of(context).primaryColorDark,
 
                       // color: Colors.white,
                       // boxShadow: [
