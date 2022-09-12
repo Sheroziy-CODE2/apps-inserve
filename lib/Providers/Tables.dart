@@ -157,16 +157,26 @@ class Tables with ChangeNotifier {
       }
     }
 
-    final Map<int, String> paymentOptions = {0: "Bar", 1: "Mix", 2: "Karte"};
+    // final Map<int, String> paymentOptions = {0: "Bar", 1: "Mix", 2: "Karte"};
+    // final Map<int, String> paymentImages = {
+    //   0: "assets/images/PayCash.png",
+    //   1: "assets/images/PayCardCash.png",
+    //   2: "assets/images/PayCard.png",
+    // };
+    // final Map<int, Icon> paymentIcons = {
+    //   0: Icon(Icons.monetization_on_outlined,
+    //       color: Colors.black.withOpacity(0.6)),
+    //   1: Icon(Icons.multiple_stop_outlined,
+    //       color: Colors.black.withOpacity(0.6)),
+    //   2: Icon(Icons.credit_card, color: Colors.black.withOpacity(0.6))
+    // };
+    final Map<int, String> paymentOptions = {0: "Bar", 2: "Karte"};
     final Map<int, String> paymentImages = {
       0: "assets/images/PayCash.png",
-      1: "assets/images/PayCardCash.png",
       2: "assets/images/PayCard.png",
     };
     final Map<int, Icon> paymentIcons = {
       0: Icon(Icons.monetization_on_outlined,
-          color: Colors.black.withOpacity(0.6)),
-      1: Icon(Icons.multiple_stop_outlined,
           color: Colors.black.withOpacity(0.6)),
       2: Icon(Icons.credit_card, color: Colors.black.withOpacity(0.6))
     };
@@ -643,56 +653,56 @@ class Tables with ChangeNotifier {
                             (key) => Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    state(() {
-                                      paymentMethod = key;
-                                    });
-                                  },
-                                  child: SizedBox(
-                                      height: 40,
-                                      width: 75,
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            top: 2,
-                                            left: 2,
-                                            child: Container(
-                                              height: 34,
-                                              width: 83,
-                                              padding: const EdgeInsets.only(
-                                                  left: 35, right: 7),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  border: paymentMethod != key
-                                                      ? null
-                                                      : Border.all(
-                                                          color: Colors.green,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          width: 4)),
-                                              child: Center(
-                                                  child: Text(
-                                                paymentOptions[key]!,
-                                                style: const TextStyle(
-                                                    fontSize: 11),
-                                              )),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 40,
-                                            width: 40,
+                                SizedBox(
+                                  width: 110,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      state(() {
+                                        paymentMethod = key;
+                                      });
+                                    },
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          top: 2,
+                                          left: 2,
+                                          child: Container(
+                                            height: 34,
+                                            width: 100,
+                                            padding: const EdgeInsets.only(
+                                                left: 35, right: 7),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFFE8E8E8),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: paymentIcons[key],
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: paymentMethod != key
+                                                    ? null
+                                                    : Border.all(
+                                                        color: Colors.green,
+                                                        style:
+                                                            BorderStyle.solid,
+                                                        width: 4)),
+                                            child: Center(
+                                                child: Text(
+                                              paymentOptions[key]!,
+                                              style: const TextStyle(
+                                                  fontSize: 11),
+                                            )),
                                           ),
-                                        ],
-                                      )),
+                                        ),
+                                        Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE8E8E8),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: paymentIcons[key],
+                                        ),
+                                    ],
+                                  ),
+                                  ),
                                 ),
                               ],
                             ),
