@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:inspery_waiter/Providers/WorkersProvider.dart';
 import 'package:inspery_waiter/widgets/table/tables/TablesNotificationWidget.dart';
 import '../../Models/TableModel.dart';
 import '../../Providers/Tables.dart';
@@ -47,7 +48,19 @@ class _TableItemState extends State<TableItem> {
       }
     }
 
-    const double dropdownHight = 38;
+    Widget getWorkerImage(){
+      try{
+        return Image.network(
+          "https://www.inspery.com/"+
+          Provider.of<WorkersProvider>(context, listen: false).findById(tabl.owner!).profile!,
+          fit: BoxFit.fill,
+          width: 40,
+          height: 40,
+        );
+      }
+      catch (e){};
+      return Image.asset("assets/images/logo_icon.png", fit: BoxFit.fill);
+    }
 
     return GridTile(
       child: GestureDetector(
@@ -69,7 +82,7 @@ class _TableItemState extends State<TableItem> {
                   flex: 5,
                   child: Container(
                     //height: 75,
-                    padding: const EdgeInsets.only(top: 5,left: 5, bottom: 5, right: 5),
+                    padding: const EdgeInsets.only(top: 5,left: 5, bottom: 5, right: 15),
                     width: MediaQuery.of(context).size.width / 2,
                     decoration: BoxDecoration(
                       boxShadow: [
@@ -122,19 +135,21 @@ class _TableItemState extends State<TableItem> {
                         ),
                         const Spacer(),
                         Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "letzte Buchung",
+                              tabl.timeHistory["Buchung"] == 0 ? "- : -" : formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000).round())),
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).primaryColorDark,
-                                fontSize: 11,
+                                fontSize: 13,
                               ),
                             ),
                             GestureDetector(
                               onTap: (){
-                                setState(() {
+                                //setState(() {
                                   var alert = AlertDialog(
                                     actions: <Widget>[
                                       ElevatedButton(
@@ -179,32 +194,15 @@ class _TableItemState extends State<TableItem> {
                                       return alert;
                                     },
                                   );
-                                });
+                                //});
                               },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 100),
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(10)),
-                                  color: Color(0xFF25363E),
-                                ),
-                                width: 114,
-                                height: dropdownHight,
-                                child:
-                                Center(
-                                  child: Text(
-                                    updateTime,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Theme.of(context).cardColor,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30.0),
+                                child: getWorkerImage(),
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
