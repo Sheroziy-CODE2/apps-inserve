@@ -27,7 +27,7 @@ class TableModel {
     //TODO: in feature we could send the notifications in the table websocket
     notifications.add(Provider.of<NotificationProvider>(context, listen: false).notificationTypes.firstWhere((not) => not.id == notificationID));
     //for(int x = 0; x < 5; x++){
-      Vibration.vibrate(pattern: [1000, 300, 1000, 300]);
+    Vibration.vibrate(pattern: [1000, 300, 1000, 300]);
     //}
     FlutterRingtonePlayer.playNotification();
     InAppNotification.show(
@@ -37,11 +37,39 @@ class TableModel {
           color: Colors.orange,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
           children: [
-            Text(notifications.last.name, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),),
-            Text(notifications.last.msg, style: const TextStyle(fontSize: 18),),
+            SizedBox(
+              width: 50,
+              child: notifications.last.imagePath == null ? Container() : ClipRRect(
+                borderRadius: BorderRadius.circular(75.0),
+                child: Image.network(
+                  notifications.last.imagePath!,
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(notifications.last.name, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),),
+                  Text(notifications.last.msg, style: const TextStyle(fontSize: 18),),
+                ],
+              ),
+            ),
+            SizedBox(width: 50,
+            child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Tisch", style: TextStyle(fontSize: 14),),
+                  Text(name, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold), textAlign: TextAlign.right),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -74,10 +102,10 @@ class TableModel {
 
   TableModel(
       {required this.id,
-      required this.name,
-      required this.total_price,
-      required this.owner,
-      required this.type});
+        required this.name,
+        required this.total_price,
+        required this.owner,
+        required this.type});
 
   factory TableModel.fromJson(response) {
     var jsonResponse = response as Map<String, dynamic>;
@@ -87,7 +115,7 @@ class TableModel {
         name: jsonResponse["name"] as String,
         id: jsonResponse["id"] as int,
         owner:
-            jsonResponse["owner"] == null ? null : jsonResponse["owner"] as int,
+        jsonResponse["owner"] == null ? null : jsonResponse["owner"] as int,
         type: jsonResponse["type"] as String,
         total_price: jsonResponse["total_price"].toDouble() as double);
   }
