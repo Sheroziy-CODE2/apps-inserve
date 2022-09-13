@@ -228,9 +228,6 @@ class _TableItemState extends State<TableItem> {
                                   const Offset(0, 3), // changes position of shadow
                                 ),
                               ],
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(50),
-                                  bottomLeft: Radius.circular(50)),
                               color: Theme.of(context).cardColor,//Theme.of(context).primaryColorDark,
                             ),
                           ),
