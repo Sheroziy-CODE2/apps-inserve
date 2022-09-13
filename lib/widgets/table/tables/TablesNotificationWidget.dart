@@ -115,6 +115,7 @@ class _TablesNotificationWidgetState extends State<TablesNotificationWidget> {
               Container(
                 width: 50,
                 height: 50,
+                //padding: const EdgeInsets.all(8),
                 //child: Icon(),
                 decoration: BoxDecoration(
                   boxShadow: [
@@ -129,18 +130,17 @@ class _TablesNotificationWidgetState extends State<TablesNotificationWidget> {
                     ),
                   ],
                   borderRadius: const BorderRadius.all(Radius.circular(50)),
-                  color: const Color(0xFF545454),//Theme.of(context).primaryColorDark,
+                  color: const Color(0xFFEEEEEE),//Theme.of(context).primaryColorDark,
 
                   // color: Colors.white,
                   // boxShadow: [
                   //   const BoxShadow(color: Colors.green, spreadRadius: 3),
                   // ],
                 ),
-                child: notifications[0].imagePath != null ? Image.network(
-                  notifications[0].imagePath!,
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.fill,
+                child: notifications[0].imagePath != null ?
+                    Image.network(
+                      notifications[0].imagePath!,
+                      fit: BoxFit.fill,
                 ) : Container(),
               ),
               const SizedBox(width: 15,),
