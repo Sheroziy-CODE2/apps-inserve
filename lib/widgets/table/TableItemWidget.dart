@@ -20,7 +20,6 @@ class TableItem extends StatefulWidget {
 class _TableItemState extends State<TableItem> {
   double table_total_price = 0;
   var _isInit = true;
-  bool dropDownHistoryTime = false;
 
   /// Listen for all incoming data
   @override
@@ -62,7 +61,7 @@ class _TableItemState extends State<TableItem> {
         child: Padding(
           padding: const EdgeInsets.only(top: 7, bottom: 7),
           child: SizedBox(
-            height: dropDownHistoryTime ? (50 * tabl.timeHistory.length).toDouble() : 63,
+            height: 63,
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
@@ -122,77 +121,89 @@ class _TableItemState extends State<TableItem> {
                           ],
                         ),
                         const Spacer(),
-                        Padding(
-                          padding: EdgeInsets.only(right: 12, top: dropDownHistoryTime ? 9 : 0),
-                          child: Column(
-                            children: [
-                              dropDownHistoryTime ? Container() : Text(
-                                "letzte Buchung",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColorDark,
-                                  fontSize: 11,
-                                ),
+                        Column(
+                          children: [
+                            Text(
+                              "letzte Buchung",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColorDark,
+                                fontSize: 11,
                               ),
-                              GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    dropDownHistoryTime = !dropDownHistoryTime;
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 100),
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10)),
-                                    color: Color(0xFF25363E),
-                                  ),
-                                  width: 114,
-                                  height: dropDownHistoryTime ? dropdownHight * tabl.timeHistory.length : dropdownHight,
-                                  child: dropDownHistoryTime ?
-                                  ListView.builder(
-                                    itemCount: tabl.timeHistory.length,
-                                    itemBuilder: (context, i) {
-                                      return Column(
-                                        children: [
-                                          Text(
-                                            tabl.timeHistory.keys.toList()[i],
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              color: Theme.of(context).cardColor,
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                          Center(
-                                            child: Text( tabl.timeHistory.values.toList()[i] == 0 ? "- : -" :
-                                            formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory.values.toList()[i]*1000).round())),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                color: Theme.of(context).cardColor,
-                                                fontSize: 20,
+                            ),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  var alert = AlertDialog(
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                          child: const Text('Okay'), onPressed: () => {Navigator.of(context).pop()})
+                                    ],
+                                    title: const Text("Historie"),
+                                    content: SizedBox(
+                                      height: 200,
+                                      width: 100,
+                                      child: ListView.builder(
+                                        itemCount: tabl.timeHistory.length,
+                                        itemBuilder: (context, i) {
+                                          return Column(
+                                            children: [
+                                              Text(
+                                                tabl.timeHistory.keys.toList()[i],
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 18,
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  )
-                                      :Center(
-                                    child: Text(
-                                      updateTime,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        color: Theme.of(context).cardColor,
-                                        fontSize: 20,
+                                              Center(
+                                                child: Text( tabl.timeHistory.values.toList()[i] == 0 ? "- : -" :
+                                                formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory.values.toList()[i]*1000).round())),
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.normal,
+                                                    fontSize: 26,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       ),
+                                    ),
+                                  );
+                                  // show the dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return alert;
+                                    },
+                                  );
+                                });
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 100),
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: Color(0xFF25363E),
+                                ),
+                                width: 114,
+                                height: dropdownHight,
+                                child:
+                                Center(
+                                  child: Text(
+                                    updateTime,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Theme.of(context).cardColor,
+                                      fontSize: 20,
                                     ),
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),
@@ -200,7 +211,7 @@ class _TableItemState extends State<TableItem> {
                 ),
                 Expanded(
                   flex: 2,
-                  child: Container(
+                  child: SizedBox(
                     height: 50,
                     child: Stack(
                       children: [
