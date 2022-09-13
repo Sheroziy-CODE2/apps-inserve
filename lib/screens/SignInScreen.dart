@@ -66,13 +66,15 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor, //Colors.transparent,
       body: ListView(
+        physics: NeverScrollableScrollPhysics(),
         children: [
           SizedBox(
             height: screenHight * widgetPositions[0],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
+              //const Spacer(),
               retDot(),
               retDot(),
               retDot(),
@@ -80,13 +82,13 @@ class _SignInState extends State<SignIn> {
               retDot(),
               retDot(),
               retDot(),
-              const Spacer(),
+              //const Spacer(),
             ],
           ),
-          SvgPicture.asset(
-            'assets/illustrations/inspery.svg',
-            matchTextDirection: true,
-          ),
+          //SvgPicture.asset(
+          /// 'assets/illustrations/inspery.svg',
+          ///  matchTextDirection: true,
+          //),
           const Center(
             child: Text(
               'I N S P E R Y',
@@ -206,7 +208,7 @@ class _SignInState extends State<SignIn> {
             'assets/illustrations/inspery.svg',
             matchTextDirection: true,
           ),
-          const Spacer(),
+          //const Spacer(),
         ],
       ),
     );
