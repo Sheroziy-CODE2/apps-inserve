@@ -132,10 +132,10 @@ class ChooseProductFormState extends State<ChooseProductForm> {
                         ? Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text("Übertragen", style: TextStyle(fontSize: 16 , color: Colors.white),),
-                      ],
-                    )
+                          ],
+                        )
                         : Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -1220,12 +1220,12 @@ class Tables with ChangeNotifier {
                 var jsonResponse = data['table_items']['table_items'];
                 List<TableItemProvidor> _tIPItems = [];
                 for (var body in jsonResponse) {
-                  // print(TableItemProvidor.fromResponse(body));
+                   print("Icoming table Item data: " + body.toString());
                   _tIPItems
                       .add(TableItemProvidor.fromResponse(body, tableID: id));
                 }
-                this._items[i].tIP.addItemsFromServer(_tIPItems);
-                this._items[i].total_price =
+                _items[i].tIP.addItemsFromServer(_tIPItems);
+                _items[i].total_price =
                     data['table_items']['table']['total_price'].toDouble()
                         as double;
                 _items[i].timeHistory["Buchung"] =
