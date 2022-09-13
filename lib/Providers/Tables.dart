@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,6 @@ import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
 import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/io.dart';
 import '../Models/CheckoutModel.dart';
 import '../Models/TableModel.dart';
 import 'dart:convert';
@@ -31,6 +31,8 @@ class Tables with ChangeNotifier {
   final StreamController<dynamic> _recipientCtrl2 = StreamController<dynamic>();
   final streamController = StreamController.broadcast();
   String? token;
+  bool notificationFromKitch = false;
+  bool notificationFromBar = false;
 
   final ConfigPrinter _configPrinter = ConfigPrinter();
 
@@ -157,16 +159,26 @@ class Tables with ChangeNotifier {
       }
     }
 
-    final Map<int, String> paymentOptions = {0: "Bar", 1: "Mix", 2: "Karte"};
+    // final Map<int, String> paymentOptions = {0: "Bar", 1: "Mix", 2: "Karte"};
+    // final Map<int, String> paymentImages = {
+    //   0: "assets/images/PayCash.png",
+    //   1: "assets/images/PayCardCash.png",
+    //   2: "assets/images/PayCard.png",
+    // };
+    // final Map<int, Icon> paymentIcons = {
+    //   0: Icon(Icons.monetization_on_outlined,
+    //       color: Colors.black.withOpacity(0.6)),
+    //   1: Icon(Icons.multiple_stop_outlined,
+    //       color: Colors.black.withOpacity(0.6)),
+    //   2: Icon(Icons.credit_card, color: Colors.black.withOpacity(0.6))
+    // };
+    final Map<int, String> paymentOptions = {0: "Bar", 2: "Karte"};
     final Map<int, String> paymentImages = {
       0: "assets/images/PayCash.png",
-      1: "assets/images/PayCardCash.png",
       2: "assets/images/PayCard.png",
     };
     final Map<int, Icon> paymentIcons = {
       0: Icon(Icons.monetization_on_outlined,
-          color: Colors.black.withOpacity(0.6)),
-      1: Icon(Icons.multiple_stop_outlined,
           color: Colors.black.withOpacity(0.6)),
       2: Icon(Icons.credit_card, color: Colors.black.withOpacity(0.6))
     };
@@ -643,56 +655,56 @@ class Tables with ChangeNotifier {
                             (key) => Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    state(() {
-                                      paymentMethod = key;
-                                    });
-                                  },
-                                  child: SizedBox(
-                                      height: 40,
-                                      width: 75,
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            top: 2,
-                                            left: 2,
-                                            child: Container(
-                                              height: 34,
-                                              width: 83,
-                                              padding: const EdgeInsets.only(
-                                                  left: 35, right: 7),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  border: paymentMethod != key
-                                                      ? null
-                                                      : Border.all(
-                                                          color: Colors.green,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          width: 4)),
-                                              child: Center(
-                                                  child: Text(
-                                                paymentOptions[key]!,
-                                                style: const TextStyle(
-                                                    fontSize: 11),
-                                              )),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 40,
-                                            width: 40,
+                                SizedBox(
+                                  width: 110,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      state(() {
+                                        paymentMethod = key;
+                                      });
+                                    },
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          top: 2,
+                                          left: 2,
+                                          child: Container(
+                                            height: 34,
+                                            width: 100,
+                                            padding: const EdgeInsets.only(
+                                                left: 35, right: 7),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFFE8E8E8),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: paymentIcons[key],
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: paymentMethod != key
+                                                    ? null
+                                                    : Border.all(
+                                                        color: Colors.green,
+                                                        style:
+                                                            BorderStyle.solid,
+                                                        width: 4)),
+                                            child: Center(
+                                                child: Text(
+                                              paymentOptions[key]!,
+                                              style: const TextStyle(
+                                                  fontSize: 11),
+                                            )),
                                           ),
-                                        ],
-                                      )),
+                                        ),
+                                        Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE8E8E8),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: paymentIcons[key],
+                                        ),
+                                    ],
+                                  ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1080,7 +1092,7 @@ class Tables with ChangeNotifier {
         //print(data);
         switch (data['type']) {
           case 'fetch_tables':
-            //print(data);
+            print("fetch_tables " + data.toString());
             break;
           case 'transfered_tables':
             for (var i = 0;
@@ -1091,6 +1103,20 @@ class Tables with ChangeNotifier {
               table.owner = data['transfered_tables']["owner"];
             }
             notifyListeners();
+            break;
+          case 'new_notification_workstation':
+            for(int x = 0; x < _items.length; x++){
+              if(_items[x].id == data['table']){
+                String type = _items[x].addNotification(notificationID: data['notification'], context: context);
+                if(type == "kitchen") {
+                  notificationFromKitch = true;
+                } else if(type == "bar") {
+                  notificationFromBar = true;
+                }
+                notifyListeners();
+                break;
+              }
+            }
             break;
         }
       },
@@ -1157,6 +1183,8 @@ class Tables with ChangeNotifier {
     }
   }
 
+
+
   Future<void> listenSocket(
       {required id, required context, required token}) async {
     var table = findById(id);
@@ -1192,12 +1220,12 @@ class Tables with ChangeNotifier {
                 var jsonResponse = data['table_items']['table_items'];
                 List<TableItemProvidor> _tIPItems = [];
                 for (var body in jsonResponse) {
-                  // print(TableItemProvidor.fromResponse(body));
+                   print("Icoming table Item data: " + body.toString());
                   _tIPItems
                       .add(TableItemProvidor.fromResponse(body, tableID: id));
                 }
-                this._items[i].tIP.addItemsFromServer(_tIPItems);
-                this._items[i].total_price =
+                _items[i].tIP.addItemsFromServer(_tIPItems);
+                _items[i].total_price =
                     data['table_items']['table']['total_price'].toDouble()
                         as double;
                 _items[i].timeHistory["Buchung"] =
@@ -1338,3 +1366,22 @@ class Tables with ChangeNotifier {
             id: 0, name: '0', owner: 0, total_price: 0.0, type: '0'));
   }
 }
+
+
+// class TableNotification{
+//   late final int table;
+//   late final int notification;
+//
+//   TableNotification({
+//     required this.notification,
+//     required this.table,
+//   });
+//
+//   factory TableNotification.fromJson(response, {required context}) {
+//     var jsonResponse = response as Map<String, dynamic>;
+//     return TableNotification(
+//       table: jsonResponse["table"] as int,
+//       notification: jsonResponse["notification"] as int,
+//     );
+//   }
+// }

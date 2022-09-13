@@ -36,7 +36,7 @@ class TableChange {
       icon: Icon(Icons.info_outline, size: 28.0, color: Colors.blue[300],),
       margin: const EdgeInsets.all(8),
       borderRadius: BorderRadius.circular(8),
-      duration:  const Duration(seconds: 2),
+      duration:  const Duration(seconds: 4),
     ).show(context);
   }
 
@@ -61,7 +61,7 @@ class TableChange {
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext contextXX, setState) {
         return AlertDialog(
-          title: const Text("Tische ändern",
+          title: const Text("Tisch ändern",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           content: Container
             (
@@ -107,7 +107,7 @@ class TableChange {
                     ElevatedButton(
                       child: SizedBox(
                           width: MediaQuery.of(context).size.width -20,
-                          child: const Center(child: Text("ÜBERGEBEN"))
+                          child: const Center(child: Text("WEITER"))
                       ),
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -119,6 +119,7 @@ class TableChange {
                           ),
                           alignment: Alignment.center),
                       onPressed: () {
+                        Navigator.of(context).pop();
                         if (_chosenTable[0] != "") {
                           TableChange.getInstance()?.showTableSearchDialog(context);
                         } else {

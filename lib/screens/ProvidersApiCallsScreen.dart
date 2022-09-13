@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../Providers/Authy.dart';
 import 'package:provider/provider.dart';
+import '../Providers/NotificationProvider.dart';
 import '../Providers/Tables.dart';
 import '../Providers/Categorys.dart';
 import '../Providers/Ingredients.dart';
@@ -67,16 +68,17 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
         //await Provider.of<DipsProvider>(context, listen: false).addDips(token: token, context: context); Remove Dips 27.07 Andi
         await Provider.of<WorkersProvider>(context, listen: false)
             .addWorkers(token: token, context: context);
+        await Provider.of<NotificationProvider>(context, listen: false).addNotificationType(token: token, context: context);
 
         await tablesData.connectALlTablesSocket(context: context, token: token);
-        // await tablesData.listenToAllTabelsSocket(
-        //     context: context, token: token);
+         await tablesData.listenToAllTabelsSocket(
+             context: context, token: token);
         for (var i = 0; i < tablesData.items.length; i++) {
           var table = tablesData.items[i];
           await tablesData.connectSocket(
               id: table.id, context: context, token: token);
-          // await tablesData.listenSocket(
-          //     id: table.id, context: context, token: token);
+           await tablesData.listenSocket(
+               id: table.id, context: context, token: token);
         }
         setState(() {
           _isLoading = false;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../Models/Product.dart';
 import '../../../Providers/TableItemChangeProvidor.dart';
+import '../../../Providers/Tables.dart';
 import '../../../screens/TablesViewScreen.dart';
 import 'CategorysColumnWidget.dart';
 import 'ProductsColumnWidget.dart';
@@ -40,7 +41,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
   @override
   Widget build(BuildContext context) {
 
-
+    Tables tablesprov = Provider.of<Tables>(context, listen: true);
     final hight = MediaQuery.of(context).size.height / 2-10;
     return GestureDetector(
       onPanUpdate: (details) {
@@ -115,23 +116,36 @@ class ChooseProductFormState extends State<ChooseProductForm> {
                 ),
                 GestureDetector(
                   onTap: (){
-                    Navigator.of(context).pushReplacementNamed(TablesView.routeName);
+                    if(tablesprov.isItemFromWaiter(tableID: widget.tableName)){
+                      tablesprov.checkoutItemsToSocket(context: context,tableID: widget.tableName);
+                    } else{
+                      Navigator.of(context).pushReplacementNamed(TablesView.routeName);
+                    }
                   },
                   child: Container(
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF818181),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(Icons.arrow_back_ios, color:  Colors.white, size: 20,),
-                          SizedBox(width: 5,),
-                          Text("zurück", style: TextStyle(fontSize: 16 , color: Colors.white),),
-                        ],
-                      )
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF818181),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: tablesprov.isItemFromWaiter(tableID: widget.tableName)
+                        ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text("Übertragen", style: TextStyle(fontSize: 16 , color: Colors.white),),
+                          ],
+                        )
+                        : Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.arrow_back_ios, color:  Colors.white, size: 20,),
+                        SizedBox(width: 5,),
+                        Text("zurück", style: TextStyle(fontSize: 16 , color: Colors.white),),
+
+                      ],
+                    ),
                   ),
                 ),
               ],

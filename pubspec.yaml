@@ -50,6 +50,9 @@ dependencies:
   lottie: ^1.4.0
   qr_flutter: ^4.0.0
   screenshot: ^1.2.3
+  vibration: ^1.7.6
+  in_app_notification: ^1.1.2
+  flutter_ringtone_player: ^3.2.0
 
 flutter_icons:
   android: true

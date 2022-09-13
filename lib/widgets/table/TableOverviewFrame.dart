@@ -401,53 +401,6 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                     )
                         : Row(
                       children: [
-                        tablesprov.isItemFromWaiter(
-                            tableID: widget.id)
-                            ? SizedBox(
-                          height: 40,
-                          width: 120,
-                          child: GestureDetector(
-                            onTap: () {
-                              tablesprov.checkoutItemsToSocket(
-                                  context: context,
-                                  tableID: widget.id);
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                  BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 40,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                        color: const Color(
-                                            0xFFF3F3F3),
-                                        borderRadius:
-                                        BorderRadius
-                                            .circular(20),
-                                      ),
-                                      child: Icon(
-                                        Icons.send,
-                                        color: Colors.black
-                                            .withOpacity(0.4),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    const Text("Übertragen"),
-                                  ],
-                                )),
-                          ),
-                        )
-                            : Container(),
-                        const SizedBox(
-                          width: 6,
-                        ),
                         SizedBox(
                           height: 40,
                           width: 105,

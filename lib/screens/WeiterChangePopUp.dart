@@ -31,7 +31,7 @@ class WeiterChange {
       ),
       margin: const EdgeInsets.all(8),
       borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 4),
     ).show(context);
   }
 
