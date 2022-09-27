@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inspery_waiter/widgets/table/TableScreenTopButtonWidget.dart';
+import '../Providers/NotificationServiceProvider.dart';
 import '../widgets/table/TableItemWidget.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Tables.dart';
@@ -9,8 +10,9 @@ import 'WeiterChangePopUp.dart';
 
 class TablesView extends StatefulWidget {
   static const routeName = '/tables-view';
+  final String payload;
 
-  const TablesView({Key? key}) : super(key: key);
+  TablesView({Key? key, required this.payload}) : super(key: key);
   @override
   State<TablesView> createState() => _TablesViewState();
 }
@@ -18,10 +20,11 @@ class TablesView extends StatefulWidget {
 class _TablesViewState extends State<TablesView> {
   final _isInit = true;
   var _isLoading = true;
-  @override
-  void initState() {
-    super.initState();
-  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   void didChangeDependencies() {
