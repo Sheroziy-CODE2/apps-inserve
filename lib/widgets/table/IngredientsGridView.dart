@@ -101,7 +101,7 @@ class IngredientsGridViewState extends State<IngredientsGridView> {
             }
             return GestureDetector(
                 onTap: (){
-                    if(tableItemProvidor.paymode || tableItemProvidor.isFromServer()) {
+                    if(!(tableItemProvidor.paymode || tableItemProvidor.isFromServer())) {
                       setState((){
                         tableItemProvidor.added_ingredients.add(e.id);
                         tableItemProvidor.notify(context);
