@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Providers/Authy.dart';
 import '../Providers/NotificationServiceProvider.dart';
+import '../util/CheckConnectionToInspery.dart';
 import 'ProvidersApiCallsScreen.dart';
 
 class EmailFieldValidator {
@@ -68,7 +69,7 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor, //Colors.transparent,
       body: ListView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           SizedBox(
             height: screenHight * widgetPositions[0],
@@ -76,7 +77,6 @@ class _SignInState extends State<SignIn> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //const Spacer(),
               retDot(),
               retDot(),
               retDot(),
@@ -84,7 +84,6 @@ class _SignInState extends State<SignIn> {
               retDot(),
               retDot(),
               retDot(),
-              //const Spacer(),
             ],
           ),
           //SvgPicture.asset(
@@ -101,8 +100,11 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 70,
+          Center(
+            child: SizedBox(
+              height: 70,
+              child: ConnectionToInspery().stateWidget(),
+            ),
           ),
           Center(
             child: SizedBox(
