@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -43,9 +43,9 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.inspery_waiter"
-        minSdkVersion 18//flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        applicationId "com.inspery.service_app"
+        minSdkVersion 33//flutter.minSdkVersion
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -58,7 +58,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-    namespace 'com.example.inspery_waiter'
+    namespace 'com.inspery.service_app'
 }
 
 flutter {

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:in_app_notification/in_app_notification.dart';
 import 'package:inspery_waiter/Providers/FlorLayoutProvider.dart';
 import 'package:inspery_waiter/screens/FlorPlanScreen.dart';
 import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'Providers/NotificationProvider.dart';
+import 'Providers/NotificationServiceProvider.dart';
 import 'Providers/TableItemChangeProvidor.dart';
 import 'Providers/TableItemProvidor.dart';
 import 'Providers/TableItemsProvidor.dart';
 import 'Providers/WorkersProvider.dart';
+import 'components/NotificationService.dart';
 import 'screens/TablesViewScreen.dart';
 import 'screens/TableViewScreen.dart';
 
@@ -101,10 +102,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => NotificationProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => NotificationServiceProvider(),
+        ),
       ],
       child: Consumer<Authy>(
-        builder: (ctx, auth, _) => InAppNotification(
-          child: MaterialApp(
+        builder: (ctx, auth, _) =>
+           // InAppNotification(child:
+          MaterialApp(
               navigatorKey: navKey,
               title: 'InServe',
               theme: ThemeData(
@@ -130,7 +135,7 @@ class MyApp extends StatelessWidget {
               routes: {
                 // all of the raoutes in the app
                 HomePage.routeName: (ctx) => const HomePage(),
-                TablesView.routeName: (ctx) => TablesView(),
+                TablesView.routeName: (ctx) => TablesView(payload: "",),
                 TableView.routeName: (ctx) => TableView(),
                 InvoicesView.routeName: (ctx) => InvoicesView(),
                 InvoiceView.routeName: (ctx) => InvoiceView(),
@@ -139,7 +144,7 @@ class MyApp extends StatelessWidget {
                 SignIn.routeName: (ctx) => SignIn(),
                 FlorPlanScreen.routeName: (ctx) => FlorPlanScreen(),
               }),
-        ),
+        //),
       ),
     );
   }

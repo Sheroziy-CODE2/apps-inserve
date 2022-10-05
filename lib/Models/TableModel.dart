@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:in_app_notification/in_app_notification.dart';
 import 'package:inspery_waiter/Providers/NotificationProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import '../components/NotificationService.dart';
 import '../components/vibration.dart';
 import '/Providers/TableItemsProvidor.dart';
 import 'NotificationModel.dart';
@@ -26,11 +26,19 @@ class TableModel {
   String addNotification({required notificationID, required context}){
     //TODO: in feature we could send the notifications in the table websocket
     notifications.add(Provider.of<NotificationProvider>(context, listen: false).notificationTypes.firstWhere((not) => not.id == notificationID));
+
     //for(int x = 0; x < 5; x++){
     Vibration.vibrate(pattern: [1000, 300, 1000, 300]);
     //}
     FlutterRingtonePlayer.playNotification();
-    InAppNotification.show(
+    print("New Notification!!");
+    Provider.of<NotificationService>(context, listen: false).showLocalNotification(
+        id: 0,
+        title: "Drink Water",
+        body: "Time to drink some water!",
+        payload: "You just took water! Huurray!");
+
+    /*InAppNotification.show(
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -76,7 +84,7 @@ class TableModel {
       duration: const Duration(seconds: 4),
       context: context,
       onTap: () => print('Notification tapped!'),
-    );
+    );*/
     return notifications.last.type;
   }
 
