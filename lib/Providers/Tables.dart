@@ -1230,7 +1230,11 @@ class Tables with ChangeNotifier {
                         as double;
                 _items[i].timeHistory["Buchung"] =
                     (DateTime.now().millisecondsSinceEpoch / 1000).round();
-                notifyListeners();
+                try {
+                  notifyListeners();
+                } catch(e){
+                  print("Notify Tables Listener failed... Should not be a problem.");
+                }
                 break;
 
               case 'deleted_table_items':
