@@ -151,67 +151,72 @@ class _TableItemState extends State<TableItem> {
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              getTime(),
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColorDark,
-                                fontSize: 13,
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                getTime(),
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColorDark,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: (){
-                                //setState(() {
-                                  var alert = AlertDialog(
-                                    actions: <Widget>[
-                                      ElevatedButton(
-                                          child: const Text('Okay'), onPressed: () => {Navigator.of(context).pop()})
-                                    ],
-                                    title: const Text("Historie"),
-                                    content: SizedBox(
-                                      height: 180,
-                                      width: 100,
-                                      child: ListView.builder(
-                                        itemCount: tabl.timeHistory.length,
-                                        itemBuilder: (context, i) {
-                                          return Column(
-                                            children: [
-                                              Text(
-                                                tabl.timeHistory.keys.toList()[i],
-                                                textAlign: TextAlign.start,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Center(
-                                                child: Text( tabl.timeHistory.values.toList()[i] == 0 ? "- : -" :
-                                                formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory.values.toList()[i]*1000).round())),
+                            Expanded(
+                              flex: 3,
+                              child: GestureDetector(
+                                onTap: (){
+                                  //setState(() {
+                                    var alert = AlertDialog(
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                            child: const Text('Okay'), onPressed: () => {Navigator.of(context).pop()})
+                                      ],
+                                      title: const Text("Historie"),
+                                      content: SizedBox(
+                                        width: 100,
+                                        child: ListView.builder(
+                                          itemCount: tabl.timeHistory.length,
+                                          itemBuilder: (context, i) {
+                                            return Column(
+                                              children: [
+                                                Text(
+                                                  tabl.timeHistory.keys.toList()[i],
+                                                  textAlign: TextAlign.start,
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.normal,
-                                                    fontSize: 26,
+                                                    fontSize: 18,
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          );
-                                        },
+                                                Center(
+                                                  child: Text( tabl.timeHistory.values.toList()[i] == 0 ? "- : -" :
+                                                  formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory.values.toList()[i]*1000).round())),
+                                                    style: const TextStyle(
+                                                      fontWeight: FontWeight.normal,
+                                                      fontSize: 26,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                  // show the dialog
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return alert;
-                                    },
-                                  );
-                                //});
-                              },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(30.0),
-                                child: getWorkerImage(),
+                                    );
+                                    // show the dialog
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return alert;
+                                      },
+                                    );
+                                  //});
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(27.0),
+                                  child: getWorkerImage(),
+                                ),
                               ),
                             ),
                           ],
