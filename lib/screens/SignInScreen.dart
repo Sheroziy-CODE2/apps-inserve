@@ -3,7 +3,6 @@ import '../Models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Providers/Authy.dart';
-import '../Providers/NotificationServiceProvider.dart';
 import 'ProvidersApiCallsScreen.dart';
 
 class EmailFieldValidator {
@@ -63,7 +62,6 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<NotificationServiceProvider>(context, listen: false).setNotificationService(context);
     double screenHight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor, //Colors.transparent,

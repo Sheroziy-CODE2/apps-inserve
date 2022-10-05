@@ -1,4 +1,4 @@
-package com.inspery.service_app
+package com.example.inspery_waiter
 
 import io.flutter.embedding.android.FlutterActivity
 
