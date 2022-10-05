@@ -58,7 +58,7 @@ class _NavBarState extends State<NavBar> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           singelItem(name: "Eingabe", selected: 1, icon: InsperyIcons.icons8_ten_keys_48, routingName: HomePage(), key: "mainPage"),
-          singelItem(name: "Tische", selected: 2, icon: InsperyIcons.icons8_chair_32, routingName: TablesView(payload: "",), key: "tablePage"),
+          singelItem(name: "Tische", selected: 2, icon: InsperyIcons.icons8_chair_32, routingName: TablesView(), key: "tablePage"),
           singelItem(name: "Rechnungen", selected: 3, icon: InsperyIcons.icons8_insert_money_euro_50, routingName: InvoicesView(), key: "invoicePage"),
           singelItem(name: "Profil", selected: 4, icon: Icons.person_sharp, routingName: Profile(), key: "profilePage"),
         ],

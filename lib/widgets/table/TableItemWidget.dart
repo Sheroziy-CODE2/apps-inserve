@@ -48,19 +48,6 @@ class _TableItemState extends State<TableItem> {
       }
     }
 
-
-    String getTime(){
-      try {
-        return tabl.timeHistory["Buchung"] == 0 ? "- : -" : formatter.format(
-            DateTime.fromMillisecondsSinceEpoch(
-                (tabl.timeHistory["Buchung"]! * 1000).round()));
-      }
-      catch(e){
-        print("timecall Error: " + e.toString());
-        return "- : -";
-      }
-    }
-
     Widget getWorkerImage(){
       try{
         return Image.network(
@@ -152,7 +139,7 @@ class _TableItemState extends State<TableItem> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              getTime(),
+                              tabl.timeHistory["Buchung"] == 0 ? "- : -" : formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000).round())),
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -170,7 +157,7 @@ class _TableItemState extends State<TableItem> {
                                     ],
                                     title: const Text("Historie"),
                                     content: SizedBox(
-                                      height: 180,
+                                      height: 200,
                                       width: 100,
                                       child: ListView.builder(
                                         itemCount: tabl.timeHistory.length,
