@@ -1092,7 +1092,15 @@ class Tables with ChangeNotifier {
         //print(data);
         switch (data['type']) {
           case 'fetch_tables':
+            // fetch_tables {type: fetch_tables, tables: [{id: 189, ....
             print("fetch_tables " + data.toString());
+              final dataX = List<Map<String, dynamic>>.from(data["tables"]);
+              for (int i = 0; i < dataX.length; i++) {
+                var o = TableModel.fromJson(dataX[i]);
+                _items.add(o);
+              }
+            notifyListeners();
+
             break;
           case 'transfered_tables':
             for (var i = 0;
@@ -1330,44 +1338,44 @@ class Tables with ChangeNotifier {
   }
 
 
-  Future<void> addTabl({required token}) async {
-    // _items.add()
-
-    final url = Uri.parse(
-      'https://www.inspery.com/table/tablels',
-    );
-    final headers = {
-      "Content-type": "application/json",
-      "Authorization": "Token ${token}"
-    };
-    final response = await http.get(url, headers: headers);
-    if (response.statusCode == 200) {
-      final data = List<Map<String, dynamic>>.from(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-      for (int i = 0; i < data.length; i++) {
-        var o = TableModel.fromJson(data[i]);
-        _items.add(o);
-      }
-    } else {
-      print(
-          'Request failed with status: ${response.statusCode}. table/api/tablels');
-      print('Request failed with status: ${response.body}. table/api/tablels');
-    }
-    notifyListeners();
-  }
+  // Future<void> addTabl({required token}) async { // removed, because now we will do it with the websocket - AH 08.10.2022
+  //   // _items.add()
+  //
+  //   final url = Uri.parse(
+  //     'https://www.inspery.com/table/tablels',
+  //   );
+  //   final headers = {
+  //     "Content-type": "application/json",
+  //     "Authorization": "Token ${token}"
+  //   };
+  //   final response = await http.get(url, headers: headers);
+  //   if (response.statusCode == 200) {
+  //     final data = List<Map<String, dynamic>>.from(
+  //         jsonDecode(utf8.decode(response.bodyBytes)));
+  //     for (int i = 0; i < data.length; i++) {
+  //       var o = TableModel.fromJson(data[i]);
+  //       _items.add(o);
+  //     }
+  //   } else {
+  //     print(
+  //         'Request failed with status: ${response.statusCode}. table/api/tablels');
+  //     print('Request failed with status: ${response.body}. table/api/tablels');
+  //   }
+  //   notifyListeners();
+  // }
 
   TableModel findById(int id) {
     // to find a table by ID
     return _items.firstWhere((t) => t.id == id,
         orElse: () => TableModel(
-            id: 0, name: '0', owner: 0, total_price: 0.0, type: '0'));
+            id: 0, name: '0', owner: 0, total_price: 0.0, type: '0', code: ""));
   }
 
   TableModel findByName(String name) {
     // to find a table by name
     return _items.firstWhere((t) => t.name == name,
         orElse: () => TableModel(
-            id: 0, name: '0', owner: 0, total_price: 0.0, type: '0'));
+            id: 0, name: '0', owner: 0, total_price: 0.0, type: '0', code: ""));
   }
 }
 
