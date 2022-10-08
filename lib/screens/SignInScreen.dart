@@ -3,7 +3,6 @@ import '../Models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Providers/Authy.dart';
-import '../Providers/NotificationServiceProvider.dart';
 import '../util/CheckConnectionToInspery.dart';
 import 'ProvidersApiCallsScreen.dart';
 

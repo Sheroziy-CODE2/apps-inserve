@@ -49,17 +49,22 @@ class _TableItemState extends State<TableItem> {
     }
 
     Widget getWorkerImage(){
+      final String img = Provider.of<WorkersProvider>(context, listen: false).findById(tabl.owner!).profile!;
+      if (img == "0"){
+        return Image.asset("assets/images/logo_icon.png", fit: BoxFit.fill, width: 40, height: 40,);
+      }
       try{
         return Image.network(
           "https://www.inspery.com/"+
-          Provider.of<WorkersProvider>(context, listen: false).findById(tabl.owner!).profile!,
+              img,
           fit: BoxFit.fill,
           width: 40,
           height: 40,
         );
       }
       catch (e){};
-      return Image.asset("assets/images/logo_icon.png", fit: BoxFit.fill);
+      return Image.asset("assets/images/logo_icon.png", fit: BoxFit.fill, width: 40,
+        height: 40,);
     }
 
     return GridTile(
@@ -141,7 +146,7 @@ class _TableItemState extends State<TableItem> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                getTime(),
+                                tabl.timeHistory["Buchung"] == 0 ? "- : -" : formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000).round())),
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -163,10 +168,12 @@ class _TableItemState extends State<TableItem> {
                                       title: const Text("Historie"),
                                       content: SizedBox(
                                         width: 100,
+                                        height: 300,
                                         child: ListView.builder(
                                           itemCount: tabl.timeHistory.length,
                                           itemBuilder: (context, i) {
                                             return Column(
+                                              mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text(
                                                   tabl.timeHistory.keys.toList()[i],
