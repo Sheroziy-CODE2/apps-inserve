@@ -66,7 +66,7 @@ class InvoiceItemsModel{
 class InvoiceOrderItemModel{
   final int id;
   final int table;
-  final int saved_table;
+  int? saved_table;
   final int user;
   final String product;
   final num selected_price;
@@ -82,7 +82,6 @@ class InvoiceOrderItemModel{
   InvoiceOrderItemModel({
     required this.id,
     required this.table,
-    required this.saved_table,
     required this.price_description,
     required this.user,
     required this.product,
@@ -93,6 +92,7 @@ class InvoiceOrderItemModel{
     required this.added_ingredients,
     required this.deleted_ingredients,
     required this.date,
+    this.saved_table,
   });
 
   factory InvoiceOrderItemModel.fromJson(response){
@@ -100,7 +100,7 @@ class InvoiceOrderItemModel{
     return InvoiceOrderItemModel(
       id:  jsonResponse["id"] as int,
       table:  jsonResponse["table"]??0,
-      saved_table:  jsonResponse["saved_table"] as int,
+      saved_table:  jsonResponse["saved_table"],
       user:  jsonResponse["user"] as int,
       product:  jsonResponse["product"] as String,
       selected_price:  jsonResponse["selected_price"] as num,
