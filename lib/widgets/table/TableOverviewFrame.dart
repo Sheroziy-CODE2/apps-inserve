@@ -406,6 +406,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                           width: 105,
                           child: GestureDetector(
                             onTap: () {
+                              print("Changed size!!!!!!!!");
                               tableItemProvidor.setItemsPaymode(
                                   paymode: !paymode);
                               paymode = !paymode;

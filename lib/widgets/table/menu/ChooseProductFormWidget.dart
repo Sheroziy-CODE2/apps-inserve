@@ -16,7 +16,8 @@ class ChooseProductForm extends StatefulWidget {
   final Function goToNextPos;
   final String categorieTypeLeft;
   final String categorieTypeRight;
-  ChooseProductForm({required this.tableName, required this.goToNextPos, required this.categorieTypeLeft, required this.categorieTypeRight, Key? key}) : super(key: key);
+  final double hight;
+  ChooseProductForm({required this.tableName, required this.goToNextPos, required this.categorieTypeLeft, required this.categorieTypeRight, Key? key, required this.hight}) : super(key: key);
 
   @override
   State<ChooseProductForm> createState() => ChooseProductFormState();
@@ -42,7 +43,6 @@ class ChooseProductFormState extends State<ChooseProductForm> {
   Widget build(BuildContext context) {
 
     Tables tablesprov = Provider.of<Tables>(context, listen: true);
-    final hight = MediaQuery.of(context).size.height / 2-10;
     return GestureDetector(
       onPanUpdate: (details) {
         updateListWidgets();
@@ -51,7 +51,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
         children: [
           AnimatedPositioned(
             //flex: 3,
-            height: hight-15,
+            height: widget.hight-15,
             width: MediaQuery
                 .of(context)
                 .size
@@ -95,7 +95,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
             ),
           ),
           Positioned(
-            height: hight-35,
+            height: widget.hight-35,
             width: MediaQuery
                 .of(context)
                 .size
@@ -152,7 +152,7 @@ class ChooseProductFormState extends State<ChooseProductForm> {
           ),
           AnimatedPositioned(
             //flex: 3,
-            height: hight-15,
+            height: widget.hight-15,
             width: MediaQuery
                 .of(context)
                 .size
