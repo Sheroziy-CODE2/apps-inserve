@@ -48,19 +48,6 @@ class _TableItemState extends State<TableItem> {
       }
     }
 
-
-    String getTime(){
-      try {
-        return tabl.timeHistory["Buchung"] == 0 ? "- : -" : formatter.format(
-            DateTime.fromMillisecondsSinceEpoch(
-                (tabl.timeHistory["Buchung"]! * 1000).round()));
-      }
-      catch(e){
-        print("timecall Error: " + e.toString());
-        return "- : -";
-      }
-    }
-
     Widget getWorkerImage(){
       try{
         return Image.network(

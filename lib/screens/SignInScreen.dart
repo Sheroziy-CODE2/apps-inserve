@@ -64,7 +64,6 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<NotificationServiceProvider>(context, listen: false).setNotificationService(context);
     double screenHight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor, //Colors.transparent,
