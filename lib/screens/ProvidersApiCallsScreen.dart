@@ -53,9 +53,9 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
   Future<void> loadProviders() async {
     // to load all the data that the user needs
     final tablesData = Provider.of<Tables>(context, listen: false);
-    final token = Provider.of<Authy>(context, listen: false).token;
+    //final token = Provider.of<Authy>(context, listen: false).token;
     {
-      tablesData.addTabl(token: token).then((_) async {
+      //tablesData.addTabl(token: token).then((_) async {
         final tokenProvider = Provider.of<Authy>(context, listen: false);
         final token = tokenProvider.token;
         await Provider.of<Categorys>(context, listen: false)
@@ -83,7 +83,7 @@ class _ProvidersApiCallsState extends State<ProvidersApiCalls> {
         setState(() {
           _isLoading = false;
         });
-      });
+      //});
     }
   }
 }
