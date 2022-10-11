@@ -40,13 +40,7 @@ class _TableItemState extends State<TableItem> {
     }
 
     final t = tabl.total_price;
-    String updateTime = "- : -";
     final DateFormat formatter = DateFormat('hh : mm');
-    if(tabl.timeHistory.keys.contains("Buchung")){
-      if(tabl.timeHistory["Buchung"]! != 0) {
-        updateTime = formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000.0).round()));
-      }
-    }
 
     Widget getWorkerImage(){
       final String img = Provider.of<WorkersProvider>(context, listen: false).findById(tabl.owner!).profile!;
@@ -146,7 +140,9 @@ class _TableItemState extends State<TableItem> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                tabl.timeHistory["Buchung"] == 0 ? "- : -" : formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000).round())),
+                                  tabl.timeHistory["Buchung"] == null ? "- : -" :
+                                  tabl.timeHistory["Buchung"] == 0 ? "- : -" :
+                                  formatter.format(DateTime.fromMillisecondsSinceEpoch((tabl.timeHistory["Buchung"]!*1000).round())),
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
