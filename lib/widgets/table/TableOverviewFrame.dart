@@ -239,7 +239,10 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                           }
                           else{
                             TableQRCodeAlert().showTableChangeDialog(
-                                context: context, restaurantImageSVG: "assets/img/logo.svg", tableKey: 'A1B2C3');
+                                context: context,
+                                restaurantImageSVG: "assets/img/logo.svg",
+                                tableID: widget.id,
+                                tableKey: table.code); //This is wrong!!
                           }
                         },
                         child: Container(
@@ -406,6 +409,7 @@ class _TableOverviewWidgetStateFrame extends State<TableOverviewWidgetFrame> {
                           width: 105,
                           child: GestureDetector(
                             onTap: () {
+                              print("Changed size!!!!!!!!");
                               tableItemProvidor.setItemsPaymode(
                                   paymode: !paymode);
                               paymode = !paymode;

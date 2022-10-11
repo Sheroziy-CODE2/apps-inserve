@@ -14,6 +14,7 @@ class TableModel {
   final String name;
   double total_price;
   int? owner;
+  String code;
   final String type;
   Map<String, int> timeHistory = {};
 
@@ -105,6 +106,7 @@ class TableModel {
         required this.name,
         required this.total_price,
         required this.owner,
+        required this.code,
         required this.type});
 
   factory TableModel.fromJson(response) {
@@ -112,6 +114,7 @@ class TableModel {
     jsonResponse["type"] == null ? jsonResponse["type"] = 'null' : null;
     print(jsonResponse);
     return TableModel(
+      code: jsonResponse["code"] as String,
         name: jsonResponse["name"] as String,
         id: jsonResponse["id"] as int,
         owner:

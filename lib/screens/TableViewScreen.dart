@@ -86,57 +86,35 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
   List<String> buttonNames = [];
   int lastSelectedItem = 0;
   double barsize = AppBar().preferredSize.height-15;
+  double hightSaveAreaTop({required context}){ return MediaQuery.of(context).size.height -
+      AppBar().preferredSize.height -
+      MediaQuery.of(context).padding.top;
+  }
+  double hightSaveAreaBottom({required context}){ return MediaQuery.of(context).size.height -
+      //AppBar().preferredSize.height -
+      MediaQuery.of(context).padding.bottom;
+  }
 
   Widget getElements(
       {required String key, required tableId, required context}) {
     final Map<String, Widget> chooseProductWidget = {
-      "Produkt": SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2) - barsize,
-        child: ChooseProductForm(
-          tableName: tableId,
-          goToNextPos: goToNextPos,
-          categorieTypeLeft: "food",
-          categorieTypeRight: "drinks",
-          //key: chooseProductForm_key,
-        ),
-      ),
-      "Größe": SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2) - barsize-38,
-        child: ChooseProductSize(
-          tableName: tableId,
-          goToNextPos: goToNextPos,
-        ),
-      ),
-      "Zusatz": SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height / 2) - barsize-38,
-        child: ChooseSideProduct(
-          tableName: tableId,
-          goToNextPos: goToNextPos,
-        ),
-      ),
-      // "Dips": SizedBox(
-      //   width: MediaQuery.of(context).size.width,
-      //   height: MediaQuery.of(context).size.height / 2 - 40,
-      //   child: ChooseDips(
-      //     tableName: tableId,
-      //     goToNextPos: goToNextPos,
-      //   ),
-      // ),
-      "Extras": SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2 - barsize-38,
-        child: ChooseExtraOptionWidget(tableName: tableId),
-      ),
-      "Anzahl": SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2 - barsize-38,
-        child: ChooseAmountWidget(tableName: tableId, productReadyToEnter: productReadyToEnter,),
-      ),
+      "Produkt": ChooseProductForm(
+        hight: hightSaveAreaBottom(context: context) / 2 + 25,
+        tableName: tableId,
+        goToNextPos: goToNextPos,
+        categorieTypeLeft: "food",
+        categorieTypeRight: "drinks",),
+      "Größe": ChooseProductSize(tableName: tableId, goToNextPos: goToNextPos,),
+      "Zusatz": ChooseSideProduct(tableName: tableId, goToNextPos: goToNextPos,),
+      "Extras": ChooseExtraOptionWidget(tableName: tableId),
+      "Anzahl": ChooseAmountWidget(tableName: tableId, productReadyToEnter: productReadyToEnter,),
     };
-    return chooseProductWidget[key]!;
+    if(key == "Produkt") {
+      return SizedBox(child: chooseProductWidget[key]!, width: MediaQuery.of(context).size.width, height: hightSaveAreaBottom(context: context) / 2,);
+    }
+    else{
+      return SizedBox(child: chooseProductWidget[key]!, width: MediaQuery.of(context).size.width, height: hightSaveAreaBottom(context: context) / 2 - 38,);
+    }
   }
 
   late TableItemProvidor tableItemProvidor;
@@ -217,108 +195,130 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
     //}catch(e){}
 
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFFF5F2E7),
-            ),
-            child: Column(
-              children: [
-                TableOverviewWidgetFrame(
-                  height: (MediaQuery.of(context).size.height / 2 - 20),
-                  height_expended: MediaQuery.of(context).size.height - 5,
-                  width: MediaQuery.of(context).size.width,
-                  id: tableId,
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      SingleChildScrollView(
-                          controller: horizontalScrollController,
-                          scrollDirection: Axis.horizontal,
-                          physics: const NeverScrollableScrollPhysics(),
-                          child: Row(
-                            children: chooseProductWidget.values.toList(),
-                          ),
+      body:
+      SafeArea(child:
+      Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFFF5F2E7),
+          ),
+          child: Column(
+            children: [
+              TableOverviewWidgetFrame(
+                height: hightSaveAreaTop(context: context) / 2,
+                height_expended: MediaQuery.of(context).size.height - 5,
+                width: MediaQuery.of(context).size.width,
+                id: tableId,
+              ),
+              Expanded(
+                child:
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SingleChildScrollView(
+                      controller: horizontalScrollController,
+                      scrollDirection: Axis.horizontal,
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: chooseProductWidget.values.toList(),
                       ),
-                      chooseProductWidget.keys
-                          .where((element) => element != "Produkt")
-                          .isNotEmpty
-                          ?
-                      SizedBox(
-                        height: 38,
-                        child: Row(
-                          children: [
-                            Flexible(
-                              child: ListView.builder(
-                                controller:
-                                horizontalScrollControllerSteps,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: chooseProductWidget.length,
-                                itemBuilder: (context, index) =>
-                                //index == chooseProductWidget.length ?
+                    ),
+                    chooseProductWidget.keys
+                        .where((element) => element != "Produkt")
+                        .isNotEmpty
+                        ?
+                    SizedBox(
+                      height: 38,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            //flex: 5,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Colors.transparent,
+                                      Color(0x19000000),
+                                      Colors.transparent,
+                                    ],
+                                    begin: FractionalOffset(0.0, 0.0),
+                                    end: FractionalOffset(1.0, 0.0),
+                                    stops: [0.0, 0.5, 1.0],
+                                    tileMode: TileMode.clamp),
+                              ),
+                              child: Flexible(
+                                child: ListView.builder(
+                                  controller:
+                                  horizontalScrollControllerSteps,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: chooseProductWidget.length,
+                                  itemBuilder: (context, index) =>
+                                  //index == chooseProductWidget.length ?
 
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      actPos = index;
-                                      horizontalScrollController
-                                          .animateTo(
-                                          MediaQuery.of(context)
-                                              .size
-                                              .width *
-                                              actPos,
-                                          duration: const Duration(
-                                              milliseconds: 500),
-                                          curve:
-                                          Curves.easeInOutQuart);
-                                      if (actPos > 1) {
-                                        horizontalScrollControllerSteps
-                                            .animateTo(actPos * 35,
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        actPos = index;
+                                        horizontalScrollController
+                                            .animateTo(
+                                            MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                                actPos,
                                             duration: const Duration(
-                                                milliseconds: 200),
-                                            curve: Curves
-                                                .easeInOutQuart);
-                                      }
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(2),
-                                    child: Container(
-                                        width: 75,
-                                        padding: const EdgeInsets.only(
-                                            right: 5, left: 5),
-                                        decoration: BoxDecoration(
-                                          color: actPos == index
-                                              ? const Color(0xFFD3E03A)
-                                              : const Color(0xFFF3F3F3),
-                                          borderRadius:
-                                          BorderRadius.circular(20),
-                                          border:
-                                          buttonNames.length > index
-                                              ? Border.all()
-                                              : null,
-                                        ),
-                                        child: Center(
-                                            child: Text(
-                                              (
-                                                  //buttonNames.length > index
-                                                  //? buttonNames[index]
-                                                  //: /*(index+1).toString() + "." + */
-                                                  chooseProductWidget
-                                                      .keys
-                                                      .toList()[index]),
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                            ))),
+                                                milliseconds: 500),
+                                            curve:
+                                            Curves.easeInOutQuart);
+                                        if (actPos > 1) {
+                                          horizontalScrollControllerSteps
+                                              .animateTo(actPos * 35,
+                                              duration: const Duration(
+                                                  milliseconds: 200),
+                                              curve: Curves
+                                                  .easeInOutQuart);
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2),
+                                      child: Container(
+                                          width: 75,
+                                          padding: const EdgeInsets.only(
+                                              right: 5, left: 5),
+                                          decoration: BoxDecoration(
+                                            color: actPos == index
+                                                ? const Color(0xFFD3E03A)
+                                                : const Color(0xFFF3F3F3),
+                                            borderRadius:
+                                            BorderRadius.circular(20),
+                                            border:
+                                            buttonNames.length > index
+                                                ? Border.all()
+                                                : null,
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                                (
+                                                    //buttonNames.length > index
+                                                    //? buttonNames[index]
+                                                    //: /*(index+1).toString() + "." + */
+                                                    chooseProductWidget
+                                                        .keys
+                                                        .toList()[index]),
+                                                style: const TextStyle(
+                                                  fontSize: 10,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                              ))),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                           Padding(
+                          ),
+                          Padding(
                               padding: const EdgeInsets.all(3),
                               child: SizedBox(
                                 height: 40,
@@ -365,20 +365,21 @@ class _TableViewState extends State<TableView> with TickerProviderStateMixin {
                                           ),
                                           const Text("Fertig"),
                                         ],
-                                      )),
+                                      )
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                          : Container(),
-                    ],
-                  ),
+                              )
+                          ),
+                        ],
+                      ),
+                    )
+                        : Container(),
+                  ],
                 ),
-              ],
-            )
-    ),
+              ),
+            ],
+          )
+      ),
       ),
     );
   }
