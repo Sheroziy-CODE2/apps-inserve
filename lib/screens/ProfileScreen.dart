@@ -1,16 +1,16 @@
 import 'dart:convert';
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:inspery_waiter/Models/DailyInvoiceModel.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Authy.dart';
-import '../printer/ConfigPrinter.dart';
+// import '../printer/ConfigPrinter.dart';
 import '../widgets/NavBar.dart';
 import 'SignInScreen.dart';
 import 'SplashScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
   static const routeName = '/profile';
@@ -201,6 +201,8 @@ class _ProfileState extends State<Profile> {
                               ),
                               child: GestureDetector(
                                 onTap: () async {
+                                  print("Not implemented jet");
+                                  /* // Commented this out because we will use a different Printer Library
                                   final ConfigPrinter _configPrinter =
                                   ConfigPrinter();
                                   print("connection " +
@@ -244,7 +246,7 @@ class _ProfileState extends State<Profile> {
                                       bluetooth.printNewLine();
                                       bluetooth.printNewLine();
                                     }
-                                  });
+                                  });*/
                                 },
                                 child: Icon(
                                   Icons.print,

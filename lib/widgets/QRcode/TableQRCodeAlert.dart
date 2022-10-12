@@ -1,15 +1,13 @@
 
 
-import 'dart:typed_data';
 
-
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 
-import '../../printer/ConfigPrinter.dart';
+// import '../../printer/ConfigPrinter.dart';
 import '../../util/EnvironmentVariables.dart';
 
 class TableQRCodeAlert {
@@ -268,6 +266,8 @@ class TableQRCodeAlert {
                                 width: 120,
                                 child: GestureDetector(
                                   onTap: () async {
+                                    print("not implemented jet");
+                                    /* // Commented this out because we will use a different Printer Library
                                     final ConfigPrinter _configPrinter =
                                     ConfigPrinter();
                                     print("connection " +
@@ -294,7 +294,7 @@ class TableQRCodeAlert {
                                         await bluetooth.printNewLine();
                                         await bluetooth.printNewLine();
                                       }
-                                    });
+                                    });*/
                                   },
                                   child: Container(
                                       decoration: BoxDecoration(
