@@ -1,3 +1,5 @@
+/* // Commented this out because we will use a different Printer Library
+
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:intl/intl.dart';
 
@@ -75,3 +77,4 @@ class TestPrint {
     });
   }
 }
+*/

@@ -2,12 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
-import '/printer/ConfigPrinter.dart';
+//import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
 import '../Models/CheckoutModel.dart';
 import '../Models/TableModel.dart';
@@ -16,11 +16,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';
 import 'Authy.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class Tables with ChangeNotifier {
   final List<TableModel> _items = [];
@@ -34,7 +34,7 @@ class Tables with ChangeNotifier {
   bool notificationFromKitch = false;
   bool notificationFromBar = false;
 
-  final ConfigPrinter _configPrinter = ConfigPrinter();
+ // final ConfigPrinter _configPrinter = ConfigPrinter();
 
   double sliderValue = 0.0;
 
@@ -975,11 +975,12 @@ class Tables with ChangeNotifier {
     final response = await http.post(url, headers: headers, body: data);
     if (response.statusCode == 201) {
       print("Tables Bill Response: " + jsonDecode(response.body).toString());
+
+      /* // Commented this out because we will use a different Printer Library
       CheckoutModel checkoutModel =
           CheckoutModel.fromJson(jsonDecode(response.body), _context);
 
       print("connection " + (await _configPrinter.checkState()).toString());
-
       BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
       //var now = DateTime.now();
@@ -1047,7 +1048,7 @@ class Tables with ChangeNotifier {
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.paperCut();
-      });
+      }); */
 
       double cash = 0;
       invoiceItemDictModel.payments
