@@ -14,8 +14,10 @@ import '../../components/TableNameComponent.dart';
 class InvoiceItemWidget extends StatefulWidget {
   // this is the invoice item widget the will be shown in the InvoicesViewScreen
   late final int id;
+  Function deleteInvoice;
   InvoiceItemWidget({
     required this.id,
+    required this.deleteInvoice,
   });
 
   @override
@@ -88,7 +90,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
         onTap: () {
           Navigator.of(context).pushNamed(
             InvoiceView.routeName,
-            arguments: widget.id,
+            arguments: [widget.id, widget.deleteInvoice],
           );
         },
         child: Container(

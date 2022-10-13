@@ -42,6 +42,18 @@ class _InvoicesScreen extends State<InvoicesView> {
     });
   }
 
+  void deleteInvoiceItem(int id){
+    setState(() {});
+    // for(int x = 0; x < invoices.length; x ++){
+    //   if(invoices[x].id == id){
+    //     setState(() {
+    //       invoices.removeAt(x);
+    //     });
+    //     return;
+    //   }
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -90,7 +102,7 @@ class _InvoicesScreen extends State<InvoicesView> {
                 child: ListView.builder(
                   itemCount: invoicesList.length,
                   itemBuilder: (context, index) =>
-                      InvoiceItemWidget(id: invoicesList[index].id),
+                      InvoiceItemWidget(id: invoicesList[index].id, deleteInvoice: deleteInvoiceItem),
                 ),
               ),
             ],

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../Style/PageRoute/CustomPageRoutBuilder.dart';
+import '../widgets/dartPackages/another_flushbar/flushbar.dart';
 import '/widgets/invoice/InvoiceTaxinfo.dart';
 import '../widgets/invoice/InvoiceOrderWidget.dart';
 import 'InvoicesViewScreen.dart';
@@ -24,7 +25,8 @@ class InvoiceView extends StatefulWidget {
 class _InvoiceViewState extends State<InvoiceView> {
   var _isLoading = true;
   List<InvoiceItem> invoiceItems = [];
-  List<Invoice> invoice = [];
+  Function? deleteFunction;
+  Invoice? invoice;
   String address = '';
   String plz = '';
   String stadt = 'Berlin';
@@ -42,7 +44,9 @@ class _InvoiceViewState extends State<InvoiceView> {
     setState(() {
       _isLoading = true;
     });
-    final int id = ModalRoute.of(context)?.settings.arguments as int;
+    List<Object?> ax = ModalRoute.of(context)?.settings.arguments as List;
+    final int id = ax[0] as int;
+    deleteFunction = ax[1] as Function;
     final tokenData = Provider.of<Authy>(context);
     String token = tokenData.token;
     getRestaurant();
@@ -57,8 +61,6 @@ class _InvoiceViewState extends State<InvoiceView> {
   void setItems(items, invoice1) {
     setState(() {
       invoiceItems = items;
-    });
-    setState(() {
       invoice = invoice1;
     });
   }
@@ -86,133 +88,8 @@ class _InvoiceViewState extends State<InvoiceView> {
         ? const SplashScreen()
         : Scaffold(
       backgroundColor: Theme.of(context).cardColor,
-      bottomNavigationBar:
-      SizedBox(
-        height: 50,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 40,
-                width: 125,
-                child: GestureDetector(
-                  onTap: () {
+      //bottomNavigationBar:
 
-                  },
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color:
-                              const Color(0xFFF3F3F3),
-                              borderRadius:
-                              BorderRadius.circular(20),
-                            ),
-                            child: Icon(
-                              Icons.assignment_return_outlined,
-                              color: Colors.black
-                                  .withOpacity(0.4),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const Text("Rückgabe"),
-                        ],
-                      )),
-                ),
-              ),
-              SizedBox(
-                height: 40,
-                width: 105,
-                child: GestureDetector(
-                  onTap: () {
-
-                  },
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color:
-                              const Color(0xFFF3F3F3),
-                              borderRadius:
-                              BorderRadius.circular(20),
-                            ),
-                            child: Icon(
-                              Icons.print_outlined,
-                              color: Colors.black
-                                  .withOpacity(0.4),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const Text("Beleg"),
-                        ],
-                      )),
-                ),
-              ),
-
-              SizedBox(
-                height: 40,
-                width: 105,
-                child: GestureDetector(
-                  onTap: () {
-
-                  },
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color:
-                              const Color(0xFFF3F3F3),
-                              borderRadius:
-                              BorderRadius.circular(20),
-                            ),
-                            child: Icon(
-                              Icons.print,
-                              color: Colors.black
-                                  .withOpacity(0.4),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const Text("Drucken"),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -247,17 +124,18 @@ class _InvoiceViewState extends State<InvoiceView> {
                     ),
                   ),
                   Text(
-                    invoice.isNotEmpty ? 'Rechnung ${invoice[0].id}' : 'Rechnung',
+                    invoice != null ? 'Rechnung ${invoice!.id}' : 'Rechnung',
                     style: const TextStyle(color: Color(0xFF2C3333), fontSize: 20),
                   ),
                   const SizedBox(width: 50,),
                 ],
               ),
             ),
-            SingleChildScrollView(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height-172,
-                child: Column(
+            SizedBox(
+              height: MediaQuery.of(context).size.height-172,
+              child:
+              SingleChildScrollView(
+                child:  Column(
                   children: [
                     InvoiceRestaurantInfo(
                         address: address,
@@ -287,8 +165,8 @@ class _InvoiceViewState extends State<InvoiceView> {
                                   ),
                                 ),
                                 Text(
-                                  invoice.isNotEmpty
-                                      ? invoice[0].id.toString()
+                                  invoice != null
+                                      ? invoice!.id.toString()
                                       : '?',
                                   textAlign: TextAlign.end,
                                   style: const TextStyle(
@@ -300,8 +178,8 @@ class _InvoiceViewState extends State<InvoiceView> {
                               ],
                             ),
                             Text(
-                              invoice.isNotEmpty
-                                  ? invoice[0].date.substring(11, 16)
+                              invoice != null
+                                  ? invoice!.date.substring(11, 16)
                                   : '?',
                               textAlign: TextAlign.end,
                               style: const TextStyle(
@@ -335,41 +213,235 @@ class _InvoiceViewState extends State<InvoiceView> {
                     ),
                     Column(
                         children: [
-                      const InvoiceSeparator(color: Color(0xFF2C3333)),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: Row(children: [
-                            const Expanded(
-                              flex: 8,
-                              child: Text(
-                                'Summe',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF2C3333),
-                                  fontSize: 25,
+                          const InvoiceSeparator(color: Color(0xFF2C3333)),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: Row(children: [
+                                const Expanded(
+                                  flex: 8,
+                                  child: Text(
+                                    'Summe',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF2C3333),
+                                      fontSize: 25,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Text(
+                                  invoice != null
+                                      ? invoice!.amount.toString() + " EUR"
+                                      : '',
+                                  textAlign: TextAlign.end,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF2C3333),
+                                    fontSize: 25,
+                                  ),
+                                )
+                              ]),
                             ),
-                            Text(
-                              invoice.isNotEmpty
-                                  ? invoice[0].amount.toString() + " EUR"
-                                  : '',
-                              textAlign: TextAlign.end,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF2C3333),
-                                fontSize: 25,
+                          ),
+                          const InvoiceSeparator(color: Color(0xFF2C3333)),
+                          const InvoicetaxInfo(),
+                        ]
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 40,
+                      width: 125,
+                      child: GestureDetector(
+                        onTap: () {
+                          var alert = AlertDialog(
+                            title: const Text("Rechnung Stornieren"),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Abbrechen'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
                               ),
-                            )
-                          ]),
-                        ),
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  print("Stornieren");
+                                  String token = Provider.of<Authy>(context, listen: false).token;
+                                  final url = Uri.parse(
+                                    'https://www.inspery.com/invoice/delete/' + invoice!.id.toString(),
+                                  );
+                                  final headers = {
+                                    "Content-type": "application/json",
+                                    "Authorization": "Token ${token}",
+                                  };
+                                  final response = await http.delete(url, headers: headers);
+                                  if (response.statusCode == 200) {
+                                    //deleteFunction!(id: invoice!.id);
+                                    setState(() {
+                                      invoice = null;
+                                    });
+                                    Navigator.of(context).pop();
+                                    Flushbar(
+                                      message: "Storniert",
+                                      icon: const Icon(
+                                        Icons.cancel_presentation_rounded,
+                                        size: 28.0,
+                                        color: Colors.green,
+                                      ),
+                                      margin: const EdgeInsets.all(8),
+                                      borderRadius: BorderRadius.circular(8),
+                                      duration: const Duration(seconds: 4),
+                                    ).show(context);
+                                  } else {
+                                    Flushbar(
+                                      message: "Storno nicht möglich..",
+                                      icon: Icon(
+                                        Icons.lock,
+                                        size: 28.0,
+                                        color: Colors.blue[300],
+                                      ),
+                                      margin: const EdgeInsets.all(8),
+                                      borderRadius: BorderRadius.circular(8),
+                                      duration: const Duration(seconds: 4),
+                                    ).show(context);
+                                    print(
+                                        'Request failed with status: ${response.statusCode}. invoice/delete/');
+                                    print(
+                                        'Request failed with status: ${response.body}. invoice/delete/');
+                                  }
+
+                                },
+                              ),
+                            ],
+                          );
+                          // show the dialog
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return alert;
+                            },
+                          );
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                              BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    color:
+                                    const Color(0xFFF3F3F3),
+                                    borderRadius:
+                                    BorderRadius.circular(20),
+                                  ),
+                                  child: Icon(
+                                    Icons.assignment_return_outlined,
+                                    color: Colors.black
+                                        .withOpacity(0.4),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("Stornieren"),
+                              ],
+                            )),
                       ),
-                      const InvoiceSeparator(color: Color(0xFF2C3333)),
-                      const InvoicetaxInfo(),
-                    ]
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: 105,
+                      child: GestureDetector(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                              BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    color:
+                                    const Color(0xFFF3F3F3),
+                                    borderRadius:
+                                    BorderRadius.circular(20),
+                                  ),
+                                  child: Icon(
+                                    Icons.print_outlined,
+                                    color: Colors.black
+                                        .withOpacity(0.4),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("Beleg"),
+                              ],
+                            )),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 40,
+                      width: 105,
+                      child: GestureDetector(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                              BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    color:
+                                    const Color(0xFFF3F3F3),
+                                    borderRadius:
+                                    BorderRadius.circular(20),
+                                  ),
+                                  child: Icon(
+                                    Icons.print,
+                                    color: Colors.black
+                                        .withOpacity(0.4),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("Drucken"),
+                              ],
+                            )),
+                      ),
                     ),
                   ],
                 ),
@@ -430,13 +502,13 @@ class _InvoiceViewState extends State<InvoiceView> {
 
     if (response1.statusCode == 200) {
       final data = Map<String, dynamic>.from(jsonDecode(response1.body));
-      var o = Invoice.fromJson(data);
-      List<Invoice> invoice = [o];
+      Invoice invoice = Invoice.fromJson(data);
       setItems(items, invoice);
     } else {
       print(
-          'Request failed with status: ${response.statusCode}. /invoice/invoices_items/$id/');
-      print(response.reasonPhrase);
+          ' Request failed with status: ${response1.statusCode}. /invoice/$id/');
+      print(response1.reasonPhrase);
+      print(response1.body);
     }
   }
 }

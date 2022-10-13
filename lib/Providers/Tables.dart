@@ -1076,7 +1076,7 @@ class Tables with ChangeNotifier {
   Future<void> connectALlTablesSocket(
       {required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('wss://inspery.com/ws/restaurant_tables/?=$token');
+    //print('wss://inspery.com/ws/restaurant_tables/?=$token');
     sleep(const Duration(milliseconds: 300));
     _allTableschannel == null
         ? _allTableschannel = WebSocketChannel.connect(
@@ -1157,7 +1157,7 @@ class Tables with ChangeNotifier {
           height: MediaQuery.of(context).size.height-100,
           width: MediaQuery.of(context).size.width-100,
           child: Center(
-            child: Text(error),
+            child: Text(error.toString()),
           ),
         ),
         actions: [
@@ -1185,7 +1185,7 @@ class Tables with ChangeNotifier {
   Future<void> connectSocket(
       {required id, required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('wss://inspery.com/ws/restaurant_tables/${id}/?=${token}');
+    //print('wss://inspery.com/ws/restaurant_tables/${id}/?=${token}');
     //sleep(const Duration(milliseconds: 300));
     for (int i = 0; i < _items.length; i++) {
       if (_items[i].id == id) {
@@ -1233,6 +1233,8 @@ class Tables with ChangeNotifier {
 
               case 'table_items':
                 //if the type is table_items the app has add the new items to the list of table_items
+              print("Table Itmes Data: ");
+              print(data);
                 var jsonResponse = data['table_items']['table_items'];
                 List<TableItemProvidor> _tIPItems = [];
                 for (var body in jsonResponse) {
@@ -1326,7 +1328,7 @@ class Tables with ChangeNotifier {
               height: MediaQuery.of(context).size.height-100,
               width: MediaQuery.of(context).size.width-100,
               child: Center(
-                child: Text(error),
+                child: Text(error.toString()),
               ),
             ),
             actions: [
