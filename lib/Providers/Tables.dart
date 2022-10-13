@@ -9,7 +9,7 @@ import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
 //import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
-import '../Models/CheckoutModel.dart';
+//import '../Models/CheckoutModel.dart';
 import '../Models/TableModel.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class Tables with ChangeNotifier {
   final List<TableModel> _items = [];
 
   WebSocketChannel? _allTableschannel;
-  final int delay = 4;
+  final int delay = 1;
   final StreamController<dynamic> _recipientCtrl1 = StreamController<dynamic>();
   final StreamController<dynamic> _recipientCtrl2 = StreamController<dynamic>();
   final streamController = StreamController.broadcast();
@@ -76,6 +76,7 @@ class Tables with ChangeNotifier {
     List jsonElemnts = [];
     for (int i = 0; i < elements.length; i++) {
       var j = {
+        "to_go": false,
         "quantity": elements[i].quantity,
         "table": tableID,
         "product": elements[i].product,
@@ -1132,10 +1133,16 @@ class Tables with ChangeNotifier {
         onError: (e) async {
           _recipientCtrl1.addError(e);
           await Future.delayed(Duration(seconds: delay));
+          await _allTableschannel?.sink.close();
+          _allTableschannel = null;
+          await connectALlTablesSocket(context: context, token: token);
           listenToAllTabelsSocket(context: context, token: token);
         }, onDone: () async {
-      await Future.delayed(Duration(seconds: delay));
-      listenToAllTabelsSocket(context: context, token: token);
+          await Future.delayed(Duration(seconds: delay));
+          await _allTableschannel?.sink.close();
+          _allTableschannel = null;
+          await connectALlTablesSocket(context: context, token: token);
+          listenToAllTabelsSocket(context: context, token: token);
     }, cancelOnError: true
 
     ).onError((error) {
@@ -1294,13 +1301,20 @@ class Tables with ChangeNotifier {
             onError: (e) async {
               _recipientCtrl2.addError(e);
               await Future.delayed(Duration(seconds: delay));
-              listenSocket(context: context, token: token, id: id);
+              await _items[i].channel?.sink.close();
+              _items[i].channel = null;
+              await connectSocket(id: id, context: context, token: token);
+              await listenSocket(context: context, token: token, id: id);
             }, onDone: () async {
-          await Future.delayed(Duration(seconds: delay));
-          listenSocket(context: context, token: token, id: id);
+              await Future.delayed(Duration(seconds: delay));
+              await _items[i].channel?.sink.close();
+              _items[i].channel = null;
+              await connectSocket(id: id, context: context, token: token);
+              await listenSocket(context: context, token: token, id: id);
         }, cancelOnError: true
 
         ).onError((error) {
+          print("-------------------->> Error2");
           AlertDialog alert = AlertDialog(
             title: Row(
               children: const [
