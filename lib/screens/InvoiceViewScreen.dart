@@ -278,7 +278,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                                 child: const Text('OK'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
-                                  print("Stornieren");
+                                  print("Stornieren " + invoice!.id.toString());
                                   String token = Provider.of<Authy>(context, listen: false).token;
                                   final url = Uri.parse(
                                     'https://www.inspery.com/invoice/delete/' + invoice!.id.toString(),
@@ -289,11 +289,8 @@ class _InvoiceViewState extends State<InvoiceView> {
                                   };
                                   final response = await http.delete(url, headers: headers);
                                   if (response.statusCode == 200) {
-                                    //deleteFunction!(id: invoice!.id);
-                                    setState(() {
-                                      invoice = null;
-                                    });
                                     Navigator.of(context).pop();
+                                    deleteFunction!(id: invoice!.id);
                                     Flushbar(
                                       message: "Storniert",
                                       icon: const Icon(
