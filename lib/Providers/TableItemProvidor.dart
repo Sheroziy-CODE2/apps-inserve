@@ -13,6 +13,7 @@ class TableItemProvidor with ChangeNotifier {
   late int quantity;
   //double total_price;
   late int table;
+  bool to_go = false;
   //int saved_table;
   int status; // 0 waiting 1 preparing 2 done
   int? user;
@@ -206,6 +207,7 @@ class TableItemProvidor with ChangeNotifier {
   }
 
   TableItemProvidor({
+    this.to_go = false,
     this.id = 0,
     this.quantity = 0,
     this.table = 0,
@@ -225,6 +227,7 @@ class TableItemProvidor with ChangeNotifier {
     var jsonResponse = response as Map<String, dynamic>;
     if(jsonResponse["selected_price"] == null) print("FAILED ID: " + (jsonResponse["id"].toString()));
     return TableItemProvidor(
+      to_go: jsonResponse["to_go"] as bool,
       id: jsonResponse["id"] as int,
       quantity: jsonResponse["quantity"] as int,
       //total_price: jsonResponse["total_price"] as double,

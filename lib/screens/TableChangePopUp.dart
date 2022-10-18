@@ -61,8 +61,14 @@ class TableChange {
     StatefulBuilder builder = StatefulBuilder(
       builder: (BuildContext contextXX, setState) {
         return AlertDialog(
-          title: const Text("Tisch ändern",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          title: Column(
+            children: const [
+              Text("Tisch auswählen",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              Text("den du abgeben möchtest",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ],
+          ),
           content: Container
             (
             width: MediaQuery.of(context).size.width,
@@ -158,6 +164,14 @@ class TableChange {
       builder: (BuildContext contextXX, setState) {
         Tables tablesProvidor = Provider.of<Tables>(context, listen: false);
         return AlertDialog(
+          title: Column(
+            children: const [
+              Text("Tisch auswählen",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              Text("zu dem übertragen wird",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ],
+          ),
           content: Container(
             width: MediaQuery.of(context).size.width,
             height: 600,
@@ -242,7 +256,7 @@ class TableChange {
                           var oldTableId = tablesData.findByName(_chosenTable[0]).id;
                           tablesprov.transferAllItemsToSocket(context: context, tableID: oldTableId, newTableID: newTableId);
                           Navigator.of(context).pushReplacementNamed(TablesView.routeName);
-                          snackBar(msg: "Alle Tisch-Bestellungen aus " +_chosenTable[0]+" wurden auf den Tisch "+userText+" übertragen", context: context);
+                          snackBar(msg: "Bestellungen aus " +_chosenTable[0]+" wurden auf den Tisch "+userText+" übertragen", context: context);
                           userText = _chosenTable[0] = "";
                         }
                         else {

@@ -79,7 +79,7 @@ class _TablesNotificationWidgetState extends State<TablesNotificationWidget> {
                                         });
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFDDDDDD),
                                           borderRadius: BorderRadius.circular(10),

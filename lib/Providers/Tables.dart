@@ -2,31 +2,31 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../Models/InvoiceItemsDictModel.dart';
 import '/Providers/TableItemProvidor.dart';
-import '/printer/ConfigPrinter.dart';
+//import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
-import '../Models/CheckoutModel.dart';
+//import '../Models/CheckoutModel.dart';
 import '../Models/TableModel.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 
 import '../main.dart';
 import 'Authy.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class Tables with ChangeNotifier {
   final List<TableModel> _items = [];
 
   WebSocketChannel? _allTableschannel;
-  final int delay = 4;
+  final int delay = 1;
   final StreamController<dynamic> _recipientCtrl1 = StreamController<dynamic>();
   final StreamController<dynamic> _recipientCtrl2 = StreamController<dynamic>();
   final streamController = StreamController.broadcast();
@@ -34,7 +34,7 @@ class Tables with ChangeNotifier {
   bool notificationFromKitch = false;
   bool notificationFromBar = false;
 
-  final ConfigPrinter _configPrinter = ConfigPrinter();
+ // final ConfigPrinter _configPrinter = ConfigPrinter();
 
   double sliderValue = 0.0;
 
@@ -76,6 +76,7 @@ class Tables with ChangeNotifier {
     List jsonElemnts = [];
     for (int i = 0; i < elements.length; i++) {
       var j = {
+        "to_go": false,
         "quantity": elements[i].quantity,
         "table": tableID,
         "product": elements[i].product,
@@ -975,11 +976,12 @@ class Tables with ChangeNotifier {
     final response = await http.post(url, headers: headers, body: data);
     if (response.statusCode == 201) {
       print("Tables Bill Response: " + jsonDecode(response.body).toString());
+
+      /* // Commented this out because we will use a different Printer Library
       CheckoutModel checkoutModel =
           CheckoutModel.fromJson(jsonDecode(response.body), _context);
 
       print("connection " + (await _configPrinter.checkState()).toString());
-
       BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
       //var now = DateTime.now();
@@ -1047,7 +1049,7 @@ class Tables with ChangeNotifier {
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.paperCut();
-      });
+      }); */
 
       double cash = 0;
       invoiceItemDictModel.payments
@@ -1074,7 +1076,7 @@ class Tables with ChangeNotifier {
   Future<void> connectALlTablesSocket(
       {required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('wss://inspery.com/ws/restaurant_tables/?=$token');
+    //print('wss://inspery.com/ws/restaurant_tables/?=$token');
     sleep(const Duration(milliseconds: 300));
     _allTableschannel == null
         ? _allTableschannel = WebSocketChannel.connect(
@@ -1131,10 +1133,16 @@ class Tables with ChangeNotifier {
         onError: (e) async {
           _recipientCtrl1.addError(e);
           await Future.delayed(Duration(seconds: delay));
+          await _allTableschannel?.sink.close();
+          _allTableschannel = null;
+          await connectALlTablesSocket(context: context, token: token);
           listenToAllTabelsSocket(context: context, token: token);
         }, onDone: () async {
-      await Future.delayed(Duration(seconds: delay));
-      listenToAllTabelsSocket(context: context, token: token);
+          await Future.delayed(Duration(seconds: delay));
+          await _allTableschannel?.sink.close();
+          _allTableschannel = null;
+          await connectALlTablesSocket(context: context, token: token);
+          listenToAllTabelsSocket(context: context, token: token);
     }, cancelOnError: true
 
     ).onError((error) {
@@ -1149,7 +1157,7 @@ class Tables with ChangeNotifier {
           height: MediaQuery.of(context).size.height-100,
           width: MediaQuery.of(context).size.width-100,
           child: Center(
-            child: Text(error),
+            child: Text(error.toString()),
           ),
         ),
         actions: [
@@ -1177,7 +1185,7 @@ class Tables with ChangeNotifier {
   Future<void> connectSocket(
       {required id, required context, required token}) async {
     // if there is no connection yet connect the channel
-    print('wss://inspery.com/ws/restaurant_tables/${id}/?=${token}');
+    //print('wss://inspery.com/ws/restaurant_tables/${id}/?=${token}');
     //sleep(const Duration(milliseconds: 300));
     for (int i = 0; i < _items.length; i++) {
       if (_items[i].id == id) {
@@ -1225,6 +1233,8 @@ class Tables with ChangeNotifier {
 
               case 'table_items':
                 //if the type is table_items the app has add the new items to the list of table_items
+              print("Table Itmes Data: ");
+              print(data);
                 var jsonResponse = data['table_items']['table_items'];
                 List<TableItemProvidor> _tIPItems = [];
                 for (var body in jsonResponse) {
@@ -1293,13 +1303,20 @@ class Tables with ChangeNotifier {
             onError: (e) async {
               _recipientCtrl2.addError(e);
               await Future.delayed(Duration(seconds: delay));
-              listenSocket(context: context, token: token, id: id);
+              await _items[i].channel?.sink.close();
+              _items[i].channel = null;
+              await connectSocket(id: id, context: context, token: token);
+              await listenSocket(context: context, token: token, id: id);
             }, onDone: () async {
-          await Future.delayed(Duration(seconds: delay));
-          listenSocket(context: context, token: token, id: id);
+              await Future.delayed(Duration(seconds: delay));
+              await _items[i].channel?.sink.close();
+              _items[i].channel = null;
+              await connectSocket(id: id, context: context, token: token);
+              await listenSocket(context: context, token: token, id: id);
         }, cancelOnError: true
 
         ).onError((error) {
+          print("-------------------->> Error2");
           AlertDialog alert = AlertDialog(
             title: Row(
               children: const [
@@ -1311,7 +1328,7 @@ class Tables with ChangeNotifier {
               height: MediaQuery.of(context).size.height-100,
               width: MediaQuery.of(context).size.width-100,
               child: Center(
-                child: Text(error),
+                child: Text(error.toString()),
               ),
             ),
             actions: [

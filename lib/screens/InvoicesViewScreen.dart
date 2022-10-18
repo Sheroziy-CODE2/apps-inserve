@@ -9,16 +9,18 @@ import '../widgets/NavBar.dart';
 import '../widgets/invoice/InvoiceItemWidget.dart';
 
 class InvoicesView extends StatefulWidget {
-  // const TablesView({Key? key}) : super(key: key);
+
+  InvoicesView({Key? key}) : super(key: key);
   static const routeName = '/invoces_screen';
 
   @override
-  State<InvoicesView> createState() => _InvoicesScreen();
+  State<InvoicesView> createState() => InvoicesScreenState();
 }
 
-class _InvoicesScreen extends State<InvoicesView> {
-  var _isLoading = true;
+class InvoicesScreenState extends State<InvoicesView> {
+  var _isLoading = false;
   List<Invoice> invoices = [];
+  bool refresh = false;
   @override
   void initState() {
     super.initState();
@@ -27,9 +29,6 @@ class _InvoicesScreen extends State<InvoicesView> {
   @override
   void didChangeDependencies() {
     // get all the invoices
-    setState(() {
-      _isLoading = true;
-    });
     final tokenData = Provider.of<Authy>(context);
     String token = tokenData.token;
     addInvoices(token);
@@ -42,11 +41,26 @@ class _InvoicesScreen extends State<InvoicesView> {
     });
   }
 
+  void deleteInvoiceItem({required int id}){
+    for(int x = 0; x < invoices.length; x ++){
+      if(invoices[x].id == id){
+          invoices.removeAt(x);
+          setState(() {
+            refresh = true;
+          });
+        return;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    setState(() {
+    if(refresh) {
+      refresh = false;
+      setState(() {
       _isLoading = false;
     });
+    }
     final invoicesList = invoices;
 
     return Scaffold(
@@ -90,7 +104,7 @@ class _InvoicesScreen extends State<InvoicesView> {
                 child: ListView.builder(
                   itemCount: invoicesList.length,
                   itemBuilder: (context, index) =>
-                      InvoiceItemWidget(id: invoicesList[index].id),
+                      InvoiceItemWidget(id: invoicesList[index].id, deleteInvoice: deleteInvoiceItem),
                 ),
               ),
             ],

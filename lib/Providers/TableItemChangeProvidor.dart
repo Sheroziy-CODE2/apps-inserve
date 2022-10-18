@@ -46,6 +46,7 @@ class TableItemChangeProvidor extends ChangeNotifier {
     items.addItemFromWaiter(
       refresh: refresh,
       newItem: TableItemProvidor(
+        to_go: false,
         product: productID,
         quantity: 1,
         table: tableID,
