@@ -26,7 +26,7 @@ jobs:
       - name: Get keychain path
         id: keychain-path
         run: |
-          path=$(find **/Keychain/ -name '*.keychain-db' -type f | head -1)
+          path=$(find -name 'signing_temp.keychain' -type f)
           echo "::set-output name=path::$path"
 
       - name: Build & upload iOS binary
@@ -35,4 +35,4 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-          KEYCHAIN_PATH: "${{steps.keychain-path.outputs.path}}"
+          KEYCHAIN_PATH: "${{steps.keychain-path.outputs.path}}"-db
