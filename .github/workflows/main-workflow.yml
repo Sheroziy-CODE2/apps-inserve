@@ -6,35 +6,6 @@ on:
       - feature/IN-*
       #- develop
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-      - uses: subosito/flutter-action@v1
-        with:
-          flutter-version: "3.0.5"
-      - run: flutter clean
-      - run: flutter pub get
-      - run: flutter build apk
-      - name: Rename The Build
-        run: python ./.github/scripts/rename_build.py
-      - name: Get APK Path
-        id: apk-path
-        run: |
-          path=$(find . -name 'waiter-app-release-*.apk' -type f | head -1)
-          echo "::set-output name=path::$path"
-      - name: Upload APK To Slack
-        uses: adrey/slack-file-upload-action@master
-        with:
-            token: ${{ secrets.SLACK_BOT_TOKEN }}
-            path: "${{steps.apk-path.outputs.path}}"
-            channel: inspery_apps
-
   deploy:
     runs-on: macos-latest
     steps:
@@ -52,10 +23,16 @@ jobs:
           p12-file-base64: ${{ secrets.IOS_DIST_SIGNING_KEY }}
           p12-password: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
 
+      - name: Get keychain path
+        id: keychain-path
+        run: |
+          path=$(find **/Keychain/ -name '*.keychain-db' -type f | head -1)
+          echo "::set-output name=path::$path"
+
       - name: Build & upload iOS binary
         run: bundle exec fastlane ios build_upload_testflight
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-          KEYCHAIN_PATH: ~/Library/Keychains/signing_temp.keychain-db
+          KEYCHAIN_PATH: "${{steps.keychain-path.outputs.path}}"
