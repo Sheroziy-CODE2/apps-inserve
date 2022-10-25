@@ -70,8 +70,8 @@ platform :ios do
  lane :build_release do |options|
   app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
 
-  profile_name = "App Provisioning Profile" # the name of the profile to use for the build
-  output_name = "example-iOS" # specify the name of the .ipa file to generate
+  profile_name = "Service Inspery" # the name of the profile to use for the build
+  output_name = "Inserve" # specify the name of the .ipa file to generate
   export_method = "app-store" # specify the export method
   compile_bitcode = true # specify whether to enable bitcode
 
@@ -87,7 +87,7 @@ platform :ios do
 
   # build the app
   gym(
-    scheme: "example-scheme", # replace with name of your project’s scheme
+    scheme: "Service Inspery", # replace with name of your project’s scheme
     output_name: output_name,
     configuration: "Release",
     export_options: {
