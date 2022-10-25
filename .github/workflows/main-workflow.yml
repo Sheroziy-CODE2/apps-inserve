@@ -23,16 +23,10 @@ jobs:
           p12-file-base64: ${{ secrets.IOS_DIST_SIGNING_KEY }}
           p12-password: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
 
-      - name: Get keychain path
-        id: keychain-path
-        run: |
-          path=$(find **/Library/Keychains -name 'signing_temp.keychain' -type f | head -1)
-          echo "::set-output name=path::$path"
-
       - name: Build & upload iOS binary
         run: bundle exec fastlane ios build_upload_testflight
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-          KEYCHAIN_PATH: "${{steps.keychain-path.outputs.path}}-db"
+          KEYCHAIN_PATH: /Users/runner/Library/Keychains/signing_temp.keychain-db
