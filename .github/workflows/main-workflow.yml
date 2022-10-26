@@ -15,6 +15,15 @@ jobs:
         with:
           xcode-version: latest-stable
 
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "3.0.5"
+
+      - run: flutter clean
+      - name: Install tools
+        run: |
+          flutter pub get
+          cd ./ios && pod install
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:
