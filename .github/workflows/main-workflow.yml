@@ -19,7 +19,6 @@ jobs:
         with:
           flutter-version: "3.0.5"
 
-      - run: flutter clean
       - name: Install tools
         run: |
           flutter pub get
