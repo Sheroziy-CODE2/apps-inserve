@@ -109,6 +109,7 @@ flutter:
     - assets/images/yourlogo.png #this logo will be printet in the TestPrinterWidget
     - assets/lottie/cateringfork-knife.json
     - assets/lottie/empty-box.json
+    - .env
     - .env.development
     - .env.production
 

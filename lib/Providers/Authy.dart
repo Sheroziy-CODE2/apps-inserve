@@ -139,7 +139,6 @@ class Authy extends ChangeNotifier {
     final url = Uri.parse(
       EnvironmentVariables.apiUrl+'authy/login',
     );
-    print (url);
     final headers = {"Content-type": "application/json"};
     final json = {"username": userName, "password": passWord};
     final m = jsonEncode(json);
