@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../Models/NotificationModel.dart';
+import '../util/EnvironmentVariables.dart';
 
 
 class NotificationProvider with ChangeNotifier {
@@ -15,7 +16,7 @@ class NotificationProvider with ChangeNotifier {
   Future<void> addNotificationType({required token, required context}) async {
     // this function will add ingredients to the _items List
     final url = Uri.parse(
-      'https://www.inspery.com/table/notification_types',
+      EnvironmentVariables.apiUrl+'table/notification_types',
     );
     final headers = {
       "Content-type": "application/json",

@@ -7,7 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EnvironmentVariables{
 
-  static String get fileName => kReleaseMode ? ".env.production" : ".env.development";
+  static String get fileName => kReleaseMode ? ".env.development" : ".env.development"; //change later first condition to .env.production
   static String get apiUrl => dotenv.env['API_URL'] ?? 'MY_FALLBACK';
 
   static const file = '.env.development';

@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert' as convert;
 import 'package:flutter/foundation.dart';
+import '../util/EnvironmentVariables.dart';
 
 class Authy extends ChangeNotifier {
   String? _token;
@@ -27,15 +28,15 @@ class Authy extends ChangeNotifier {
   late String photoLink = "";
   String RestaurantPhotoLink = "";
 
-  String getUserName(){
+  String getUserName() {
     String name = "";
-    if(first_name != null){
+    if (first_name != null) {
       name += first_name!;
     }
-    if(last_name != null){
+    if (last_name != null) {
       name += " " + last_name!;
     }
-    if(name == ""){
+    if (name == "") {
       name = _userName;
     }
     return name;
@@ -43,7 +44,7 @@ class Authy extends ChangeNotifier {
 
   Future<void> getRestaurantPhoto() async {
     //callling the restaurant info Api
-    final url = Uri.parse('https://www.inspery.com/app/api/restaurant/3');
+    final url = Uri.parse(EnvironmentVariables.apiUrl+'app/api/restaurant/3');
     try {
       final response = await http.get(url);
       var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
@@ -136,8 +137,9 @@ class Authy extends ChangeNotifier {
   Future<void> signIn(String userName, String passWord) async {
     // this function will call the login API and save the data in SharedPreferences
     final url = Uri.parse(
-      'https://www.inspery.com/authy/login',
+      EnvironmentVariables.apiUrl+'authy/login',
     );
+    print (url);
     final headers = {"Content-type": "application/json"};
     final json = {"username": userName, "password": passWord};
     final m = jsonEncode(json);
@@ -184,7 +186,7 @@ class Authy extends ChangeNotifier {
   }
 }
 
-class UserGroupModel{
+class UserGroupModel {
   int id;
   String name;
 

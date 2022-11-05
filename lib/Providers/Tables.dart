@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../Models/InvoiceItemsDictModel.dart';
+import '../util/EnvironmentVariables.dart';
 import '/Providers/TableItemProvidor.dart';
 //import '/printer/ConfigPrinter.dart';
 import 'package:provider/provider.dart';
@@ -965,7 +966,7 @@ class Tables with ChangeNotifier {
 
     String token = Provider.of<Authy>(_context, listen: false).token;
     final url = Uri.parse(
-      'https://www.inspery.com/invoice/invoices_items/',
+      EnvironmentVariables.apiUrl+'invoice/invoices_items/',
     );
     final headers = {
       "Content-type": "application/json",
@@ -1044,7 +1045,7 @@ class Tables with ChangeNotifier {
               method + ": " + element.price.toStringAsFixed(2), 0, 2);
         }
         ;
-        bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
+        bluetooth.printQRcode(EnvironmentVariables.apiUrl, 150, 150, 1);
         bluetooth.printNewLine();
         bluetooth.printNewLine();
         bluetooth.printNewLine();
@@ -1359,7 +1360,7 @@ class Tables with ChangeNotifier {
   //   // _items.add()
   //
   //   final url = Uri.parse(
-  //     'https://www.inspery.com/table/tablels',
+  //     EnvironmentVariables.apiUrl+'table/tablels',
   //   );
   //   final headers = {
   //     "Content-type": "application/json",

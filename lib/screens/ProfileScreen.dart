@@ -6,6 +6,7 @@ import 'package:inspery_waiter/Models/DailyInvoiceModel.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Authy.dart';
 // import '../printer/ConfigPrinter.dart';
+import '../util/EnvironmentVariables.dart';
 import '../widgets/NavBar.dart';
 import 'SignInScreen.dart';
 import 'SplashScreen.dart';
@@ -36,7 +37,7 @@ class _ProfileState extends State<Profile> {
     Future<void> getDailyInvoice() async {
       String token = Provider.of<Authy>(context, listen: false).token;
       final url = Uri.parse(
-        'https://www.inspery.com/invoice/daily_invoice/',
+        EnvironmentVariables.apiUrl+'invoice/daily_invoice/',
       );
       final headers = {
         "Content-type": "application/json",
@@ -238,7 +239,7 @@ class _ProfileState extends State<Profile> {
                                           "Tip Bar", dailyIncoiveModel.cash_tip.toStringAsFixed(2), 1);
                                       bluetooth.printNewLine();
                                       bluetooth.printQRcode(
-                                          "https://www.inspery.com/",
+                                          EnvironmentVariables.apiUrl,
                                           150,
                                           150,
                                           1);

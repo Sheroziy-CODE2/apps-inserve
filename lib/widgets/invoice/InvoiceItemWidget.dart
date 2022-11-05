@@ -10,6 +10,7 @@ import '../../Models/Invoice.dart';
 
 import '../../screens/InvoiceViewScreen.dart';
 import '../../components/TableNameComponent.dart';
+import '../../util/EnvironmentVariables.dart';
 
 class InvoiceItemWidget extends StatefulWidget {
   // this is the invoice item widget the will be shown in the InvoicesViewScreen
@@ -46,7 +47,7 @@ class _InvoiceCardState extends State<InvoiceItemWidget> {
 
   Future<void> invoiceCall(String token) async {
     final url = Uri.parse(
-      'https://www.inspery.com/invoice/${widget.id}/',
+      EnvironmentVariables.apiUrl+'invoice/${widget.id}/',
     );
     final headers = {
       "Content-type": "application/json",
