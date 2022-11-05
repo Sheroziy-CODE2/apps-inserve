@@ -35,6 +35,8 @@ class Tables with ChangeNotifier {
   bool notificationFromKitch = false;
   bool notificationFromBar = false;
 
+  String originUrl = EnvironmentVariables.apiUrl.replaceAll("https://", "");
+
  // final ConfigPrinter _configPrinter = ConfigPrinter();
 
   double sliderValue = 0.0;
@@ -1081,7 +1083,7 @@ class Tables with ChangeNotifier {
     sleep(const Duration(milliseconds: 300));
     _allTableschannel == null
         ? _allTableschannel = WebSocketChannel.connect(
-            Uri.parse('wss://inspery.com/ws/restaurant_tables/?=$token'),
+            Uri.parse("wss://"+originUrl+"ws/restaurant_tables/?=$token"),
           )
         : null;
   }
@@ -1193,7 +1195,7 @@ class Tables with ChangeNotifier {
         await _items[i].channel == null
             ? _items[i].channel = WebSocketChannel.connect(
                 Uri.parse(
-                    'wss://inspery.com/ws/restaurant_tables/${id}/?=${token}'),
+                    "wss://"+originUrl+"ws/restaurant_tables/${id}/?=${token}"),
               )
             : null;
       }

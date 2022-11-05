@@ -9,12 +9,12 @@ class ConnectionToInspery{
 
   Future<bool> check() async{
     try {
-      final result = await InternetAddress.lookup('inspery.com');
+      final result = await InternetAddress.lookup('dev.inspery.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         return true;
       }
     } on SocketException catch (e) {
-      print('Can not connect to inspery.com, error: ' + e.toString());
+      print('Can not connect to dev.inspery.com, error: ' + e.toString());
       return false;
     }
     return false;
