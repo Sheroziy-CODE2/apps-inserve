@@ -70,7 +70,7 @@ platform :ios do
  lane :build_release do |options|
   app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
 
-  profile_name = "Service Inspery" # the name of the profile to use for the build
+  profile_name = "com.inspery.service-app" # the name of the profile to use for the build
   output_name = "Inserve" # specify the name of the .ipa file to generate
   export_method = "app-store" # specify the export method
   compile_bitcode = true # specify whether to enable bitcode

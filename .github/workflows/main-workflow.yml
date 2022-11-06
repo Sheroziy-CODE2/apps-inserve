@@ -11,31 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_11.3.app/Contents/Developer'
-
-      - name: Bundle install
-        run: cd ./ios && bundle install
-
-      - uses: actions/cache@v2
+      - name: Set up ruby env
+        uses: ruby/setup-ruby@v1
         with:
-         path: /opt/hostedtoolcache/flutter
-         key: ${{ runner.OS }}-flutter-install-cache-3.0.5
+          ruby-version: 2.7.2
+          bundler-cache: true
 
-      - uses: subosito/flutter-action@v1
-        with:
-          flutter-version: "3.0.5"
-          channel: 'stable'
-
-      - name: Setup JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: "12.x"
-
-      - name: Install tools
-        run: |
-            flutter pub get
-            cd ./ios && pod install
 
       - name: Import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v1
