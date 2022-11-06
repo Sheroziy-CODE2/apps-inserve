@@ -17,7 +17,14 @@ jobs:
           ruby-version: 2.7.2
           bundler-cache: true
 
+      - name: Get ipa path
+        id: ipa-path
+        run: |
+          path=$(find /Users/runner/work/apps-inserve/apps-inserve -name 'Gemfile.lock' -type f | head -1)
+          echo "::set-output name=path::$path"
+
       - name: Setup Fastlane
+        working-directory: /Users/runner/work/apps-inserve/apps-inserve/ios
         run: bundle install
 
       - name: Import Code-Signing Certificates
@@ -25,12 +32,6 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.IOS_DIST_SIGNING_KEY }}
           p12-password: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
-
-      - name: Get ipa path
-        id: ipa-path
-        run: |
-          path=$(find /Users/runner/work/apps-inserve/apps-inserve -name 'Gemfile.lock' -type f | head -1)
-          echo "::set-output name=path::$path"
 
       - name: Build & upload iOS binary
         working-directory: /Users/runner/work/apps-inserve/apps-inserve/ios
