@@ -89,8 +89,7 @@ platform :ios do
   gym(
     scheme: "Runner", # replace with name of your project’s scheme
     output_name: output_name,
-    configuration: "Release",
-    workspace: "Runner.xcworkspace",
+    configuration: "Debug",
     export_method: export_method,
     export_options: {
       provisioningProfiles: {
