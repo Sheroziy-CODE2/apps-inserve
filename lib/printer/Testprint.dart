@@ -43,7 +43,7 @@ class TestPrint {
         bluetooth.printCustom("--------------------------------", 1, 0);
         bluetooth.printLeftRight("SUMME", "232,20", 3);
         bluetooth.printCustom("--------------------------------", 1, 0);
-        bluetooth.printQRcode("https://www.inspery.com/", 150, 150, 1);
+        bluetooth.printQRcode(EnvironmentVariables.apiUrl, 150, 150, 1);
 
 //      bluetooth.printImageBytes(bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
 //         bluetooth.printLeftRight("LEFT", "RIGHT", 0);

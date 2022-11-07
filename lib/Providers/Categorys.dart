@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import '../util/EnvironmentVariables.dart';
 import 'Category.dart';
 import 'dart:convert';
 
@@ -21,7 +22,7 @@ class Categorys with ChangeNotifier {
   Future<void> addProducts(cat, {required token, required context}) async {
     //this function will get all the products for the category sent to it
     final url = Uri.parse(
-      'https://www.inspery.com/menu/products/${cat.id}',
+      EnvironmentVariables.apiUrl+'menu/products/${cat.id}',
     );
     final headers = {"Content-type": "application/json", "Authorization": "Token $token"};
     final response = await http.get(url, headers: headers);
@@ -44,7 +45,7 @@ class Categorys with ChangeNotifier {
   Future<void> addCategory({required token, required context}) async {
     // this function will add categorys to the _items List
     final url = Uri.parse(
-      'https://www.inspery.com/menu/category/4',
+      EnvironmentVariables.apiUrl+'menu/category/4',
     );
     final headers = {"Content-type": "application/json"};
     final response = await http.get(url, headers: headers);

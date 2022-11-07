@@ -265,7 +265,7 @@ class TableItemsProvidor with ChangeNotifier {
   // Future<void> loadAllProduct({required String tableName}) async {
   //   //LISTS!
   //   final url = Uri.parse(
-  //     'https://www.inspery.com/table/api/tablel_items/' + tableName,
+  //     EnvironmentVariables.apiUrl+'table/api/tablel_items/' + tableName,
   //   );
   //   final headers = {"Content-type": "application/json"};
   //   if (isLoading) return;

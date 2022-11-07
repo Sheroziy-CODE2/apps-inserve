@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../Providers/Authy.dart';
 import '../Models/Invoice.dart';
+import '../util/EnvironmentVariables.dart';
 import '../widgets/NavBar.dart';
 import '../widgets/invoice/InvoiceItemWidget.dart';
 
@@ -116,7 +117,7 @@ class InvoicesScreenState extends State<InvoicesView> {
 
   Future<void> addInvoices(token) async {
     final url = Uri.parse(
-      'https://www.inspery.com/invoice/',
+      EnvironmentVariables.apiUrl+'invoice/',
     );
     final headers = {
       "Content-type": "application/json",

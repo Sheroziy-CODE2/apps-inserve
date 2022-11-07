@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Models/Ingredient.dart';
+import '../util/EnvironmentVariables.dart';
 
 class Ingredients with ChangeNotifier {
   List<Ingredient> _items = [];
@@ -14,7 +15,7 @@ class Ingredients with ChangeNotifier {
   Future<void> addIngredients({required token, required context}) async {
     // this function will add ingredients to the _items List
     final url = Uri.parse(
-      'https://www.inspery.com/menu/ingriedients/',
+      EnvironmentVariables.apiUrl+'menu/ingriedients/',
     );
     final headers = {
       "Content-type": "application/json",

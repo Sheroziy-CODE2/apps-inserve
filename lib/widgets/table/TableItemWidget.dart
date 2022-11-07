@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:inspery_waiter/Providers/WorkersProvider.dart';
+import 'package:inspery_waiter/util/EnvironmentVariables.dart';
 import 'package:inspery_waiter/widgets/table/tables/TablesNotificationWidget.dart';
 import '../../Models/TableModel.dart';
 import '../../Providers/Tables.dart';
@@ -49,7 +50,7 @@ class _TableItemState extends State<TableItem> {
       }
       try{
         return Image.network(
-          "https://www.inspery.com/"+
+          EnvironmentVariables.apiUrl+
               img,
           fit: BoxFit.fill,
           width: 40,
