@@ -89,11 +89,11 @@ platform :ios do
   gym(
     scheme: "Runner", # replace with name of your project’s scheme
     output_name: output_name,
-    configuration: "Debug",
+    configuration: "Release",
     export_method: export_method,
     export_options: {
       provisioningProfiles: {
-        app_identifier => profile_name
+        "com.inspery.service-app" => "App Provisioning Profile"
       }
     }
   )
