@@ -35,7 +35,7 @@ jobs:
       - name: Get APK Path
         id: apk-path
         run: |
-          path=$(find . -name 'waiter-app-release-*.apk' -type f | head -1)
+          path=$(find . -name 'inserve-app-release-*.apk' -type f | head -1)
           echo "::set-output name=path::$path"
 
       - name: Upload APK To Slack
