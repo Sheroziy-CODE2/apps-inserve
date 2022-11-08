@@ -1,13 +1,19 @@
 
 
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EnvironmentVariables{
-  static const filename = '.env';
+
+  static String get fileName => kReleaseMode ? ".env.development" : ".env.development"; //change later first condition to .env.production
+  static String get apiUrl => dotenv.env['API_URL'] ?? 'MY_FALLBACK';
+
+  static const file = '.env.development';
   Map<String, String> environment_variables = {};
 
-  Future load({String assetsFileName = filename}) async {
+  Future load({String assetsFileName = file}) async {
     final lines = await rootBundle.loadString(assetsFileName);
     Map<String, String> environment = {};
     for (String line in lines.split('\n')) {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:inspery_waiter/Providers/FlorLayoutProvider.dart';
 import 'package:inspery_waiter/screens/FlorPlanScreen.dart';
+import 'package:inspery_waiter/util/EnvironmentVariables.dart';
 import '/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +32,7 @@ import 'screens/HomePageScreen.dart';
 import 'screens/ProvidersApiCallsScreen.dart';
 import 'screens/ProfileScreen.dart';
 
-void main() {
+Future<void> main() async {
   // Step 2
   WidgetsFlutterBinding.ensureInitialized();
   // Step 3
@@ -42,6 +44,9 @@ void main() {
         child: MyApp(),
       )
   ));
+  //Load Needed URL FOR ENVIRONMENT
+  await dotenv.load(fileName: EnvironmentVariables.fileName);
+
   runApp(
       Phoenix(
         child: MyApp(),

@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../util/EnvironmentVariables.dart';
+
 class Products with ChangeNotifier {
   List<Product> _items = [];
 
@@ -13,7 +15,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProducts({required token, required context}) async {
     final url = Uri.parse(
-      'https://www.inspery.com/menu/products/',
+      EnvironmentVariables.apiUrl+'menu/products/',
     );
     final headers = {"Authorization": "Token $token"};
     final response = await http.get(url, headers: headers);

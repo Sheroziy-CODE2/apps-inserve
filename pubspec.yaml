@@ -55,6 +55,7 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
 
   flutter_share: ^2.0.0
+  flutter_dotenv: ^5.0.2
 
 flutter_icons:
   android: true
@@ -110,7 +111,8 @@ flutter:
     - assets/images/yourlogo.png #this logo will be printet in the TestPrinterWidget
     - assets/lottie/cateringfork-knife.json
     - assets/lottie/empty-box.json
-    - .env
+    - .env.development
+    - .env.production
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

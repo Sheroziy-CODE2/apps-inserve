@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../Style/PageRoute/CustomPageRoutBuilder.dart';
+import '../util/EnvironmentVariables.dart';
 import '../widgets/dartPackages/another_flushbar/flushbar.dart';
 import '/widgets/invoice/InvoiceTaxinfo.dart';
 import '../widgets/invoice/InvoiceOrderWidget.dart';
@@ -281,7 +282,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                                   print("Stornieren " + invoice!.id.toString());
                                   String token = Provider.of<Authy>(context, listen: false).token;
                                   final url = Uri.parse(
-                                    'https://www.inspery.com/invoice/delete/' + invoice!.id.toString(),
+                                    EnvironmentVariables.apiUrl+'invoice/delete/' + invoice!.id.toString(),
                                   );
                                   final headers = {
                                     "Content-type": "application/json",
@@ -452,7 +453,7 @@ class _InvoiceViewState extends State<InvoiceView> {
 
   Future<void> getRestaurant() async {
     //callling the restaurant info Api
-    final url = Uri.parse('https://www.inspery.com/app/api/restaurant/3');
+    final url = Uri.parse(EnvironmentVariables.apiUrl+'app/api/restaurant/3');
     try {
       final response = await http.get(url);
       var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
@@ -466,7 +467,7 @@ class _InvoiceViewState extends State<InvoiceView> {
   Future<void> addInvoiceItems(token, id) async {
     //callling the invoiceItems Api
     final url = Uri.parse(
-      'https://www.inspery.com/invoice/invoices_items/$id',
+      EnvironmentVariables.apiUrl+'invoice/invoices_items/$id',
     );
     final headers = {
       "Content-type": "application/json",
@@ -489,7 +490,7 @@ class _InvoiceViewState extends State<InvoiceView> {
     }
     //callling the invoice Api
     final url1 = Uri.parse(
-      'https://www.inspery.com/invoice/$id',
+      EnvironmentVariables.apiUrl+'invoice/$id',
     );
     final headers1 = {
       "Content-type": "application/json",

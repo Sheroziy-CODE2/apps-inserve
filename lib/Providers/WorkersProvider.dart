@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../Models/WorkerModel.dart';
+import '../util/EnvironmentVariables.dart';
 
 
 
@@ -19,7 +20,7 @@ class WorkersProvider with ChangeNotifier {
   Future<void> addWorkers({required token, required context}) async {
 
     final url = Uri.parse(
-      'https://www.inspery.com/authy/workers',
+      EnvironmentVariables.apiUrl+'authy/workers',
     );
     final headers = {"Authorization": "Token $token"};
     final response = await http.get(url, headers: headers);

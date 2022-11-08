@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../util/EnvironmentVariables.dart';
+
 //The class help to create the buttons with image and the text below, plus allow to show what is selected
 class MyImageButton extends StatefulWidget {
   final selectedIconColor;
@@ -45,7 +47,7 @@ class _MyImageButtonState extends State<MyImageButton> {
                   child: widget.image == null ?
                   Image.asset("assets/images/logo_icon.png") :
                   Image.network(
-                    "https://www.inspery.com"+widget.image!,
+                    EnvironmentVariables.apiUrl+widget.image!,
                     fit: BoxFit.cover,
                   ),
                 ),
