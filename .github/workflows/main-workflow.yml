@@ -27,7 +27,7 @@ jobs:
         id: apk-info
         uses: hkusu/apk-info-action@v1
         with:
-          apk-path: ${{ steps.apk-path.outputs.path }}
+          apk-path: build/app/outputs/flutter-apk/app-release.apk
 
       - name: Rename The Build
         run: python ./.github/scripts/rename_build.py "${{steps.apk-info.outputs.version-name}}" "${{steps.apk-info.outputs.version-code}}"
