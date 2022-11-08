@@ -17,6 +17,14 @@ jobs:
           ruby-version: 2.7.2
           bundler-cache: true
 
+      - name: Run Flutter tasks
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "3.0.5"
+      - run: flutter pub get
+      - run: flutter pub run build_runner build
+      - run: flutter build ios --release --no-codesign
+
       - name: Get ipa path
         id: ipa-path
         run: |
