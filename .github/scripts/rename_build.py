@@ -4,8 +4,10 @@ import os
 
 apk = 'build/app/outputs/flutter-apk/app-release.apk'
 
-date_string = datetime.now().strftime('%Y%m%H%M')
+build_name = sys.argv[1]
 
-new_apk_name = 'build/app/outputs/flutter-apk/waiter-app-release-'+ date_string +'.apk'
+build_number = sys.argv[2]
+
+new_apk_name = 'build/app/outputs/flutter-apk/inserve-app-release-'+ build_name + "("+build_number+")" +'.apk'
 
 os.rename(apk, new_apk_name)
