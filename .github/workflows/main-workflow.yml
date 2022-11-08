@@ -21,9 +21,13 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: "3.0.5"
-      - run: flutter pub get
-      - run: flutter pub run build_runner build
-      - run: flutter build ios --release --no-codesign
+
+      - name: Run Flutter Get
+        run: flutter pub get
+      - name: Run Flutter Build
+        run: flutter pub run build_runner build
+      - name: Run Flutter ios
+        run: flutter build ios --release --no-codesign
 
       - name: Get ipa path
         id: ipa-path
