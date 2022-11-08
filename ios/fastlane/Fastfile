@@ -108,7 +108,6 @@ platform :ios do
       skip_screenshots: true,
       skip_metadata: true,
       skip_app_version_update: true,
-      skip_waiting_for_build_processing: true,
       force: true, # skips verification of HTML preview file (since this will be run from a CI machine)
       run_precheck_before_submit: false # not supported through ASC API yet
   )
